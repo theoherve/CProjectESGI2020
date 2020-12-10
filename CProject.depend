@@ -1,0 +1,505 @@
+# depslib dependency file v1.0
+1607435606 source:c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\cproject\main.c
+	<stdio.h>
+	<stdlib.h>
+	<curl.h>
+	"mysql.h"
+	<mysql/mysql.h>
+	<stdlib.h>
+	<mysql/mysql.h>
+
+1583890677 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl.h
+	"SDL_main.h"
+	"SDL_stdinc.h"
+	"SDL_assert.h"
+	"SDL_atomic.h"
+	"SDL_audio.h"
+	"SDL_clipboard.h"
+	"SDL_cpuinfo.h"
+	"SDL_endian.h"
+	"SDL_error.h"
+	"SDL_events.h"
+	"SDL_filesystem.h"
+	"SDL_gamecontroller.h"
+	"SDL_haptic.h"
+	"SDL_hints.h"
+	"SDL_joystick.h"
+	"SDL_loadso.h"
+	"SDL_log.h"
+	"SDL_messagebox.h"
+	"SDL_metal.h"
+	"SDL_mutex.h"
+	"SDL_power.h"
+	"SDL_render.h"
+	"SDL_rwops.h"
+	"SDL_sensor.h"
+	"SDL_shape.h"
+	"SDL_system.h"
+	"SDL_thread.h"
+	"SDL_timer.h"
+	"SDL_version.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1583890677 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_main.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1583890678 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_stdinc.h
+	"SDL_config.h"
+	<sys/types.h>
+	<stdio.h>
+	<stdlib.h>
+	<stddef.h>
+	<stdarg.h>
+	<stdlib.h>
+	<malloc.h>
+	<stddef.h>
+	<stdarg.h>
+	<memory.h>
+	<string.h>
+	<strings.h>
+	<wchar.h>
+	<inttypes.h>
+	<stdint.h>
+	<ctype.h>
+	<math.h>
+	<float.h>
+	<alloca.h>
+	<malloc.h>
+	<malloc.h>
+	<malloc.h>
+	<stdlib.h>
+	<sal.h>
+	"begin_code.h"
+	"close_code.h"
+
+1583890678 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_config.h
+	"SDL_platform.h"
+
+1583890677 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_platform.h
+	"AvailabilityMacros.h"
+	"TargetConditionals.h"
+	<winapifamily.h>
+	"begin_code.h"
+	"close_code.h"
+
+1583890678 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\begin_code.h
+
+1583890678 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\close_code.h
+
+1583890677 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_assert.h
+	"SDL_config.h"
+	"begin_code.h"
+	<signal.h>
+	"close_code.h"
+
+1583890677 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_atomic.h
+	"SDL_stdinc.h"
+	"SDL_platform.h"
+	"begin_code.h"
+	<sys/cpuinline.h>
+	<mbarrier.h>
+	"close_code.h"
+
+1583890677 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_audio.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_endian.h"
+	"SDL_mutex.h"
+	"SDL_thread.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1583890677 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_error.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1583890677 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_endian.h
+	"SDL_stdinc.h"
+	<endian.h>
+	<endian.h>
+	"begin_code.h"
+	"close_code.h"
+
+1583890677 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_mutex.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1583890678 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_thread.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_atomic.h"
+	"SDL_mutex.h"
+	"begin_code.h"
+	<process.h>
+	<process.h>
+	<stdlib.h>
+	"close_code.h"
+
+1583890677 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_rwops.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1583890677 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_clipboard.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1583890677 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_cpuinfo.h
+	"SDL_stdinc.h"
+	<intrin.h>
+	<intrin.h>
+	<altivec.h>
+	<arm_neon.h>
+	<armintr.h>
+	<arm_neon.h>
+	<arm64intr.h>
+	<arm64_neon.h>
+	<mm3dnow.h>
+	<immintrin.h>
+	<mmintrin.h>
+	<xmmintrin.h>
+	<emmintrin.h>
+	<pmmintrin.h>
+	"begin_code.h"
+	"close_code.h"
+
+1583890677 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_events.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"SDL_keyboard.h"
+	"SDL_mouse.h"
+	"SDL_joystick.h"
+	"SDL_gamecontroller.h"
+	"SDL_quit.h"
+	"SDL_gesture.h"
+	"SDL_touch.h"
+	"begin_code.h"
+	"close_code.h"
+
+1583890678 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_video.h
+	"SDL_stdinc.h"
+	"SDL_pixels.h"
+	"SDL_rect.h"
+	"SDL_surface.h"
+	"begin_code.h"
+	"close_code.h"
+
+1583890677 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_pixels.h
+	"SDL_stdinc.h"
+	"SDL_endian.h"
+	"begin_code.h"
+	"close_code.h"
+
+1583890677 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_rect.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_pixels.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1583890678 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_surface.h
+	"SDL_stdinc.h"
+	"SDL_pixels.h"
+	"SDL_rect.h"
+	"SDL_blendmode.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1583890677 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_blendmode.h
+	"begin_code.h"
+	"close_code.h"
+
+1583890677 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_keyboard.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_keycode.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1583890677 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_keycode.h
+	"SDL_stdinc.h"
+	"SDL_scancode.h"
+
+1583890678 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_scancode.h
+	"SDL_stdinc.h"
+
+1583890677 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_mouse.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1583890677 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_joystick.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1583890677 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_gamecontroller.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_rwops.h"
+	"SDL_joystick.h"
+	"begin_code.h"
+	"close_code.h"
+
+1583890677 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_quit.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+
+1583890677 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_gesture.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"SDL_touch.h"
+	"begin_code.h"
+	"close_code.h"
+
+1583890678 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_touch.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1583890677 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_filesystem.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1583890677 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_haptic.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_joystick.h"
+	"begin_code.h"
+	"close_code.h"
+
+1583890677 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_hints.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1583890677 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_loadso.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1583890677 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_log.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1583890677 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_messagebox.h
+	"SDL_stdinc.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1583890677 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_metal.h
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1583890677 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_power.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1583890677 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_render.h
+	"SDL_stdinc.h"
+	"SDL_rect.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1583890678 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_sensor.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1583890678 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_shape.h
+	"SDL_stdinc.h"
+	"SDL_pixels.h"
+	"SDL_rect.h"
+	"SDL_surface.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1583890678 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_system.h
+	"SDL_stdinc.h"
+	"SDL_keyboard.h"
+	"SDL_render.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1583890678 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_timer.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1583890678 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\sdl2-2.0.12\include\sdl_version.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1602219428 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\curl-7.73.0_3-win32-mingw\include\curl\curl.h
+	"curlver.h"
+	"system.h"
+	<stdio.h>
+	<limits.h>
+	<osreldate.h>
+	<sys/types.h>
+	<time.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<sys/select.h>
+	<sys/socket.h>
+	<sys/time.h>
+	<support/SupportDefs.h>
+	"easy.h"
+	"multi.h"
+	"urlapi.h"
+	"options.h"
+	"typecheck-gcc.h"
+
+1602647458 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\curl-7.73.0_3-win32-mingw\include\curl\curlver.h
+
+1601266970 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\curl-7.73.0_3-win32-mingw\include\curl\system.h
+	<winsock2.h>
+	<windows.h>
+	<ws2tcpip.h>
+	<sys/types.h>
+	<sys/socket.h>
+	<sys/poll.h>
+
+1602218200 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\curl-7.73.0_3-win32-mingw\include\curl\easy.h
+
+1602219428 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\curl-7.73.0_3-win32-mingw\include\curl\multi.h
+	"curl.h"
+
+1601266970 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\curl-7.73.0_3-win32-mingw\include\curl\urlapi.h
+	"curl.h"
+
+1602219428 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\curl-7.73.0_3-win32-mingw\include\curl\options.h
+
+1602219428 c:\users\theoj\onedrive\documents\professionnel\esgi\2ème année\1er semestre\langage c avancé\projet\bibliothèques graphiques\curl-7.73.0_3-win32-mingw\include\curl\typecheck-gcc.h
+
+1605010494 c:\program files\mariadb 10.5\include\mysql\server\mysql.h
+	<standards.h>
+	<sys/types.h>
+	"mysql_version.h"
+	"mysql_com.h"
+	"mysql_time.h"
+	"my_list.h"
+	"typelib.h"
+	"my_alloc.h"
+
+1605012188 c:\program files\mariadb 10.5\include\mysql\server\mysql_version.h
+	<custom_conf.h>
+
+1605010494 c:\program files\mariadb 10.5\include\mysql\server\mysql_com.h
+	"my_decimal_limits.h"
+	"pack.h"
+
+1605010494 c:\program files\mariadb 10.5\include\mysql\server\my_decimal_limits.h
+
+1605010494 c:\program files\mariadb 10.5\include\mysql\server\pack.h
+
+1605010494 c:\program files\mariadb 10.5\include\mysql\server\mysql_time.h
+
+1605010494 c:\program files\mariadb 10.5\include\mysql\server\my_list.h
+
+1605010494 c:\program files\mariadb 10.5\include\mysql\server\typelib.h
+	"my_alloc.h"
+
+1605010494 c:\program files\mariadb 10.5\include\mysql\server\my_alloc.h
+	<mysql/psi/psi_memory.h>
+
+1605010494 c:\program files\mariadb 10.5\include\mysql\server\mysql\psi\psi_memory.h
+	"psi_base.h"
+
+1605010494 c:\program files\mariadb 10.5\include\mysql\server\mysql\psi\psi_base.h
+
+1605010494 c:\program files\mariadb 10.5\include\mysql\mysql.h
+	<stdarg.h>
+	<sys/types.h>
+	"mariadb_com.h"
+	"mariadb_version.h"
+	"ma_list.h"
+	"mariadb_ctype.h"
+	"mariadb_stmt.h"
+
+1605010494 c:\program files\mariadb 10.5\include\mysql\mariadb_com.h
+
+1605012182 c:\program files\mariadb 10.5\include\mysql\mariadb_version.h
+	<custom_conf.h>
+
+1605010494 c:\program files\mariadb 10.5\include\mysql\ma_list.h
+
+1605010494 c:\program files\mariadb 10.5\include\mysql\mariadb_ctype.h
+	<ctype.h>
+
+1605010494 c:\program files\mariadb 10.5\include\mysql\mariadb_stmt.h
+
+1573102340 c:\wamp64\bin\mariadb\mariadb10.4.10\include\mysql\mysql.h
+	<stdarg.h>
+	<sys/types.h>
+	"mariadb_com.h"
+	"mariadb_version.h"
+	"ma_list.h"
+	"mariadb_ctype.h"
+	"mariadb_stmt.h"
+
+1573102340 c:\wamp64\bin\mariadb\mariadb10.4.10\include\mysql\mariadb_com.h
+
+1573102650 c:\wamp64\bin\mariadb\mariadb10.4.10\include\mysql\mariadb_version.h
+	<custom_conf.h>
+
+1573102340 c:\wamp64\bin\mariadb\mariadb10.4.10\include\mysql\ma_list.h
+
+1573102340 c:\wamp64\bin\mariadb\mariadb10.4.10\include\mysql\mariadb_ctype.h
+	<ctype.h>
+
+1573102340 c:\wamp64\bin\mariadb\mariadb10.4.10\include\mysql\mariadb_stmt.h
+
+1605010494 c:\program files (x86)\mariadb 10.5\include\mysql\mysql.h
+	<stdarg.h>
+	<sys/types.h>
+	"mariadb_com.h"
+	"mariadb_version.h"
+	"ma_list.h"
+	"mariadb_ctype.h"
+	"mariadb_stmt.h"
+
+1605010494 c:\program files (x86)\mariadb 10.5\include\mysql\mariadb_com.h
+
+1605017624 c:\program files (x86)\mariadb 10.5\include\mysql\mariadb_version.h
+	<custom_conf.h>
+
+1605010494 c:\program files (x86)\mariadb 10.5\include\mysql\ma_list.h
+
+1605010494 c:\program files (x86)\mariadb 10.5\include\mysql\mariadb_ctype.h
+	<ctype.h>
+
+1605010494 c:\program files (x86)\mariadb 10.5\include\mysql\mariadb_stmt.h
+
