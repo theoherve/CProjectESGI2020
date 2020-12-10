@@ -1,4 +1,4 @@
-/* //test code SDL
+ //test code SDL
 #include <stdio.h>
 #include <stdlib.h>
 #include <SDL.h>
@@ -61,7 +61,7 @@ int main(int argc, char **argv)
     }
 
     return 1;
-} */
+}
 
 /*//test code Curl
 #include <stdio.h>
@@ -153,7 +153,7 @@ int main(int argc, char **argv)
   exit(0);
 }* */
 
-//start real code
+/*//start real code
 #include <stdio.h>
 #include <stdlib.h>
 int main(int argc, char **argv){
@@ -163,3 +163,4 @@ int main(int argc, char **argv){
     return 0;
 
 }
+*/
