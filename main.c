@@ -1,4 +1,4 @@
- //test code SDL
+/* //test code SDL
 #include <stdio.h>
 #include <stdlib.h>
 #include <SDL.h>
@@ -61,7 +61,7 @@ int main(int argc, char **argv)
     }
 
     return 1;
-}
+}*/
 
 /*//test code Curl
 #include <stdio.h>
@@ -120,7 +120,7 @@ int main(int argc, char **argv){
 }
 
 
-/*#include <stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <mysql/mysql.h>
 
@@ -153,14 +153,138 @@ int main(int argc, char **argv)
   exit(0);
 }* */
 
-/*//start real code
+//start real code
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <winsock.h>
+#include <MYSQL/mysql.h>
+
+int SignIn(){
+
+    printf("\nSign in ok\n");
+
+    return 0;
+
+}
+
+int SignUp(){
+
+    char pseudo[50];
+    char mail[100];
+    char city[100];
+    char password[100];
+    char confirm_password[100];
+    int check_password=1;
+
+    MYSQL mysql;
+    mysql_init(&mysql);
+    mysql_options(&mysql,MYSQL_READ_DEFAULT_GROUP,"option");
+
+    if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0)){
+
+        printf("\nSign in:\n");
+
+        printf("Enter your pseudo:\n\n");
+        fflush(stdin);
+        fgets(pseudo,50,stdin);
+        if(pseudo[strlen(pseudo)-1]=='\n'){
+            pseudo[strlen(pseudo)-1]=='\0';
+        }
+
+        printf("Enter your mail:\n\n");
+        fflush(stdin);
+        fgets(mail,100,stdin);
+        if(mail[strlen(mail)-1]=='\n'){
+            mail[strlen(mail)-1]=='\0';
+        }
+
+        printf("Enter your city:\n\n");
+        fflush(stdin);
+        fgets(city,100,stdin);
+        if(city[strlen(city)-1]=='\n'){
+            city[strlen(city)-1]=='\0';
+        }
+
+        do{
+            check_password=1;
+            printf("Enter your password:\n\n");
+            fflush(stdin);
+            fgets(password,100,stdin);
+            if(password[strlen(password)-1]=='\n'){
+                password[strlen(password)-1]=='\0';
+            }
+            if(strlen(password)<8){
+                printf("Password to short\n");
+                check_password=0;
+            }
+
+            if(password[0]<65 || password[0]>90 && check_password!=0 ){
+                printf("The first letter must be a capital letter\n");
+                check_password=0;
+            }
+
+            if(strpbrk(password,"0123456789")==NULL && check_password!=0){
+                printf("Your password must contain a number\n");
+                check_password=0;
+            }
+
+        }while(check_password!=1);
+
+
+        do{
+            check_password=1;
+           printf("Confirm your password:\n\n");
+           fflush(stdin);
+           fgets(confirm_password,100,stdin);
+           if(confirm_password[strlen(confirm_password)-1]=='\n'){
+              confirm_password[strlen(confirm_password)-1]=='\0';
+           }
+
+           if(strstr(password,confirm_password)==NULL){
+                printf("Both passwords must match\n");
+                check_password=0;
+           }
+
+        }while(check_password!=1);
+
+        printf("Pseudo: %s\nMail: %s\nCity: %s\nPassword %s\n",pseudo,mail,city,password);
+
+        mysql_close(&mysql);
+
+
+    }else{
+        printf("ERROR: An error occurred while connecting to the DB!");
+    }
+
+    return 0;
+
+}
+
+
 int main(int argc, char **argv){
+
+    int choice;
+    int id;
+
+    do{
+        printf("1: Sign in\n2: Sign up\n");
+        scanf("%d",&choice);
+    }while(choice!=1 && choice!=2);
+
+    if(choice==1){
+        id=SignIn();
+    }else if(choice==2){
+        id=SignUp();
+    }else{
+
+    }
 
 
 
     return 0;
 
 }
-*/
+
+
+
