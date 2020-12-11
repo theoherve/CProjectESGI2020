@@ -153,33 +153,54 @@ int main(int argc, char **argv)
 #include <stdio.h>
 #include <stdlib.h>
 #include <curl.h>
+
 int main(int argc, char **argv){
 
     CURL *curl;
     FILE *fp;
     int result;
+    char errbuf[CURL_ERROR_SIZE];
 
     //fp = fopen(argv[2], "wb");
     fp = fopen("testCurlApiExport/script1.json", "wb");
 
     curl = curl_easy_init(); //initialize CURL fonction
     if(curl){
-        //curl_easy_setopt(curl, CURLOPT_URL, "https://example.com"); //CURLOPT_ULR allow us to enter the url of the file we want to dl
+
         //curl_easy_setopt(curl, CURLOPT_URL, argv[1]);
-        curl_easy_setopt(curl, CURLOPT_URL, "https://opendata.paris.fr/explore/dataset/etalages-et-terrasses/download/?format=json&timezone=Europe/Berlin&lang=fr");
+
+        //curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, callback_func); //marche pas
+
+        curl_easy_setopt(curl, CURLOPT_URL, "https://opendata.paris.fr/explore/dataset/etalages-et-terrasses/download/?format=json&timezone=Europe/Berlin&lang=fr"); //CURLOPT_ULR allow us to enter the url of the file we want to dl
+        //curl_easy_setopt(curl, CURLOPT_URL, "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Nusfjord_road%2C_2010_09.jpg/1280px-Nusfjord_road%2C2010_09.jpg");
 
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp); //alow to write on the file we dl
 
         curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1L);
 
+        curl_easy_setopt(curl, CURLOPT_ERRORBUFFER, errbuf);
+        errbuf[0] = 0;
+
+        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
+
         result = curl_easy_perform(curl); //return if the dl was successful (might take few seconds)
 
-        if(result != CURLE_OK){
+        /*if(result != CURLE_OK){
             fprintf(stderr, "curl_easy_perform() failed: %s\n",
                 curl_easy_strerror(result));
         }else{
             printf("Download successful !\n");
-        }
+        }*/
+
+        if(result != CURLE_OK) {
+            size_t len = strlen(errbuf);
+            fprintf(stderr, "\nlibcurl: (%d) ", result);
+            if(len)
+                fprintf(stderr, "%s%s", errbuf, ((errbuf[len - 1] != '\n') ? "\n" : ""));
+            else
+                fprintf(stderr, "%s\n", curl_easy_strerror(result));
+            }
+
         fclose(fp);
         curl_easy_cleanup(curl);
     }
