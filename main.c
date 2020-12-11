@@ -176,6 +176,7 @@ int SignUp(){
     char password[100];
     char confirm_password[100];
     int check_password=1;
+    char query[255];
 
     MYSQL mysql;
     mysql_init(&mysql);
@@ -189,21 +190,21 @@ int SignUp(){
         fflush(stdin);
         fgets(pseudo,50,stdin);
         if(pseudo[strlen(pseudo)-1]=='\n'){
-            pseudo[strlen(pseudo)-1]=='\0';
+            pseudo[strlen(pseudo)-1]='\0';
         }
 
         printf("Enter your mail:\n\n");
         fflush(stdin);
         fgets(mail,100,stdin);
         if(mail[strlen(mail)-1]=='\n'){
-            mail[strlen(mail)-1]=='\0';
+            mail[strlen(mail)-1]='\0';
         }
 
         printf("Enter your city:\n\n");
         fflush(stdin);
         fgets(city,100,stdin);
         if(city[strlen(city)-1]=='\n'){
-            city[strlen(city)-1]=='\0';
+            city[strlen(city)-1]='\0';
         }
 
         do{
@@ -212,7 +213,7 @@ int SignUp(){
             fflush(stdin);
             fgets(password,100,stdin);
             if(password[strlen(password)-1]=='\n'){
-                password[strlen(password)-1]=='\0';
+                password[strlen(password)-1]='\0';
             }
             if(strlen(password)<8){
                 printf("Password to short\n");
@@ -238,7 +239,7 @@ int SignUp(){
            fflush(stdin);
            fgets(confirm_password,100,stdin);
            if(confirm_password[strlen(confirm_password)-1]=='\n'){
-              confirm_password[strlen(confirm_password)-1]=='\0';
+              confirm_password[strlen(confirm_password)-1]='\0';
            }
 
            if(strstr(password,confirm_password)==NULL){
@@ -250,7 +251,26 @@ int SignUp(){
 
         printf("Pseudo: %s\nMail: %s\nCity: %s\nPassword %s\n",pseudo,mail,city,password);
 
-        mysql_close(&mysql);
+        strcpy(query,"INSERT INTO USER (pseudo,mail,city,password) VALUES('");
+        strcat(query,pseudo);
+        strcat(query,"','");
+        strcat(query,mail);
+        strcat(query,"','");
+        strcat(query,city);
+        strcat(query,"','");
+        strcat(query,password);
+        strcat(query,"')");
+
+
+        printf("\n%s",query);
+
+        //sprintf(query,"INSERT INTO USER (pseudo,mail,city,password) VALUES('%s','%s','%s','%s');",pseudo,mail,city,password);
+
+        mysql_query(&mysql,query);
+
+        //mysql_query(&mysql,"INSERT INTO USER (pseudo,mail,city,password) VALUES('Izonite','armanddfl@gmail.com','Chatou','Test1234')");
+         mysql_close(&mysql);
+
 
 
     }else{
