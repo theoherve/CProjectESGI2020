@@ -175,8 +175,11 @@ int SignUp(){
     char city[100];
     char password[100];
     char confirm_password[100];
-    int check_password=1;
+    int check=1;
     char query[255];
+    MYSQL_RES *result=NULL;
+    MYSQL_ROW row;
+    int id;
 
     MYSQL mysql;
     mysql_init(&mysql);
@@ -186,29 +189,78 @@ int SignUp(){
 
         printf("\nSign in:\n");
 
-        printf("Enter your pseudo:\n\n");
-        fflush(stdin);
-        fgets(pseudo,50,stdin);
-        if(pseudo[strlen(pseudo)-1]=='\n'){
-            pseudo[strlen(pseudo)-1]='\0';
-        }
+        do{
+            check=1;
+            printf("Enter your pseudo:\n\n");
+            fflush(stdin);
+            fgets(pseudo,50,stdin);
+            if(pseudo[strlen(pseudo)-1]=='\n'){
+                pseudo[strlen(pseudo)-1]='\0';
+            }
 
-        printf("Enter your mail:\n\n");
-        fflush(stdin);
-        fgets(mail,100,stdin);
-        if(mail[strlen(mail)-1]=='\n'){
-            mail[strlen(mail)-1]='\0';
-        }
+            strcpy(query,"SELECT id FROM USER WHERE pseudo='");
+            strcat(query,pseudo);
+            strcat(query,"'");
 
-        printf("Enter your city:\n\n");
-        fflush(stdin);
-        fgets(city,100,stdin);
-        if(city[strlen(city)-1]=='\n'){
-            city[strlen(city)-1]='\0';
-        }
+            mysql_query(&mysql,query);
+            result = mysql_store_result(&mysql);
+            row = mysql_fetch_row(result);
+
+            if(row){
+                printf("\nPseudo déjà utilisé\n");
+                check=0;
+            }
+
+
+        }while(check!=1);
+
 
         do{
-            check_password=1;
+            check=1;
+            printf("Enter your mail:\n\n");
+            fflush(stdin);
+            fgets(mail,100,stdin);
+            if(mail[strlen(mail)-1]=='\n'){
+                mail[strlen(mail)-1]='\0';
+            }
+
+            if(strchr(mail,'@')==NULL){
+                printf("\nThe mail forma is incorect\n");
+                check=0;
+            }
+
+            if(strchr(mail,'.')==NULL && check!=0){
+                printf("\nThe mail forma is incorect\n");
+                check=0;
+            }
+
+            strcpy(query,"SELECT id FROM USER WHERE mail='");
+            strcat(query,mail);
+            strcat(query,"'");
+
+            mysql_query(&mysql,query);
+            result = mysql_store_result(&mysql);
+            row = mysql_fetch_row(result);
+
+            if(row){
+                printf("\nMail already used\n");
+                check=0;
+            }
+
+
+
+        }while(check!=1);
+
+            printf("Enter your city:\n\n");
+            fflush(stdin);
+            fgets(city,100,stdin);
+            if(city[strlen(city)-1]=='\n'){
+                city[strlen(city)-1]='\0';
+            }
+
+
+        do{
+            check=1;
             printf("Enter your password:\n\n");
             fflush(stdin);
             fgets(password,100,stdin);
@@ -217,24 +269,24 @@ int SignUp(){
             }
             if(strlen(password)<8){
                 printf("Password to short\n");
-                check_password=0;
+                check=0;
             }
 
-            if(password[0]<65 || password[0]>90 && check_password!=0 ){
+            if(password[0]<65 || password[0]>90 && check!=0 ){
                 printf("The first letter must be a capital letter\n");
-                check_password=0;
+                check=0;
             }
 
-            if(strpbrk(password,"0123456789")==NULL && check_password!=0){
+            if(strpbrk(password,"0123456789")==NULL && check!=0){
                 printf("Your password must contain a number\n");
-                check_password=0;
+                check=0;
             }
 
-        }while(check_password!=1);
+        }while(check!=1);
 
 
         do{
-            check_password=1;
+            check=1;
            printf("Confirm your password:\n\n");
            fflush(stdin);
            fgets(confirm_password,100,stdin);
@@ -244,10 +296,10 @@ int SignUp(){
 
            if(strstr(password,confirm_password)==NULL){
                 printf("Both passwords must match\n");
-                check_password=0;
+                check=0;
            }
 
-        }while(check_password!=1);
+        }while(check!=1);
 
         printf("Pseudo: %s\nMail: %s\nCity: %s\nPassword %s\n",pseudo,mail,city,password);
 
@@ -268,8 +320,25 @@ int SignUp(){
 
         mysql_query(&mysql,query);
 
+        strcpy(query,"SELECT id FROM USER WHERE pseudo='");
+        strcat(query,pseudo);
+        strcat(query,"'");
+
+        mysql_query(&mysql,query);
+        result = mysql_store_result(&mysql);
+        row = mysql_fetch_row(result);
+
+        if(row){
+            sscanf(row[0],"%d",&id);
+            printf("Welcome %s, your account has been successfully created",pseudo);
+        }else{
+            printf("ERROR: Your account can't be create");
+        }
+
         //mysql_query(&mysql,"INSERT INTO USER (pseudo,mail,city,password) VALUES('Izonite','armanddfl@gmail.com','Chatou','Test1234')");
+
          mysql_close(&mysql);
+
 
 
 
@@ -277,7 +346,7 @@ int SignUp(){
         printf("ERROR: An error occurred while connecting to the DB!");
     }
 
-    return 0;
+    return id;
 
 }
 
@@ -296,9 +365,11 @@ int main(int argc, char **argv){
         id=SignIn();
     }else if(choice==2){
         id=SignUp();
-    }else{
-
     }
+
+    printf("#%d#",id);
+
+
 
 
 
