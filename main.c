@@ -405,11 +405,132 @@ int SignUp(){
 
 }
 
+void cocktails(int id){
+    int choice;
+
+    printf("--COCKTAILS--\n");
+
+    do{
+        printf("\n1:Create a coktails\n2:List of users Cocktails\n3:Return to menu\n");
+        scanf("%d",&choice);
+        if(choice==1){
+            createCocktails(id);
+        }
+    }while(choice!=3);
+
+}
+
+void createCocktails(int id){
+
+    char name_cocktail[100];
+    char txt_tmp[10];
+    int id_cocktails;
+    int tab_ingredient[10];
+    int tab_quantity[10];
+    int max=0;
+    int choice;
+    int quantity;
+    char query[255];
+    MYSQL_RES *result = NULL;
+    MYSQL_ROW row;
+    unsigned int i = 0;
+    int count_row=0;
+    int check_count_row=0;
+
+    MYSQL mysql;
+    mysql_init(&mysql);
+    mysql_options(&mysql,MYSQL_READ_DEFAULT_GROUP,"option");
+
+    if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0)){
+
+        printf("| Creation of a cocktail |\n");
+        printf("Choose the name of your cocktails\n");
+        fflush(stdin);
+        fgets(name_cocktail,100,stdin);
+        if(name_cocktail[strlen(name_cocktail)-1]=='\n'){
+            name_cocktail[strlen(name_cocktail)-1]='\0';
+        }
+            printf("Choose an ingredient(max 10)\n");
+        do{
+            printf("Choose a number (or 0 if the list is finish)\n");
+            printf("(%d/10)\n)",max);
+            strcpy(query,"SELECT * FROM ingredient");
+            mysql_query(&mysql,query);
+
+            result = mysql_use_result(&mysql);
+            while((row = mysql_fetch_row(result))){
+                if(check_count_row==0){
+                    count_row++;
+                }
+                printf("[%s] [%s]",row[0],row[1]);
+                printf("\n");
+            }
+
+            check_count_row=1;
+            printf("%d",count_row);
+
+            scanf("%d",&choice);
+            if(choice<=count_row && choice>0){
+                if(choice!=0){
+                    tab_ingredient[max]=choice;
+                    printf("Enter the quantity (in milliter)\n");
+                    scanf("%d",&quantity);
+                    tab_quantity[max]=quantity;
+                    max++;
+                }
+            }
+
+        }while(choice!=0 && max<10 || max==0);
+
+        itoa(id,txt_tmp,10);
+        strcpy(query,"INSERT INTO COCKTAILS (name,id_user) VALUES('");
+        strcat(query,name_cocktail);
+        strcat(query,"','");
+        strcat(query,txt_tmp);
+        strcat(query,"')");
+
+        printf("%s",query);
+
+        mysql_query(&mysql,query);
+
+        strcpy(query,"SELECT LAST_INSERT_ID() FROM COCKTAILS");
+        mysql_query(&mysql,query);
+
+        result = mysql_store_result(&mysql);
+        row = mysql_fetch_row(result);
+
+        if(row){
+            sscanf(row[0],"%d",&id_cocktails);
+            printf("\n---%d---",id_cocktails);
+        }
+
+        for(i=0;i<max;i++){
+            strcpy(query,"INSERT INTO RECIPE (id_cocktail,id_ingredient,quantity) VALUES('");
+            itoa(id_cocktails,txt_tmp,10);
+            strcat(query,txt_tmp);
+            strcat(query,"','");
+            itoa(tab_ingredient[i],txt_tmp,10);
+            strcat(query,txt_tmp);
+            strcat(query,"','");
+            itoa(tab_quantity[i],txt_tmp,10);
+            strcat(query,txt_tmp);
+            strcat(query,"')");
+
+            printf("\n%s",query);
+            mysql_query(&mysql,query);
+        }
+
+    }
+
+
+}
+
 
 int main(int argc, char **argv){
 
     int choice;
     int id;
+
 
     do{
         printf("1: Sign in\n2: Sign up\n");
@@ -422,7 +543,18 @@ int main(int argc, char **argv){
         id=SignUp();
     }
 
-    printf("#%d#",id);
+    printf("#%d\n#",id);
+
+
+    do{
+        printf("--MENU--\n1: Cocktails\n4:EXIT\n");
+        scanf("%d",&choice);
+
+        if(choice==1){
+            cocktails(id);
+        }
+
+    }while(choice!=4);
 
 
 
