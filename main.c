@@ -416,6 +416,10 @@ void cocktails(int id){
         if(choice==1){
             createCocktails(id);
         }
+
+        if(choice==2){
+            listCocktails(id);
+        }
     }while(choice!=3);
 
 }
@@ -467,7 +471,7 @@ void createCocktails(int id){
             }
 
             check_count_row=1;
-            printf("%d",count_row);
+            //printf("%d",count_row);
 
             scanf("%d",&choice);
             if(choice<=count_row && choice>0){
@@ -489,7 +493,7 @@ void createCocktails(int id){
         strcat(query,txt_tmp);
         strcat(query,"')");
 
-        printf("%s",query);
+        //printf("%s",query);
 
         mysql_query(&mysql,query);
 
@@ -501,7 +505,7 @@ void createCocktails(int id){
 
         if(row){
             sscanf(row[0],"%d",&id_cocktails);
-            printf("\n---%d---",id_cocktails);
+            //printf("\n---%d---",id_cocktails);
         }
 
         for(i=0;i<max;i++){
@@ -516,14 +520,120 @@ void createCocktails(int id){
             strcat(query,txt_tmp);
             strcat(query,"')");
 
-            printf("\n%s",query);
+            //printf("\n%s",query);
             mysql_query(&mysql,query);
         }
+
+        mysql_close(&mysql);
 
     }
 
 
 }
+
+void listCocktails(int id){
+
+    char query[255];
+    MYSQL_RES *result = NULL;
+    MYSQL_ROW row;
+    char **tab_coktails;
+    int count_row=0;
+    unsigned int i = 0;
+    int choice;
+    int choice2;
+    int check=0;
+    char id_cocktail[10];
+
+    MYSQL mysql;
+    mysql_init(&mysql);
+    mysql_options(&mysql,MYSQL_READ_DEFAULT_GROUP,"option");
+
+    if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0)){
+
+       printf("| List of the cocktail |\n");
+
+       strcpy(query,"SELECT * FROM cocktails");
+       mysql_query(&mysql,query);
+
+       result = mysql_use_result(&mysql);
+       while((row = mysql_fetch_row(result))){
+            count_row++;
+       }
+
+       tab_coktails=malloc(sizeof(char)*count_row);
+       if(tab_coktails!=NULL){
+
+            for(i=0;i<count_row;i++){
+                tab_coktails[i]=malloc(sizeof(char*)*11);
+            }
+       }
+
+       //printf("#%d#",count_row);
+
+       do{
+            count_row=0;
+
+            strcpy(query,"SELECT cocktails.id,name,user.pseudo FROM cocktails INNER JOIN user ON cocktails.id_user = user.id");
+            mysql_query(&mysql,query);
+
+            result = mysql_use_result(&mysql);
+            while((row = mysql_fetch_row(result))){
+
+                printf("[%d] |%s| created by %s",count_row+1,row[1],row[2]);
+                printf("\n");
+                if(check==0){
+                    strcpy(tab_coktails[count_row],row[0]);
+
+                }
+                count_row++;
+            }
+
+            check=1;
+
+            /*for(i=0;i<count_row;i++){
+                printf("%s\n",tab_coktails[i]);
+            }*/
+
+            printf("Choose a cocktails (enter 0 to return to the coktails menu)\n");
+            scanf("%d",&choice);
+
+            if(choice>0 && choice<=count_row){
+                strcpy(id_cocktail,tab_coktails[choice-1]);
+                printf("Recipe\n");
+                //printf("%s\n",id_cocktail);
+                strcpy(query,"SELECT ingredient.name,quantity FROM recipe INNER JOIN cocktails ON recipe.id_cocktail = '");
+                strcat(query,id_cocktail);
+                strcat(query,"' and cocktails.id='");
+                strcat(query,id_cocktail);
+                strcat(query,"' INNER JOIN ingredient ON recipe.id_ingredient = ingredient.id");
+                 mysql_query(&mysql,query);
+
+                result = mysql_use_result(&mysql);
+                while((row = mysql_fetch_row(result))){
+
+                    printf("|%s| quantity: %s",row[0],row[1]);
+                    printf("\n");
+                }
+
+                do{
+                    printf("Return to cocktails list ?(enter 0)");
+                    scanf("%d",&choice2);
+                }while(choice2!=0);
+            }
+
+        }while(choice!=0);
+
+       free(tab_coktails);
+       mysql_close(&mysql);
+
+    }else{
+
+        printf("ERROR: An error occurred while connecting to the DB!");
+
+    }
+
+}
+
 
 
 int main(int argc, char **argv){
