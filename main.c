@@ -159,6 +159,7 @@ int main(int argc, char **argv)
 #include <string.h>
 #include <winsock.h>
 #include <MYSQL/mysql.h>
+#include <SDL.h>
 
 int SignIn(){
 
@@ -170,9 +171,11 @@ int SignIn(){
     MYSQL_ROW row;
     int id;
 
+
     MYSQL mysql;
     mysql_init(&mysql);
     mysql_options(&mysql,MYSQL_READ_DEFAULT_GROUP,"option");
+
 
     if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0)){
 
@@ -640,11 +643,81 @@ int main(int argc, char **argv){
 
     int choice;
     int id;
+    SDL_Window    *window=NULL;
+    SDL_Renderer *renderer=NULL;
+    SDL_Rect rect={78,50,250,120};
+    SDL_Color background={213,115,51,255};
+    SDL_Color items={129,120,115,255};
+    SDL_Event event;
+    SDL_bool quit=SDL_FALSE;
+    int x_mouse;
+    int y_mouse;
+
+    if (SDL_Init(SDL_INIT_VIDEO)!=0){
+        fprintf(stderr, "SDL Error : Init failed\n");
+        return 0;
+    }
+
+    window=SDL_CreateWindow("Picomencer",600,100,400,700,0);
+    if(window==NULL){
+        printf("SDL ERROR");
+    }
+
+    renderer=SDL_CreateRenderer(window,-1,SDL_RENDERER_SOFTWARE);
+
+    if(renderer==NULL){
+        printf("SDL renderer ERROR");
+    }
+
+    SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
+    SDL_RenderClear(renderer);
+    SDL_RenderPresent(renderer);
+    SDL_SetRenderDrawColor(renderer,items.r,items.g,items.b,items.a);
+    SDL_RenderFillRect(renderer,&rect);
+    rect.y+=170;
+    SDL_RenderFillRect(renderer,&rect);
+    SDL_RenderPresent(renderer);
+    /*while(!quit){
+
+
+        if(event.button.button==SDL_BUTTON_LEFT){
+            SDL_GetMouseState(&x_mouse,&y_mouse);
+
+        }
+
+        SDL_WaitEvent(&event);
+        if(event.type==SDL_QUIT){
+            quit=SDL_TRUE;
+        }
+
+
+    }
+
+
 
 
     do{
         printf("1: Sign in\n2: Sign up\n");
         scanf("%d",&choice);
+    }while(choice!=1 && choice!=2);*/
+
+
+    do{
+
+        SDL_WaitEvent(&event);
+
+        if(event.button.button==SDL_BUTTON_LEFT){
+            SDL_GetMouseState(&x_mouse,&y_mouse);
+        }
+
+        if(x_mouse>=78 && x_mouse<=328 && y_mouse>=50 && y_mouse<=170){
+            choice=1;
+        }
+
+        if(x_mouse>=78 && x_mouse<=328 && y_mouse>=220 && y_mouse<=340){
+            choice=2;
+        }
+
     }while(choice!=1 && choice!=2);
 
     if(choice==1){
@@ -653,10 +726,10 @@ int main(int argc, char **argv){
         id=SignUp();
     }
 
-    printf("#%d\n#",id);
+    //printf("#%d\n#",id);
 
 
-    do{
+    /*do{
         printf("--MENU--\n1: Cocktails\n4:EXIT\n");
         scanf("%d",&choice);
 
@@ -664,9 +737,72 @@ int main(int argc, char **argv){
             cocktails(id);
         }
 
+    }while(choice!=4);*/
+
+    do{
+
+        //printf("GUI CHoice\n");
+
+        x_mouse=0;
+        y_mouse=0;
+        choice=0;
+        printf("choice: %d\n",choice);
+        SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
+        SDL_RenderClear(renderer);
+        SDL_RenderPresent(renderer);
+        SDL_SetRenderDrawColor(renderer,items.r,items.g,items.b,items.a);
+        rect.x=78;
+        rect.y=50;
+        rect.w=250;
+        rect.h=120;
+        SDL_RenderFillRect(renderer,&rect);
+        rect.x-=30;
+        rect.y+=500;
+        rect.w-=125;
+        rect.h-=60;
+        SDL_RenderFillRect(renderer,&rect);
+        SDL_RenderPresent(renderer);
+
+
+        do{
+            choice=0;
+            x_mouse=0;
+            y_mouse=0;
+            //printf("choice: %d\n",choice);
+            SDL_WaitEvent(&event);
+
+            if(event.button.button==SDL_BUTTON_LEFT){
+                SDL_GetMouseState(&x_mouse,&y_mouse);
+            }
+
+            if(x_mouse>=78 && x_mouse<=328 && y_mouse>=50 && y_mouse<=170){
+                choice=1;
+                printf("coord: %d-%d \n",x_mouse,y_mouse);
+                x_mouse=0;
+                y_mouse=0;
+            }
+
+            if(x_mouse>=48 && x_mouse<=173 && y_mouse>=550 && y_mouse<=710){
+                choice=4;
+                x_mouse=0;
+                y_mouse=0;
+            }
+
+
+        }while(choice!=1 && choice!=4);
+
+        if(choice==1){
+            cocktails(id);
+        }
+
+
+
     }while(choice!=4);
 
 
+    SDL_DestroyWindow(window);
+    SDL_DestroyRenderer(renderer);
+    SDL_Quit();
 
 
 
