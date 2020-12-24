@@ -159,6 +159,7 @@ int main(int argc, char **argv)
 #include <string.h>
 #include <winsock.h>
 #include <MYSQL/mysql.h>
+#include <time.h>
 
 int SignIn(){
 
@@ -634,6 +635,137 @@ void listCocktails(int id){
 
 }
 
+void game(){
+
+    int choice;
+    char **tab_id_game;
+    char query[255];
+    MYSQL_RES *result = NULL;
+    MYSQL_ROW row;
+    int count_row=0;
+    unsigned int i;
+    unsigned int y;
+    unsigned int number;
+    char txt_number[5];
+    char question[500];
+    int id_used[15];
+    int check=0;
+
+    MYSQL mysql;
+    mysql_init(&mysql);
+    mysql_options(&mysql,MYSQL_READ_DEFAULT_GROUP,"option");
+
+    srand(time(NULL));
+
+    if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0)){
+        printf("--GAME--\n");
+
+        do{
+            printf("1: Start a game\n2: Return to the menu\n");
+            scanf("%d",&choice);
+
+            if(choice==1){
+                        count_row=0;
+                        strcpy(query,"SELECT id FROM game");
+                        mysql_query(&mysql,query);
+
+                        result = mysql_use_result(&mysql);
+                        while((row = mysql_fetch_row(result))){
+                            count_row++;
+                        }
+
+                        printf("---check---\n");
+
+                        //printf("row: %d", count_row);
+
+                        tab_id_game=malloc(sizeof(char)*count_row);
+                        if(tab_id_game!=NULL){
+
+                            for(i=0;i<count_row;i++){
+                                tab_id_game[i]=malloc(sizeof(char*)*11);
+                            }
+                        }
+
+                        mysql_query(&mysql,query);
+
+                        i=0;
+                        result = mysql_use_result(&mysql);
+                        while((row = mysql_fetch_row(result))){
+                           strcpy(tab_id_game[i],row[0]);
+                           i++;
+
+                        }
+
+                        for(i=0;i<15;i++){
+
+
+                            do{
+                                check=1;
+                                number=rand()%16;
+                                //printf("#%d#\n",number);
+                                if(i!=0){
+                                    for(y=0;y<i;y++){
+                                        if(id_used[y]==number){
+                                            check=0;
+                                        }
+                                    }
+
+                                    if(check==1){
+                                        id_used[i]=number;
+                                    }
+
+                                }else{
+                                    id_used[i]=number;
+                                    check=1;
+                                }
+
+                            }while(check!=1);
+
+                            strcpy(txt_number,tab_id_game[number]);
+                            //printf("-%s-\n",txt_number);
+                            strcpy(query,"SELECT question FROM game WHERE id='");
+                            strcat(query,txt_number);
+                            strcat(query,"'");
+
+                            //printf("|%s|\n",query);
+
+                            mysql_query(&mysql,query);
+                            result = mysql_use_result(&mysql);
+                            while((row = mysql_fetch_row(result))){
+
+                                strcpy(question,row[0]);
+                            }
+                            //printf("Check");
+                            do{
+                                printf("%d: %s\n",i+1,question);
+                                printf("1: Next question\n");
+
+                                scanf("%d",&choice);
+                            }while(choice!=1);
+
+                            choice=0;
+                        }
+
+
+
+
+
+                        free(tab_id_game);
+
+
+            }
+        }while(choice!=2);
+
+        mysql_close(&mysql);
+
+    }else{ //////////
+
+        printf("ERROR: An error occurred while connecting to the DB!");
+
+    }
+
+}
+
 
 
 int main(int argc, char **argv){
@@ -657,11 +789,15 @@ int main(int argc, char **argv){
 
 
     do{
-        printf("--MENU--\n1: Cocktails\n4:EXIT\n");
+        printf("--MENU--\n1: Cocktails\n3:Game\n4:EXIT\n");
         scanf("%d",&choice);
 
         if(choice==1){
             cocktails(id);
+        }
+
+        if(choice==3){
+            game();
         }
 
     }while(choice!=4);
