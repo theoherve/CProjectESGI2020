@@ -63,147 +63,53 @@ int main(int argc, char **argv)
     return 1;
 } */
 
-/*//test code Curl
 #include <stdio.h>
 #include <stdlib.h>
 #include <curl.h>
 
-int main(void){
-  CURL *curl;
-  CURLcode res;
-
-  curl = curl_easy_init();
-  if(curl) {
-    curl_easy_setopt(curl, CURLOPT_URL, "https://example.com");
-    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-
-    res = curl_easy_perform(curl);
-    if(res != CURLE_OK)
-      fprintf(stderr, "curl_easy_perform() failed: %s\n",
-              curl_easy_strerror(res));
-
-    curl_easy_cleanup(curl);
-  }
-  return 0;
-
-} */
-
-/*//test code mysql
-#include <stdio.h>
-#include <stdlib.h>
-#include <mysql/mysql.h>
-
-int main(int argc, char **argv){
-
-    MYSQL *con = mysql_init (NULL);
-
-    if(con == NULL){
-        fprintf(stderr, "%s\n", mysql_error(con));
-        exit(1);
-    }
-
-    printf("\ncoucou");
-    if(mysql_real_connect(con, "localhost", "root", "root", "test", 0, NULL, 0) == NULL){
-        fprintf(stderr, "%s\n", mysql_error(con));
-        mysql_close(con);
-        exit(1);
-    }
-    printf("\ncoucou2");
-    if(mysql_query(con, "CREATE DATABASE theo")){
-        fprintf(stderr, "%s\n", mysql_error(con));
-        mysql_close(con);
-        exit(1);
-    }
-    printf("\ncoucou3");
-    mysql_close(con);
-    exit(0);
-}*/
-
-
-/*#include <stdio.h>
-#include <stdlib.h>
-#include <mysql/mysql.h>
-
-int main(int argc, char **argv)
-{
-  MYSQL *con = mysql_init(NULL);
-
-  if (con == NULL){
-      fprintf(stderr, "%s\n", mysql_error(con));
-      exit(1);
-  }
-
-  if (mysql_real_connect(con, "localhost", "root", "root", NULL, 0, NULL, 0) == NULL){
-      fprintf(stderr, "%s\n", mysql_error(con));
-      mysql_close(con);
-      exit(1);
-  }
-
-  if (mysql_query(con, "CREATE DATABASE testdb")){
-      fprintf(stderr, "%s\n", mysql_error(con));
-      mysql_close(con);
-      exit(1);
-  }
-
-  mysql_close(con);
-  exit(0);
-}*/
-
-//start real code
-#include <stdio.h>
-#include <stdlib.h>
-#include <curl.h>
-
-int main(int argc, char **argv){
+void getApiViaCurl(FILE *fp){
 
     CURL *curl;
-    FILE *fp;
     int result;
     char errbuf[CURL_ERROR_SIZE];
 
-    //fp = fopen(argv[2], "wb");
     fp = fopen("testCurlApiExport/script1.json", "wb");
 
     curl = curl_easy_init(); //initialize CURL fonction
     if(curl){
 
         //curl_easy_setopt(curl, CURLOPT_URL, argv[1]);
-
-        //curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, callback_func); //marche pas
-
         curl_easy_setopt(curl, CURLOPT_URL, "https://opendata.paris.fr/explore/dataset/etalages-et-terrasses/download/?format=json&timezone=Europe/Berlin&lang=fr"); //CURLOPT_ULR allow us to enter the url of the file we want to dl
-        //curl_easy_setopt(curl, CURLOPT_URL, "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Nusfjord_road%2C_2010_09.jpg/1280px-Nusfjord_road%2C2010_09.jpg");
-
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp); //alow to write on the file we dl
-
         curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1L);
-
         curl_easy_setopt(curl, CURLOPT_ERRORBUFFER, errbuf);
         errbuf[0] = 0;
-
         curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
 
         result = curl_easy_perform(curl); //return if the dl was successful (might take few seconds)
 
-        /*if(result != CURLE_OK){
-            fprintf(stderr, "curl_easy_perform() failed: %s\n",
-                curl_easy_strerror(result));
-        }else{
-            printf("Download successful !\n");
-        }*/
-
         if(result != CURLE_OK) {
             size_t len = strlen(errbuf);
             fprintf(stderr, "\nlibcurl: (%d) ", result);
-            if(len)
+            if(len){
                 fprintf(stderr, "%s%s", errbuf, ((errbuf[len - 1] != '\n') ? "\n" : ""));
-            else
+            }else{
                 fprintf(stderr, "%s\n", curl_easy_strerror(result));
+                printf("Download successful !\n");
             }
+        }
 
         fclose(fp);
         curl_easy_cleanup(curl);
     }
+
+}
+
+int main(int argc, char **argv){
+
+    FILE *fp;
+
+    getApiViaCurl(fp);
 
     return 0;
 
