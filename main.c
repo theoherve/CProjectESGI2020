@@ -105,11 +105,30 @@ void getApiViaCurl(FILE *fp){
 
 }
 
+void compareFile(FILE *fp){
+
+    FILE *fp2;
+
+    fp = fopen("testCurlApiExport/script1.json", "rb");     //open the existing file
+    if(fp != NULL){
+        newfile = malloc(sizeof(char)*strlen(fileName)+1);
+    }
+
+    fp2 = fopen("testCurlApiExport/script1.json", "rb");    //open the new downloaded file
+    if(fp2 != NULL){
+        fseek(fp, 0, SEEK_END);
+        position = ftell(fp)
+    }
+
+}
+
 int main(int argc, char **argv){
 
     FILE *fp;
 
     getApiViaCurl(fp);
+
+    //compareFile(fp);
 
     return 0;
 
