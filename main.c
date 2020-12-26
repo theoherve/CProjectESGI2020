@@ -101,11 +101,11 @@ void getApiViaCurl(FILE *fp){
             fprintf(stderr, "\nlibcurl: (%d) ", result);
             if(len){
                 fprintf(stderr, "%s%s", errbuf, ((errbuf[len - 1] != '\n') ? "\n" : ""));
-            }else{
+            }
+        }else{
                 fprintf(stderr, "%s\n", curl_easy_strerror(result));
                 printf("Download successful !\n");
             }
-        }
 
         fclose(fp);
         curl_easy_cleanup(curl);
@@ -163,7 +163,7 @@ void readFile(FILE *fp){
 	data = malloc(sizeof(char) * 255);
 
 	// Ouvre le fichier "script1.json" en lecture bit
-	fp = fopen("script1.json", "rb");
+	fp = fopen("testCurlApiExport/script1.json", "rb");
 
 	while(fread(&buffer, sizeof(char), 1, fp)){// Lit un caractère qui sera stocké dans un buffer puis fait avancer le curseur de lecture
 		if(buffer == '"'){ // => Début de construction du mot clé
@@ -190,7 +190,7 @@ void readFile(FILE *fp){
 
 
 /*
-	Le programme a pour but d'afficher les différentes champs d'informations de chaque restaurant
+	Le programme a pour but d'afficher les différents champs d'informations de chaques restaurants
 	écrit dans un fichier.
 */
 int main(int argc, char **argv){
