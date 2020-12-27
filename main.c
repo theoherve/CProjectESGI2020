@@ -173,8 +173,8 @@ void readFile(FILE *fp){
 				i++;
 			}
 			key[i] = '\0';
-
-			if(!strcmp(key, "geo_point_2d") || !strcmp(key, "date_periode") || !strcmp(key, "lieu1") || !strcmp(key, "libelle_type")) // Vérifie si le mot key est identique à un des trois mots clés choisis
+			if(!strcmp(key, "geo_point_2d") || !strcmp(key, "date_periode") || !strcmp(key, "lieu1") || !strcmp(key, "libelle_type")){
+              if(!strcmp(key, "geo_point_2d") || !strcmp(key, "date_periode") || !strcmp(key, "lieu1") || !strcmp(key, "libelle_type")) // Vérifie si le mot key est identique à un des trois mots clés choisis
 				data = getData(fp, data); // Appel de la fonction getData
 
 			printf("%s = %s\n", key, data);
@@ -183,6 +183,7 @@ void readFile(FILE *fp){
 								// Permet de faire un saut de
 			if(iData % 4 == 0)	// ligne tout les 4 champs lus
 				printf("\n");	// (juste pour la lisibilité dans la console)
+			}
 		}
 	}
 
