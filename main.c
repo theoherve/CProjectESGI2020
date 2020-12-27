@@ -79,7 +79,7 @@ void getApiViaCurl(FILE *fp){
     int result;
     char errbuf[CURL_ERROR_SIZE];
 
-    fp = fopen("testCurlApiExport/script1.json", "wb");
+    fp = fopen("exportFolder/DownloadedAPI.json", "wb");
 
     curl = curl_easy_init(); //initialize CURL fonction
     if(curl){
@@ -134,12 +134,12 @@ char *getData(FILE *fp, char *data){
 
     FILE *fp2;
 
-    fp = fopen("testCurlApiExport/script1.json", "rb");     //open the existing file
+    fp = fopen("exportFolder/DownloadedAPI.json", "rb");     //open the existing file
     if(fp != NULL){
         newfile = malloc(sizeof(char)*strlen(fileName)+1);
     }
 
-    fp2 = fopen("testCurlApiExport/script1.json", "rb");    //open the new downloaded file
+    fp2 = fopen("exportFolder/DownloadedAPI.json", "rb");    //open the new downloaded file
     if(fp2 != NULL){
         fseek(fp, 0, SEEK_END);
         position = ftell(fp);
@@ -162,8 +162,8 @@ void readFile(FILE *fp){
 	key = malloc(sizeof(char) * 255);
 	data = malloc(sizeof(char) * 255);
 
-	// Ouvre le fichier "script1.json" en lecture bit
-	fp = fopen("testCurlApiExport/script1.json", "rb");
+	// Ouvre le fichier "DownloadedAPI.json" en lecture bit
+	fp = fopen("exportFolder/DownloadedAPI.json", "rb");
 
 	while(fread(&buffer, sizeof(char), 1, fp)){// Lit un caractère qui sera stocké dans un buffer puis fait avancer le curseur de lecture
 		if(buffer == '"'){ // => Début de construction du mot clé
@@ -181,7 +181,7 @@ void readFile(FILE *fp){
 
 			iData++;			//
 								// Permet de faire un saut de
-			if(iData % 3 == 0)	// ligne tout les 3 champs lus
+			if(iData % 4 == 0)	// ligne tout les 4 champs lus
 				printf("\n");	// (juste pour la lisibilité dans la console)
 		}
 	}
