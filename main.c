@@ -72,6 +72,7 @@ Display Paris's bars (retrieve Api information via Curl on a file, sort the info
 #include <stdlib.h>
 #include <string.h>
 #include <curl.h>
+#include <MYSQL/mysql.h>
 
 void getApiViaCurl(FILE *fp){
 
@@ -130,20 +131,35 @@ char *getData(FILE *fp, char *data){
 	}
 }
 
-void sendBDD(char *key, char *data){
+void sendBDD(MYSQL mysql, char *data_geo_point_2d, char *data_date_periode, char *data_lieu1, char *data_libelle_type){
+    char query[255];
 
+    if(strcmp(data_date_periode,"Toute l'ann\u00e9e"))
+        strcpy(data_date_periode,"Toute l\\'année");
 
-    if(!strcmp(key, "geo_point_2d")){
-
-
-
-    }else{
-        printf("no good key value");
-    }
-
+    strcpy(query,"INSERT INTO BAR (geo_point_2d, libelle_type, date_periode, lieu1) VALUES('");
+    strcat(query,data_geo_point_2d);
+    strcat(query,"','");
+    strcat(query,data_libelle_type);
+    strcat(query,"','");
+    strcat(query,data_date_periode);
+    strcat(query,"','");
+    strcat(query,data_lieu1);
+    strcat(query,"')");
+    mysql_query(&mysql,query);
+    printf("%s\n", query);
 }
 
 void readFile(FILE *fp){
+
+    MYSQL mysql;
+    mysql_init(&mysql);
+    mysql_options(&mysql,MYSQL_READ_DEFAULT_GROUP,"option");
+
+    char *data_geo_point_2d;
+    char *data_libelle_type;
+    char *data_date_periode;
+    char *data_lieu1;
 
     char buffer;
 	char *key;
@@ -156,32 +172,53 @@ void readFile(FILE *fp){
 	key = malloc(sizeof(char) * 255);
 	data = malloc(sizeof(char) * 255);
 
-	// Ouvre le fichier "DownloadedAPI.json" en lecture bit
-	fp = fopen("exportFolder/DownloadedAPI.json", "rb");
+	data_geo_point_2d = malloc(sizeof(char) * 255);
+    data_libelle_type = malloc(sizeof(char) * 255);
+    data_date_periode = malloc(sizeof(char) * 255);
+    data_lieu1 = malloc(sizeof(char) * 255);
+/*
+    data_geo_point_2d = NULL;
+    data_libelle_type = NULL;
+    data_date_periode = NULL;
+    data_lieu1 = NULL;*/
 
-	while(fread(&buffer, sizeof(char), 1, fp)){// Lit un caractère qui sera stocké dans un buffer puis fait avancer le curseur de lecture
-		if(buffer == '"'){ // => Début de construction du mot clé
-			i = 0;
-			while(fread(&buffer, sizeof(char), 1, fp) && buffer != '"'){ // => Continue la construction du mot clé tant que le buffer ne lit pas '"'
-				key[i] = buffer;
-				i++;
-			}
-			key[i] = '\0';
-			if(!strcmp(key, "geo_point_2d") || !strcmp(key, "date_periode") || !strcmp(key, "lieu1") || !strcmp(key, "libelle_type")){
-              if(!strcmp(key, "geo_point_2d") || !strcmp(key, "date_periode") || !strcmp(key, "lieu1") || !strcmp(key, "libelle_type")){ // Vérifie si le mot key est identique à un des trois mots clés choisis
-				data = getData(fp, data); // Appel de la fonction getData
-              }
+	if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0)){
 
-			printf("%s = %s\n", key, data);
+        // Ouvre le fichier "DownloadedAPI.json" en lecture bit
+        fp = fopen("exportFolder/DownloadedAPI.json", "rb");
 
-			sendBDD(key, data);
+        while(fread(&buffer, sizeof(char), 1, fp)){// Lit un caractère qui sera stocké dans un buffer puis fait avancer le curseur de lecture
+            if(buffer == '"'){ // => Début de construction du mot clé
+                i = 0;
+                while(fread(&buffer, sizeof(char), 1, fp) && buffer != '"'){ // => Continue la construction du mot clé tant que le buffer ne lit pas '"'
+                    key[i] = buffer;
+                    i++;
+                }
+                key[i] = '\0';
+                if(!strcmp(key, "geo_point_2d") || !strcmp(key, "date_periode") || !strcmp(key, "lieu1") || !strcmp(key, "libelle_type")){
+                  if(!strcmp(key, "geo_point_2d")){ // Vérifie si le mot key est identique à un des trois mots clés choisis
+                    data_geo_point_2d = getData(fp, data_geo_point_2d); // Appel de la fonction getData
+                  }else if(!strcmp(key, "date_periode")){
+                    data_date_periode = getData(fp, data_date_periode); // Appel de la fonction getData
+                  }else if(!strcmp(key, "lieu1")){
+                    data_lieu1 = getData(fp, data_lieu1); // Appel de la fonction getData
+                  }else if(!strcmp(key, "libelle_type")){
+                    data_libelle_type = getData(fp, data_libelle_type); // Appel de la fonction getData
+                  }
 
-			iData++;			//
-								// Permet de faire un saut de
-			if(iData % 4 == 0)	// ligne tout les 4 champs lus
-				printf("\n");	// (juste pour la lisibilité dans la console)
-			}
-		}
+                    iData++;			//
+                                        // Permet de faire un saut de
+                    if(iData % 4 == 0){	// ligne tout les 4 champs lus
+                        //printf("%s = %s\n", key, data);
+                        printf("\n");	// (juste pour la lisibilité dans la console)
+
+                        sendBDD(mysql, data_geo_point_2d, data_date_periode, data_lieu1, data_libelle_type);
+                    }
+                }
+            }
+        }
+	}else{
+        printf("\nERROR: An error occurred while connecting to the DB!\n\n");
 	}
 
 }
