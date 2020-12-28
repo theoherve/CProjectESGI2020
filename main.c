@@ -130,24 +130,18 @@ char *getData(FILE *fp, char *data){
 	}
 }
 
-/*void compareFile(FILE *fp){
+void sendBDD(char *key, char *data){
 
-    FILE *fp2;
 
-    fp = fopen("exportFolder/DownloadedAPI.json", "rb");     //open the existing file
-    if(fp != NULL){
-        newfile = malloc(sizeof(char)*strlen(fileName)+1);
+    if(!strcmp(key, "geo_point_2d")){
+
+
+
+    }else{
+        printf("no good key value");
     }
 
-    fp2 = fopen("exportFolder/DownloadedAPI.json", "rb");    //open the new downloaded file
-    if(fp2 != NULL){
-        fseek(fp, 0, SEEK_END);
-        position = ftell(fp);
-        fseek(fp, 0, SEEK_SET);
-
-    }
-
-}*/
+}
 
 void readFile(FILE *fp){
 
@@ -174,10 +168,13 @@ void readFile(FILE *fp){
 			}
 			key[i] = '\0';
 			if(!strcmp(key, "geo_point_2d") || !strcmp(key, "date_periode") || !strcmp(key, "lieu1") || !strcmp(key, "libelle_type")){
-              if(!strcmp(key, "geo_point_2d") || !strcmp(key, "date_periode") || !strcmp(key, "lieu1") || !strcmp(key, "libelle_type")) // Vérifie si le mot key est identique à un des trois mots clés choisis
+              if(!strcmp(key, "geo_point_2d") || !strcmp(key, "date_periode") || !strcmp(key, "lieu1") || !strcmp(key, "libelle_type")){ // Vérifie si le mot key est identique à un des trois mots clés choisis
 				data = getData(fp, data); // Appel de la fonction getData
+              }
 
 			printf("%s = %s\n", key, data);
+
+			sendBDD(key, data);
 
 			iData++;			//
 								// Permet de faire un saut de
@@ -199,8 +196,6 @@ int main(int argc, char **argv){
     FILE *fp;
 
     getApiViaCurl(fp);
-
-    //compareFile(fp);
 
     readFile(fp);
 
