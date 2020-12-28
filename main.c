@@ -245,6 +245,244 @@ int SignIn(){
 
 }
 
+int SignIn_SDL(){
+
+    char pseudo[50];
+    char password[100];
+    char query[255];
+    int check=1;
+    MYSQL_RES *result=NULL;
+    MYSQL_ROW row;
+    int id;
+
+    //SDL
+    int check_input=0;
+    char hide_password[100];
+
+
+    MYSQL mysql;
+    mysql_init(&mysql);
+    mysql_options(&mysql,MYSQL_READ_DEFAULT_GROUP,"option");
+
+
+    if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0)){
+
+        //printf("\nSign in:\n");
+
+        do{
+           check=1;
+           check_input=0;
+           strcpy(pseudo,"");
+           strcpy(password,"");
+           strcpy(hide_password,"");
+           /*printf("Enter your pseudo:\n\n");
+           fflush(stdin);
+           fgets(pseudo,50,stdin);
+           if(pseudo[strlen(pseudo)-1]=='\n'){
+               pseudo[strlen(pseudo)-1]='\0';
+           }*/
+
+           do{
+
+                SDL_WaitEvent(&event);
+                if(event.type == SDL_TEXTINPUT){
+                    strcat(pseudo,event.text.text);
+                }
+
+                if(event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_BACKSPACE){
+                    pseudo[strlen(pseudo)-1]='\0';
+                }
+
+                if(event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_RETURN){
+                    check_input=1;
+                }
+
+                SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
+                SDL_RenderClear(renderer);
+                SDL_RenderPresent(renderer);
+
+                font=TTF_OpenFont("poppins-Regular.ttf", 35);
+                text=TTF_RenderText_Blended(font,"Sign In",font_color);
+                position.x=0;
+                position.y=0;
+                texture= SDL_CreateTextureFromSurface(renderer,text);
+                SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                position.x=20;
+                position.y=50;
+                SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                font=TTF_OpenFont("poppins-Regular.ttf", 20);
+                text=TTF_RenderText_Blended(font,"Enter your pseudo:",font_color);
+                position.x=0;
+                position.y=0;
+                texture= SDL_CreateTextureFromSurface(renderer,text);
+                SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                position.x=15;
+                position.y=130;
+                SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                text=TTF_RenderText_Blended(font,pseudo,font_color);
+                position.x=0;
+                position.y=0;
+                texture= SDL_CreateTextureFromSurface(renderer,text);
+                SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                position.x=15;
+                position.y=150;
+                SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                SDL_RenderPresent(renderer);
+
+            }while(check_input!=1);
+
+            check_input=0;
+
+            /*printf("Enter your password:\n\n");
+            fflush(stdin);
+            fgets(password,100,stdin);
+            if(password[strlen(password)-1]=='\n'){
+                password[strlen(password)-1]='\0';
+            }*/
+
+            do{
+
+                SDL_WaitEvent(&event);
+                if(event.type == SDL_TEXTINPUT){
+                    strcat(password,event.text.text);
+                    strcat(hide_password,"*");
+                }
+
+                if(event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_BACKSPACE){
+                    password[strlen(password)-1]='\0';
+                    hide_password[strlen(hide_password)-1]='\0';
+                }
+
+                if(event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_RETURN){
+                    check_input=1;
+                }
+
+                SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
+                SDL_RenderClear(renderer);
+                SDL_RenderPresent(renderer);
+
+                font=TTF_OpenFont("poppins-Regular.ttf", 35);
+                text=TTF_RenderText_Blended(font,"Sign In",font_color);
+                position.x=0;
+                position.y=0;
+                texture= SDL_CreateTextureFromSurface(renderer,text);
+                SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                position.x=20;
+                position.y=50;
+                SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                font=TTF_OpenFont("poppins-Regular.ttf", 20);
+                text=TTF_RenderText_Blended(font,"Enter your password:",font_color);
+                position.x=0;
+                position.y=0;
+                texture= SDL_CreateTextureFromSurface(renderer,text);
+                SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                position.x=15;
+                position.y=130;
+                SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                text=TTF_RenderText_Blended(font,hide_password,font_color);
+                position.x=0;
+                position.y=0;
+                texture= SDL_CreateTextureFromSurface(renderer,text);
+                SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                position.x=15;
+                position.y=150;
+                SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                SDL_RenderPresent(renderer);
+
+            }while(check_input!=1);
+
+            strcpy(query,"SELECT id,password FROM USER WHERE pseudo='");
+            strcat(query,pseudo);
+            strcat(query,"'");
+
+            mysql_query(&mysql,query);
+            result = mysql_store_result(&mysql);
+            row = mysql_fetch_row(result);
+
+            if(!row){
+                //printf("Incorrect pseudo");
+                SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
+                SDL_RenderClear(renderer);
+                SDL_RenderPresent(renderer);
+
+                font=TTF_OpenFont("poppins-Regular.ttf", 35);
+                text=TTF_RenderText_Blended(font,"Sign In",font_color);
+                position.x=0;
+                position.y=0;
+                texture= SDL_CreateTextureFromSurface(renderer,text);
+                SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                position.x=20;
+                position.y=50;
+                SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                font=TTF_OpenFont("poppins-Regular.ttf", 20);
+                text=TTF_RenderText_Blended(font,"Incorect pseudo",font_color);
+                position.x=0;
+                position.y=0;
+                texture= SDL_CreateTextureFromSurface(renderer,text);
+                SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                position.x=15;
+                position.y=130;
+                SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                SDL_RenderPresent(renderer);
+                SDL_Delay(3000);
+
+                check=0;
+            }
+
+            if(check!=0){
+                if(strstr(password,row[1])==NULL){
+                    //printf("Incorrect password");
+
+                    SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
+                    SDL_RenderClear(renderer);
+                    SDL_RenderPresent(renderer);
+
+                    font=TTF_OpenFont("poppins-Regular.ttf", 35);
+                    text=TTF_RenderText_Blended(font,"Sign In",font_color);
+                    position.x=0;
+                    position.y=0;
+                    texture= SDL_CreateTextureFromSurface(renderer,text);
+                    SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                    position.x=20;
+                    position.y=50;
+                    SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                    font=TTF_OpenFont("poppins-Regular.ttf", 20);
+                    text=TTF_RenderText_Blended(font,"Incorect password",font_color);
+                    position.x=0;
+                    position.y=0;
+                    texture= SDL_CreateTextureFromSurface(renderer,text);
+                    SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                    position.x=15;
+                    position.y=130;
+                    SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                    SDL_RenderPresent(renderer);
+                    SDL_Delay(3000);
+                    check=0;
+                }
+            }
+
+        }while(check!=1);
+
+        printf("You are connected");
+        sscanf(row[0],"%d",&id);
+
+    }else{
+        printf("ERROR: An error occurred while connecting to the DB!");
+    }
+    return id;
+
+}
+
 int SignUp(){
 
     char pseudo[50];
@@ -257,6 +495,9 @@ int SignUp(){
     MYSQL_RES *result=NULL;
     MYSQL_ROW row;
     int id;
+    //SDL
+    int check_input=0;
+    char hide_password[100];
 
     MYSQL mysql;
     mysql_init(&mysql);
@@ -268,12 +509,66 @@ int SignUp(){
 
         do{
             check=1;
-            printf("Enter your pseudo:\n\n");
+            check_input=0;
+            strcpy(pseudo,"");
+            /*printf("Enter your pseudo:\n\n");
             fflush(stdin);
             fgets(pseudo,50,stdin);
             if(pseudo[strlen(pseudo)-1]=='\n'){
                 pseudo[strlen(pseudo)-1]='\0';
-            }
+            }*/
+
+            do{
+
+                SDL_WaitEvent(&event);
+                if(event.type == SDL_TEXTINPUT){
+                    strcat(pseudo,event.text.text);
+                }
+
+                if(event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_BACKSPACE){
+                    pseudo[strlen(pseudo)-1]='\0';
+                }
+
+                if(event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_RETURN){
+                    check_input=1;
+                }
+
+                SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
+                SDL_RenderClear(renderer);
+                SDL_RenderPresent(renderer);
+
+                font=TTF_OpenFont("poppins-Regular.ttf", 35);
+                text=TTF_RenderText_Blended(font,"Sign Up",font_color);
+                position.x=0;
+                position.y=0;
+                texture= SDL_CreateTextureFromSurface(renderer,text);
+                SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                position.x=20;
+                position.y=50;
+                SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                font=TTF_OpenFont("poppins-Regular.ttf", 20);
+                text=TTF_RenderText_Blended(font,"Enter your pseudo:",font_color);
+                position.x=0;
+                position.y=0;
+                texture= SDL_CreateTextureFromSurface(renderer,text);
+                SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                position.x=15;
+                position.y=130;
+                SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                text=TTF_RenderText_Blended(font,pseudo,font_color);
+                position.x=0;
+                position.y=0;
+                texture= SDL_CreateTextureFromSurface(renderer,text);
+                SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                position.x=15;
+                position.y=150;
+                SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                SDL_RenderPresent(renderer);
+
+            }while(check_input!=1);
 
             strcpy(query,"SELECT id FROM USER WHERE pseudo='");
             strcat(query,pseudo);
@@ -284,7 +579,33 @@ int SignUp(){
             row = mysql_fetch_row(result);
 
             if(row){
-                printf("\nPseudo déjà utilisé\n");
+                SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
+                SDL_RenderClear(renderer);
+                SDL_RenderPresent(renderer);
+
+                font=TTF_OpenFont("poppins-Regular.ttf", 35);
+                text=TTF_RenderText_Blended(font,"Sign Up",font_color);
+                position.x=0;
+                position.y=0;
+                texture= SDL_CreateTextureFromSurface(renderer,text);
+                SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                position.x=20;
+                position.y=50;
+                SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                font=TTF_OpenFont("poppins-Regular.ttf", 20);
+                text=TTF_RenderText_Blended(font,"Pseudo already used",font_color);
+                position.x=0;
+                position.y=0;
+                texture= SDL_CreateTextureFromSurface(renderer,text);
+                SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                position.x=15;
+                position.y=130;
+                SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                SDL_RenderPresent(renderer);
+                SDL_Delay(3000);
+
                 check=0;
             }
 
@@ -294,20 +615,124 @@ int SignUp(){
 
         do{
             check=1;
-            printf("Enter your mail:\n\n");
+            check_input=0;
+            strcpy(mail,"");
+            /*printf("Enter your mail:\n\n");
             fflush(stdin);
             fgets(mail,100,stdin);
             if(mail[strlen(mail)-1]=='\n'){
                 mail[strlen(mail)-1]='\0';
-            }
+            }*/
+
+            do{
+
+                SDL_WaitEvent(&event);
+                if(event.type == SDL_TEXTINPUT){
+                    strcat(mail,event.text.text);
+                }
+
+                if(event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_BACKSPACE){
+                    mail[strlen(mail)-1]='\0';
+                }
+
+                if(event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_RETURN){
+                    check_input=1;
+                }
+
+                SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
+                SDL_RenderClear(renderer);
+                SDL_RenderPresent(renderer);
+
+                font=TTF_OpenFont("poppins-Regular.ttf", 35);
+                text=TTF_RenderText_Blended(font,"Sign Up",font_color);
+                position.x=0;
+                position.y=0;
+                texture= SDL_CreateTextureFromSurface(renderer,text);
+                SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                position.x=20;
+                position.y=50;
+                SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                font=TTF_OpenFont("poppins-Regular.ttf", 20);
+                text=TTF_RenderText_Blended(font,"Enter your mail:",font_color);
+                position.x=0;
+                position.y=0;
+                texture= SDL_CreateTextureFromSurface(renderer,text);
+                SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                position.x=15;
+                position.y=130;
+                SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                text=TTF_RenderText_Blended(font,mail,font_color);
+                position.x=0;
+                position.y=0;
+                texture= SDL_CreateTextureFromSurface(renderer,text);
+                SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                position.x=15;
+                position.y=150;
+                SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                SDL_RenderPresent(renderer);
+
+            }while(check_input!=1);
 
             if(strchr(mail,'@')==NULL){
-                printf("\nThe mail forma is incorect\n");
+                SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
+                SDL_RenderClear(renderer);
+                SDL_RenderPresent(renderer);
+
+                font=TTF_OpenFont("poppins-Regular.ttf", 35);
+                text=TTF_RenderText_Blended(font,"Sign Up",font_color);
+                position.x=0;
+                position.y=0;
+                texture= SDL_CreateTextureFromSurface(renderer,text);
+                SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                position.x=20;
+                position.y=50;
+                SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                font=TTF_OpenFont("poppins-Regular.ttf", 20);
+                text=TTF_RenderText_Blended(font,"The mail forma is incorect",font_color);
+                position.x=0;
+                position.y=0;
+                texture= SDL_CreateTextureFromSurface(renderer,text);
+                SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                position.x=15;
+                position.y=130;
+                SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                SDL_RenderPresent(renderer);
+                SDL_Delay(3000);
                 check=0;
             }
 
             if(strchr(mail,'.')==NULL && check!=0){
-                printf("\nThe mail forma is incorect\n");
+                SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
+                SDL_RenderClear(renderer);
+                SDL_RenderPresent(renderer);
+
+                font=TTF_OpenFont("poppins-Regular.ttf", 35);
+                text=TTF_RenderText_Blended(font,"Sign Up",font_color);
+                position.x=0;
+                position.y=0;
+                texture= SDL_CreateTextureFromSurface(renderer,text);
+                SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                position.x=20;
+                position.y=50;
+                SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                font=TTF_OpenFont("poppins-Regular.ttf", 20);
+                text=TTF_RenderText_Blended(font,"The mail forma is incorect",font_color);
+                position.x=0;
+                position.y=0;
+                texture= SDL_CreateTextureFromSurface(renderer,text);
+                SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                position.x=15;
+                position.y=130;
+                SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                SDL_RenderPresent(renderer);
+                SDL_Delay(3000);
                 check=0;
             }
 
@@ -320,7 +745,33 @@ int SignUp(){
             row = mysql_fetch_row(result);
 
             if(row){
-                printf("\nMail already used\n");
+                SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
+                SDL_RenderClear(renderer);
+                SDL_RenderPresent(renderer);
+
+                font=TTF_OpenFont("poppins-Regular.ttf", 35);
+                text=TTF_RenderText_Blended(font,"Sign Up",font_color);
+                position.x=0;
+                position.y=0;
+                texture= SDL_CreateTextureFromSurface(renderer,text);
+                SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                position.x=20;
+                position.y=50;
+                SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                font=TTF_OpenFont("poppins-Regular.ttf", 20);
+                text=TTF_RenderText_Blended(font,"Mail already used",font_color);
+                position.x=0;
+                position.y=0;
+                texture= SDL_CreateTextureFromSurface(renderer,text);
+                SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                position.x=15;
+                position.y=130;
+                SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                SDL_RenderPresent(renderer);
+                SDL_Delay(3000);
+
                 check=0;
             }
 
@@ -328,34 +779,225 @@ int SignUp(){
 
         }while(check!=1);
 
-            printf("Enter your city:\n\n");
+            /*printf("Enter your city:\n\n");
             fflush(stdin);
             fgets(city,100,stdin);
             if(city[strlen(city)-1]=='\n'){
                 city[strlen(city)-1]='\0';
+            }*/
+
+        check_input=0;
+
+        do{
+
+            SDL_WaitEvent(&event);
+            if(event.type == SDL_TEXTINPUT){
+                strcat(city,event.text.text);
             }
+
+            if(event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_BACKSPACE){
+                city[strlen(city)-1]='\0';
+            }
+
+            if(event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_RETURN){
+                check_input=1;
+            }
+
+            SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
+            SDL_RenderClear(renderer);
+            SDL_RenderPresent(renderer);
+
+            font=TTF_OpenFont("poppins-Regular.ttf", 35);
+            text=TTF_RenderText_Blended(font,"Sign Up",font_color);
+            position.x=0;
+            position.y=0;
+            texture= SDL_CreateTextureFromSurface(renderer,text);
+            SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+            position.x=20;
+            position.y=50;
+            SDL_RenderCopy(renderer, texture, NULL, &position);
+
+            font=TTF_OpenFont("poppins-Regular.ttf", 20);
+            text=TTF_RenderText_Blended(font,"Enter your City:",font_color);
+            position.x=0;
+            position.y=0;
+            texture= SDL_CreateTextureFromSurface(renderer,text);
+            SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+            position.x=15;
+            position.y=130;
+            SDL_RenderCopy(renderer, texture, NULL, &position);
+
+            text=TTF_RenderText_Blended(font,city,font_color);
+            position.x=0;
+            position.y=0;
+            texture= SDL_CreateTextureFromSurface(renderer,text);
+            SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+            position.x=15;
+            position.y=150;
+            SDL_RenderCopy(renderer, texture, NULL, &position);
+
+            SDL_RenderPresent(renderer);
+
+        }while(check_input!=1);
 
 
         do{
             check=1;
-            printf("Enter your password:\n\n");
+            check_input=0;
+            /*printf("Enter your password:\n\n");
             fflush(stdin);
             fgets(password,100,stdin);
             if(password[strlen(password)-1]=='\n'){
                 password[strlen(password)-1]='\0';
-            }
+            }*/
+
+            do{
+
+                SDL_WaitEvent(&event);
+                if(event.type == SDL_TEXTINPUT){
+                    strcat(password,event.text.text);
+                    strcat(hide_password,"*");
+                }
+
+                if(event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_BACKSPACE){
+                    password[strlen(password)-1]='\0';
+                    hide_password[strlen(hide_password)-1]='\0';
+                }
+
+                if(event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_RETURN){
+                    check_input=1;
+                }
+
+                SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
+                SDL_RenderClear(renderer);
+                SDL_RenderPresent(renderer);
+
+                font=TTF_OpenFont("poppins-Regular.ttf", 35);
+                text=TTF_RenderText_Blended(font,"Sign Up",font_color);
+                position.x=0;
+                position.y=0;
+                texture= SDL_CreateTextureFromSurface(renderer,text);
+                SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                position.x=20;
+                position.y=50;
+                SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                font=TTF_OpenFont("poppins-Regular.ttf", 20);
+                text=TTF_RenderText_Blended(font,"Enter your password:",font_color);
+                position.x=0;
+                position.y=0;
+                texture= SDL_CreateTextureFromSurface(renderer,text);
+                SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                position.x=15;
+                position.y=130;
+                SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                text=TTF_RenderText_Blended(font,hide_password,font_color);
+                position.x=0;
+                position.y=0;
+                texture= SDL_CreateTextureFromSurface(renderer,text);
+                SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                position.x=15;
+                position.y=150;
+                SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                SDL_RenderPresent(renderer);
+
+            }while(check_input!=1);
+
             if(strlen(password)<8){
-                printf("Password to short\n");
+                //printf("Password to short\n");
+                SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
+                SDL_RenderClear(renderer);
+                SDL_RenderPresent(renderer);
+
+                font=TTF_OpenFont("poppins-Regular.ttf", 35);
+                text=TTF_RenderText_Blended(font,"Sign Up",font_color);
+                position.x=0;
+                position.y=0;
+                texture= SDL_CreateTextureFromSurface(renderer,text);
+                SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                position.x=20;
+                position.y=50;
+                SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                font=TTF_OpenFont("poppins-Regular.ttf", 20);
+                text=TTF_RenderText_Blended(font,"Password to short",font_color);
+                position.x=0;
+                position.y=0;
+                texture= SDL_CreateTextureFromSurface(renderer,text);
+                SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                position.x=15;
+                position.y=130;
+                SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                SDL_RenderPresent(renderer);
+                SDL_Delay(3000);
+
                 check=0;
             }
 
             if(password[0]<65 || password[0]>90 && check!=0 ){
-                printf("The first letter must be a capital letter\n");
+                //printf("The first letter must be a capital letter\n");
+                SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
+                SDL_RenderClear(renderer);
+                SDL_RenderPresent(renderer);
+
+                font=TTF_OpenFont("poppins-Regular.ttf", 35);
+                text=TTF_RenderText_Blended(font,"Sign Up",font_color);
+                position.x=0;
+                position.y=0;
+                texture= SDL_CreateTextureFromSurface(renderer,text);
+                SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                position.x=20;
+                position.y=50;
+                SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                font=TTF_OpenFont("poppins-Regular.ttf", 20);
+                text=TTF_RenderText_Blended(font,"The first letter must be a capital letter",font_color);
+                position.x=0;
+                position.y=0;
+                texture= SDL_CreateTextureFromSurface(renderer,text);
+                SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                position.x=15;
+                position.y=130;
+                SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                SDL_RenderPresent(renderer);
+                SDL_Delay(3000);
+
                 check=0;
             }
 
             if(strpbrk(password,"0123456789")==NULL && check!=0){
-                printf("Your password must contain a number\n");
+                //printf("Your password must contain a number\n");
+                SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
+                SDL_RenderClear(renderer);
+                SDL_RenderPresent(renderer);
+
+                font=TTF_OpenFont("poppins-Regular.ttf", 35);
+                text=TTF_RenderText_Blended(font,"Sign Up",font_color);
+                position.x=0;
+                position.y=0;
+                texture= SDL_CreateTextureFromSurface(renderer,text);
+                SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                position.x=20;
+                position.y=50;
+                SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                font=TTF_OpenFont("poppins-Regular.ttf", 20);
+                text=TTF_RenderText_Blended(font,"Your password must contain a number",font_color);
+                position.x=0;
+                position.y=0;
+                texture= SDL_CreateTextureFromSurface(renderer,text);
+                SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                position.x=15;
+                position.y=130;
+                SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                SDL_RenderPresent(renderer);
+                SDL_Delay(3000);
+
                 check=0;
             }
 
@@ -364,15 +1006,99 @@ int SignUp(){
 
         do{
             check=1;
-           printf("Confirm your password:\n\n");
+            check_input=0;
+            strcpy(confirm_password,"");
+            strcpy(hide_password,"");
+           /*printf("Confirm your password:\n\n");
            fflush(stdin);
            fgets(confirm_password,100,stdin);
            if(confirm_password[strlen(confirm_password)-1]=='\n'){
               confirm_password[strlen(confirm_password)-1]='\0';
-           }
+           }*/
+
+           do{
+
+                SDL_WaitEvent(&event);
+                if(event.type == SDL_TEXTINPUT){
+                    strcat(confirm_password,event.text.text);
+                    strcat(hide_password,"*");
+                }
+
+                if(event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_BACKSPACE){
+                    confirm_password[strlen(confirm_password)-1]='\0';
+                    hide_password[strlen(hide_password)-1]='\0';
+                }
+
+                if(event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_RETURN){
+                    check_input=1;
+                }
+
+                SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
+                SDL_RenderClear(renderer);
+                SDL_RenderPresent(renderer);
+
+                font=TTF_OpenFont("poppins-Regular.ttf", 35);
+                text=TTF_RenderText_Blended(font,"Sign Up",font_color);
+                position.x=0;
+                position.y=0;
+                texture= SDL_CreateTextureFromSurface(renderer,text);
+                SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                position.x=20;
+                position.y=50;
+                SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                font=TTF_OpenFont("poppins-Regular.ttf", 20);
+                text=TTF_RenderText_Blended(font,"Confirm your password:",font_color);
+                position.x=0;
+                position.y=0;
+                texture= SDL_CreateTextureFromSurface(renderer,text);
+                SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                position.x=15;
+                position.y=130;
+                SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                text=TTF_RenderText_Blended(font,hide_password,font_color);
+                position.x=0;
+                position.y=0;
+                texture= SDL_CreateTextureFromSurface(renderer,text);
+                SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                position.x=15;
+                position.y=150;
+                SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                SDL_RenderPresent(renderer);
+
+            }while(check_input!=1);
 
            if(strstr(password,confirm_password)==NULL){
-                printf("Both passwords must match\n");
+                //printf("Both passwords must match\n");
+                SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
+                SDL_RenderClear(renderer);
+                SDL_RenderPresent(renderer);
+
+                font=TTF_OpenFont("poppins-Regular.ttf", 35);
+                text=TTF_RenderText_Blended(font,"Sign Up",font_color);
+                position.x=0;
+                position.y=0;
+                texture= SDL_CreateTextureFromSurface(renderer,text);
+                SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                position.x=20;
+                position.y=50;
+                SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                font=TTF_OpenFont("poppins-Regular.ttf", 20);
+                text=TTF_RenderText_Blended(font,"Both passwords must match",font_color);
+                position.x=0;
+                position.y=0;
+                texture= SDL_CreateTextureFromSurface(renderer,text);
+                SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                position.x=15;
+                position.y=130;
+                SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                SDL_RenderPresent(renderer);
+                SDL_Delay(3000);
+
                 check=0;
            }
 
@@ -536,7 +1262,7 @@ void cocktails(int id){
         }while(choice!=1 && choice!=2 && choice!=3);
 
         if(choice==1){
-            createCocktails(id);
+            createCocktails_SDL(id);
         }
 
         if(choice==2){
@@ -554,6 +1280,7 @@ void createCocktails(int id){
     int id_cocktails;
     int tab_ingredient[10];
     int tab_quantity[10];
+    char **tab_choice_ingredient;
     int max=0;
     int choice;
     int quantity;
@@ -577,8 +1304,26 @@ void createCocktails(int id){
         if(name_cocktail[strlen(name_cocktail)-1]=='\n'){
             name_cocktail[strlen(name_cocktail)-1]='\0';
         }
-            printf("Choose an ingredient(max 10)\n");
+
+        strcpy(query,"SELECT * FROM ingredient");
+        mysql_query(&mysql,query);
+
+        result = mysql_use_result(&mysql);
+        while((row = mysql_fetch_row(result))){
+             count_row++;
+        }
+
+        tab_choice_ingredient=malloc(sizeof(char*)*count_row);
+        if(tab_choice_ingredient!=NULL){
+
+             for(i=0;i<count_row;i++){
+                 tab_choice_ingredient[i]=malloc(sizeof(char)*11);
+             }
+        }
+
+        printf("Choose an ingredient(max 10)\n");
         do{
+            count_row=0;
             printf("Choose a number (or 0 if the list is finish)\n");
             printf("(%d/10)\n)",max);
             strcpy(query,"SELECT * FROM ingredient");
@@ -586,11 +1331,17 @@ void createCocktails(int id){
 
             result = mysql_use_result(&mysql);
             while((row = mysql_fetch_row(result))){
-                if(check_count_row==0){
-                    count_row++;
-                }
-                printf("[%s] [%s]",row[0],row[1]);
+
+                printf("[%d] [%s]",count_row+1,row[1]);
                 printf("\n");
+
+                if(check_count_row==0){
+                    //count_row++;
+                    strcpy(tab_choice_ingredient[count_row],row[0]);
+
+                }
+
+                count_row++;
             }
 
             check_count_row=1;
@@ -636,8 +1387,8 @@ void createCocktails(int id){
             itoa(id_cocktails,txt_tmp,10);
             strcat(query,txt_tmp);
             strcat(query,"','");
-            itoa(tab_ingredient[i],txt_tmp,10);
-            strcat(query,txt_tmp);
+            //itoa(tab_choice_ingredient[tab_ingredient[i]-1],txt_tmp,10);
+            strcat(query,tab_choice_ingredient[tab_ingredient[i]-1]);
             strcat(query,"','");
             itoa(tab_quantity[i],txt_tmp,10);
             strcat(query,txt_tmp);
@@ -647,6 +1398,388 @@ void createCocktails(int id){
             mysql_query(&mysql,query);
         }
 
+        free(tab_choice_ingredient);
+        mysql_close(&mysql);
+
+    }
+
+
+}
+
+void createCocktails_SDL(int id){
+
+    char name_cocktail[100];
+    char txt_tmp[10];
+    int id_cocktails;
+    int tab_ingredient[10];
+    int tab_quantity[10];
+    char **tab_choice_ingredient;
+    int max=0;
+    int choice;
+    int quantity;
+    char query[255];
+    MYSQL_RES *result = NULL;
+    MYSQL_ROW row;
+    unsigned int i = 0;
+    int count_row=0;
+    int check_count_row=0;
+    //SDL
+    int x_mouse;
+    int y_mouse;
+    int loop=6;
+    char gui_txt[255];
+    char txt_max[10];
+    int y_position_increment;
+    char txt_count_row[10];
+    int check_input=0;
+    char txt_quantity[10];
+
+    MYSQL mysql;
+    mysql_init(&mysql);
+    mysql_options(&mysql,MYSQL_READ_DEFAULT_GROUP,"option");
+
+    if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0)){
+
+
+
+        //printf("| Creation of a cocktail |\n");
+        //printf("Choose the name of your cocktails\n");
+        //fflush(stdin);
+        //fgets(name_cocktail,100,stdin);
+
+        do{
+
+            SDL_WaitEvent(&event);
+            if(event.type == SDL_TEXTINPUT){
+                strcat(name_cocktail,event.text.text);
+            }
+
+            if(event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_BACKSPACE){
+                name_cocktail[strlen(name_cocktail)-1]='\0';
+            }
+
+            if(event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_RETURN){
+                check_input=1;
+            }
+
+            SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
+            SDL_RenderClear(renderer);
+            SDL_RenderPresent(renderer);
+
+            font=TTF_OpenFont("poppins-Regular.ttf", 35);
+            text=TTF_RenderText_Blended(font,"Creation of a cocktail",font_color);
+            position.x=0;
+            position.y=0;
+            texture= SDL_CreateTextureFromSurface(renderer,text);
+            SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+            position.x=20;
+            position.y=50;
+            SDL_RenderCopy(renderer, texture, NULL, &position);
+
+            font=TTF_OpenFont("poppins-Regular.ttf", 20);
+            text=TTF_RenderText_Blended(font,"Choose the name of your cocktails:",font_color);
+            position.x=0;
+            position.y=0;
+            texture= SDL_CreateTextureFromSurface(renderer,text);
+            SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+            position.x=15;
+            position.y=130;
+            SDL_RenderCopy(renderer, texture, NULL, &position);
+
+            text=TTF_RenderText_Blended(font,name_cocktail,font_color);
+            position.x=0;
+            position.y=0;
+            texture= SDL_CreateTextureFromSurface(renderer,text);
+            SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+            position.x=15;
+            position.y=150;
+            SDL_RenderCopy(renderer, texture, NULL, &position);
+
+            SDL_RenderPresent(renderer);
+
+        }while(check_input!=1);
+
+        if(name_cocktail[strlen(name_cocktail)-1]=='\n'){
+            name_cocktail[strlen(name_cocktail)-1]='\0';
+        }
+
+        printf("%s",name_cocktail);
+
+        strcpy(query,"SELECT * FROM ingredient");
+        mysql_query(&mysql,query);
+
+        result = mysql_use_result(&mysql);
+        while((row = mysql_fetch_row(result))){
+             count_row++;
+        }
+
+        tab_choice_ingredient=malloc(sizeof(char*)*count_row);
+        if(tab_choice_ingredient!=NULL){
+
+             for(i=0;i<count_row;i++){
+                 tab_choice_ingredient[i]=malloc(sizeof(char)*11);
+             }
+        }
+
+        //printf("Choose an ingredient(max 10)\n");
+        do{
+            count_row=0;
+            y_position_increment=170;
+            choice=-1;
+            x_mouse=0;
+            y_mouse=0;
+
+            SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
+            SDL_RenderClear(renderer);
+            SDL_RenderPresent(renderer);
+
+            font=TTF_OpenFont("poppins-Regular.ttf", 35);
+            text=TTF_RenderText_Blended(font,"Creation of a cocktail",font_color);
+            position.x=0;
+            position.y=0;
+            texture= SDL_CreateTextureFromSurface(renderer,text);
+            SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+            position.x=20;
+            position.y=50;
+            SDL_RenderCopy(renderer, texture, NULL, &position);
+
+            font=TTF_OpenFont("poppins-Regular.ttf", 20);
+            strcpy(gui_txt,"Choose an ingredient (");
+            itoa(max,txt_max,10);
+            strcat(gui_txt,txt_max);
+            strcat(gui_txt,"/10)");
+            text=TTF_RenderText_Blended(font,gui_txt,font_color);
+            position.x=0;
+            position.y=0;
+            texture= SDL_CreateTextureFromSurface(renderer,text);
+            SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+            position.x=15;
+            position.y=130;
+            SDL_RenderCopy(renderer, texture, NULL, &position);
+            //printf("Choose a number (or 0 if the list is finish)\n");
+            //printf("(%d/10)\n)",max);
+            strcpy(query,"SELECT * FROM ingredient");
+            mysql_query(&mysql,query);
+
+            result = mysql_use_result(&mysql);
+            while((row = mysql_fetch_row(result))){
+
+                //printf("[%d] [%s]",count_row+1,row[1]);
+                //printf("\n");
+                if(count_row<loop && count_row>=loop-6){
+                    strcpy(gui_txt,"[");
+                    itoa(count_row,txt_count_row,10);
+                    strcat(gui_txt,txt_count_row);
+                    strcat(gui_txt,"] ");
+                    strcat(gui_txt,row[1]);
+                    text=TTF_RenderText_Blended(font,gui_txt,font_color);
+                    position.x=0;
+                    position.y=0;
+                    texture= SDL_CreateTextureFromSurface(renderer,text);
+                    SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                    position.x=20;
+                    position.y=y_position_increment;
+                    SDL_RenderCopy(renderer, texture, NULL, &position);
+                    SDL_RenderPresent(renderer);
+
+                    y_position_increment+=70;
+                }
+
+                if(check_count_row==0){
+                    //count_row++;
+                    strcpy(tab_choice_ingredient[count_row],row[0]);
+
+                }
+
+                count_row++;
+            }
+
+            check_count_row=1;
+            //printf("%d",count_row);
+
+            text=TTF_RenderText_Blended(font,"Finish",font_color);
+            surface=NULL;
+            surface = SDL_CreateRGBSurface(0, 120, 70, 32, 0, 0, 0, 0);
+            SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 129, 120, 115));
+            position.x=20;
+            position.y=15;
+            SDL_BlitSurface(text,NULL,surface,&position);
+            texture= SDL_CreateTextureFromSurface(renderer,surface);
+            SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+            position.x=20;
+            position.y=610;
+            SDL_RenderCopy(renderer, texture, NULL, &position);
+
+            SDL_RenderPresent(renderer);
+
+            do{
+
+                SDL_WaitEvent(&event);
+
+                if(event.type == SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT){
+                    SDL_GetMouseState(&x_mouse,&y_mouse);
+                }
+
+                if(event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_UP){
+                    choice=-2;
+                }
+
+                if(event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_DOWN){
+                    choice=-3;
+                }
+
+                if(x_mouse>=20 && x_mouse<=390 && y_mouse>=170 && y_mouse<=198){
+                    choice=6;
+                }
+
+                if(x_mouse>=60 && x_mouse<=340 && y_mouse>=240 && y_mouse<=268){
+                    choice=5;
+                }
+
+                if(x_mouse>=20 && x_mouse<=340 && y_mouse>=310 && y_mouse<=338){
+                    choice=4;
+                }
+
+                if(x_mouse>=20 && x_mouse<=340 && y_mouse>=380 && y_mouse<=408){
+                    choice=3;
+                }
+
+                if(x_mouse>=20 && x_mouse<=340 && y_mouse>=450 && y_mouse<=478){
+                    choice=2;
+                }
+
+                if(x_mouse>=20 && x_mouse<=340 && y_mouse>=520 && y_mouse<=548){
+                    choice=1;
+                }
+
+                if(x_mouse>=20 && x_mouse<=140 && y_mouse>=610 && y_mouse<=680){
+                    choice=0;
+                }
+
+            }while(choice==-1);
+
+            //scanf("%d",&choice);
+            if(choice<=count_row && choice>0){
+                if(choice!=0){
+                    tab_ingredient[max]=loop-choice+1;
+                    check_input=0;
+                    //printf("Enter the quantity (in milliter)\n");
+                    //scanf("%d",&quantity);
+                    do{
+
+                        SDL_WaitEvent(&event);
+                        if(event.type == SDL_TEXTINPUT){
+                            strcat(txt_quantity,event.text.text);
+                        }
+
+                        if(event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_BACKSPACE){
+                            txt_quantity[strlen(txt_quantity)-1]='\0';
+                        }
+
+                        if(event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_RETURN){
+                            check_input=1;
+                        }
+
+                        SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
+                        SDL_RenderClear(renderer);
+                        SDL_RenderPresent(renderer);
+
+                        font=TTF_OpenFont("poppins-Regular.ttf", 35);
+                        text=TTF_RenderText_Blended(font,"Creation of a cocktail",font_color);
+                        position.x=0;
+                        position.y=0;
+                        texture= SDL_CreateTextureFromSurface(renderer,text);
+                        SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                        position.x=20;
+                        position.y=50;
+                        SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                        font=TTF_OpenFont("poppins-Regular.ttf", 20);
+                        text=TTF_RenderText_Blended(font,"Enter the quantity:",font_color);
+                        position.x=0;
+                        position.y=0;
+                        texture= SDL_CreateTextureFromSurface(renderer,text);
+                        SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                        position.x=15;
+                        position.y=130;
+                        SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                        text=TTF_RenderText_Blended(font,txt_quantity,font_color);
+                        position.x=0;
+                        position.y=0;
+                        texture= SDL_CreateTextureFromSurface(renderer,text);
+                        SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                        position.x=15;
+                        position.y=150;
+                        SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                        SDL_RenderPresent(renderer);
+
+                    }while(check_input!=1);
+                    quantity=atoi(txt_quantity);
+                    tab_quantity[max]=quantity;
+                    max++;
+                }
+            }
+
+            if(choice==-2){
+                if(loop>6){
+                    loop-=1;
+                }
+
+                //printf("%d\n",loop);
+            }
+
+            if(choice==-3){
+
+                if(loop+1<=count_row){
+                    loop+=1;
+                }
+
+                //printf("%d\n",loop);
+            }
+
+        }while(choice!=0 && max<10 || max==0);
+
+        itoa(id,txt_tmp,10);
+        strcpy(query,"INSERT INTO COCKTAILS (name,id_user) VALUES('");
+        strcat(query,name_cocktail);
+        strcat(query,"','");
+        strcat(query,txt_tmp);
+        strcat(query,"')");
+
+        //printf("%s",query);
+
+        mysql_query(&mysql,query);
+
+        strcpy(query,"SELECT LAST_INSERT_ID() FROM COCKTAILS");
+        mysql_query(&mysql,query);
+
+        result = mysql_store_result(&mysql);
+        row = mysql_fetch_row(result);
+
+        if(row){
+            sscanf(row[0],"%d",&id_cocktails);
+            //printf("\n---%d---",id_cocktails);
+        }
+
+        for(i=0;i<max;i++){
+            strcpy(query,"INSERT INTO RECIPE (id_cocktail,id_ingredient,quantity) VALUES('");
+            itoa(id_cocktails,txt_tmp,10);
+            strcat(query,txt_tmp);
+            strcat(query,"','");
+            //itoa(tab_choice_ingredient[tab_ingredient[i]-1],txt_tmp,10);
+            strcat(query,tab_choice_ingredient[tab_ingredient[i]-1]);
+            strcat(query,"','");
+            itoa(tab_quantity[i],txt_tmp,10);
+            strcat(query,txt_tmp);
+            strcat(query,"')");
+
+            //printf("\n%s",query);
+            mysql_query(&mysql,query);
+        }
+
+        free(tab_choice_ingredient);
         mysql_close(&mysql);
 
     }
@@ -1029,7 +2162,7 @@ void listCocktails_SDL(int id){
                     loop-=1;
                 }
 
-                printf("%d\n",loop);
+                //printf("%d\n",loop);
             }
 
             if(choice==-3){
@@ -1038,7 +2171,7 @@ void listCocktails_SDL(int id){
                     loop+=1;
                 }
 
-                printf("%d\n",loop);
+                //printf("%d\n",loop);
             }
 
         }while(choice!=0);
@@ -1065,6 +2198,9 @@ int main(int argc, char **argv){
     SDL_bool quit=SDL_FALSE;
     int x_mouse;
     int y_mouse;
+    int check=0;
+    char txt_test[255];
+    char txt_test_tmp[255];
 
     if (SDL_Init(SDL_INIT_VIDEO)!=0){
         fprintf(stderr, "SDL Error : Init failed\n");
@@ -1083,6 +2219,77 @@ int main(int argc, char **argv){
     }
 
     TTF_Init();
+
+    /*font=TTF_OpenFont("poppins-Regular.ttf", 20);
+
+
+
+    while(check!=1){
+
+        SDL_WaitEvent(&event);
+        if(event.type == SDL_TEXTINPUT){
+            strcat(txt_test,event.text.text);
+
+            /*SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
+            SDL_RenderClear(renderer);
+            SDL_RenderPresent(renderer);
+
+
+            text=TTF_RenderText_Blended(font,txt_test,font_color);
+            position.x=0;
+            position.y=0;
+            texture= SDL_CreateTextureFromSurface(renderer,text);
+            SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+            position.x=20;
+            position.y=50;
+            SDL_RenderCopy(renderer, texture, NULL, &position);
+
+            SDL_RenderPresent(renderer);
+
+        }
+
+        if(event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_BACKSPACE){
+            txt_test[strlen(txt_test)-1]='\0';
+
+            /*SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
+            SDL_RenderClear(renderer);
+            SDL_RenderPresent(renderer);
+
+            strcat(txt_test,event.text.text);
+            text=TTF_RenderText_Blended(font,txt_test,font_color);
+            position.x=0;
+            position.y=0;
+            texture= SDL_CreateTextureFromSurface(renderer,text);
+            SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+            position.x=20;
+            position.y=50;
+            SDL_RenderCopy(renderer, texture, NULL, &position);
+
+            SDL_RenderPresent(renderer);
+        }
+
+        if(event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_KP_ENTER){
+            check=1;
+        }
+
+            SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
+            SDL_RenderClear(renderer);
+            SDL_RenderPresent(renderer);
+
+
+            text=TTF_RenderText_Blended(font,txt_test,font_color);
+            position.x=0;
+            position.y=0;
+            texture= SDL_CreateTextureFromSurface(renderer,text);
+            SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+            position.x=20;
+            position.y=50;
+            SDL_RenderCopy(renderer, texture, NULL, &position);
+
+            SDL_RenderPresent(renderer);
+    }
+
+    printf("%s",txt_test);*/
 
     SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
     SDL_RenderClear(renderer);
@@ -1165,7 +2372,7 @@ int main(int argc, char **argv){
     }while(choice!=1 && choice!=2);
 
     if(choice==1){
-        id=SignIn();
+        id=SignIn_SDL();
     }else if(choice==2){
         id=SignUp();
     }
