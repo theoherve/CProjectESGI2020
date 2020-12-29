@@ -236,6 +236,96 @@ void readFile(FILE *fp){
 
 }
 
+void loadBars(){
+
+    FILE *fp = NULL;
+
+    getApiViaCurl(fp);
+
+    readFile(fp);
+
+    return;
+}
+
+void selectFromCategory(){
+    system("cls");
+
+    int categorySelected;
+    char query[255];
+    char type[255];
+    MYSQL_RES *result=NULL;
+    MYSQL_ROW row;
+
+    printf("Here you can find the type of place you want to go !\n\n");
+
+    do{
+        printf("Choose the type of place among what there is :\n\n");
+        printf("1 - COMMERCE ACCESSOIRE\n\n");
+        printf("2 - CONTRE ETALAGE\n\n");
+        printf("3 - CONTRE TERRASSE\n\n");
+        printf("4 - ETALAGE\n\n");
+        printf("5 - PLANCHER MOBILE\n\n");
+        printf("6 - TERRASSE FERMEE\n\n");
+        printf("7 - TERRASSE OUVERTE\n\n");
+        printf("0 - Back\n\n");
+        scanf("%d", &categorySelected);
+
+        switch(categorySelected){
+            case 0:
+                return;
+                break;
+            case 1:
+                type = "COMMERCE ACCESSOIRE";
+                strcpy(query, "SELECT * FROM BAR WHERE libelle_type='");
+                strcat(query, type);
+                strcat(query, "'");
+                mysql_query(&mysql,query);
+                result = mysql_store_result(&mysql);
+                row = mysql_fetch_row(result);
+                if(row){
+
+                }
+                break;
+            case 2:
+
+                break;
+        }
+    }while(1);
+
+}
+
+void selectMenu(){
+
+    int menuSelection;
+
+    printf("Here you can find the bars you need !\n\n\n");
+
+    do{
+        system("cls");
+
+        printf("*** BARS ***\n\n");
+        printf("1 - Load bar list (no need to do it everytime, your favorite bar will not disapear :D\n\n");
+        printf("2 - Selection from a category\n\n");
+        printf("3 - make a research from an entry\n\n");
+        printf("0 - leave the program\n\n");
+        scanf("%d", &menuSelection);
+
+        switch(menuSelection){
+            case 0:
+                printf("\nEnjoy your drinks ;)\nSee you next time !\n");
+                return 0;
+                break;
+            case 1:
+                loadBars();
+                break;
+            case 2:
+                selectFromCategory();
+                break;
+        }
+
+    }while(1);
+}
+
 
 /*
 	Le programme a pour but d'afficher les différents champs d'informations de chaques restaurants
@@ -243,11 +333,7 @@ void readFile(FILE *fp){
 */
 int main(int argc, char **argv){
 
-    FILE *fp = NULL;
-
-    getApiViaCurl(fp);
-
-    readFile(fp);
+    selectMenu();
 
     return 0;
 
