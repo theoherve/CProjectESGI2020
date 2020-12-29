@@ -1,68 +1,3 @@
-/* //test code SDL
-#include <stdio.h>
-#include <stdlib.h>
-#include <SDL.h>
-
-void sdl_error(char *error)
-{
-    fprintf(stderr, "SDL Error : %s\n", error);
-}
-
-int main(int argc, char **argv)
-{
-    SDL_Window    *window;
-    SDL_Renderer *renderer;
-
-    window = NULL;
-    renderer = NULL;
-
-    if (SDL_Init(SDL_INIT_VIDEO))
-    {
-        sdl_error("initialization failed");
-        return 0;
-    }
-
-    window = SDL_CreateWindow(
-        "Tétris",
-        SDL_WINDOWPOS_CENTERED,
-        SDL_WINDOWPOS_CENTERED,
-        500,
-        500,
-        SDL_WINDOW_SHOWN
-    );
-
-    if (!window)
-    {
-        sdl_error("window creation failed");
-        return 0;
-    }
-
-    renderer = SDL_CreateRenderer(window, -1, 0);
-
-    if (!renderer)
-    {
-        sdl_error("renderer creation failed");
-        return 0;
-    }
-
-    sdl_error("renderer creation ok");
-
-    SDL_Event event;
-
-    while(1)
-    { // SDL loop
-        while( SDL_PollEvent( &event ) != 0 )
-        {
-            if( event.type == SDL_QUIT )
-            {
-                // Ctrl + C in console !
-            }
-        } // end of handling event.
-    }
-
-    return 1;
-} */
-
 /*
 Programmed by HERVÉ Théo and DE FARIA LEITE Armand
 December 2020
@@ -381,7 +316,7 @@ void selectMenu(MYSQL mysql){
         system("cls");
 
         printf("*** BARS ***\n\n");
-        printf("1 - Load bar list (no need to do it everytime, your favorite bar will not disapear :D\n\n");
+        printf("1 - Load bar list (no need to do it everytime, your favorite bar will not disapear :D)\n\n");
         printf("2 - Selection from a category\n\n");
         printf("3 - Make a research from an entry\n\n");
         printf("0 - Leave the program\n\n");
