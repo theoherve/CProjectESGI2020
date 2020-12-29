@@ -116,7 +116,6 @@ void getApiViaCurl(FILE *fp){
 
 char *getData(FILE *fp, char *data){
 	char buffer;
-	int i;
 
 	while(fread(&buffer, sizeof(char), 1, fp)){
 		if(buffer == '"' || buffer == '['){
@@ -129,25 +128,46 @@ char *getData(FILE *fp, char *data){
 			return data;
 		}
 	}
+	return NULL;
 }
 
 void sendBDD(MYSQL mysql, char *data_geo_point_2d, char *data_date_periode, char *data_lieu1, char *data_libelle_type){
     char query[255];
+    MYSQL_RES *result=NULL;
+    MYSQL_ROW row;
 
     if(strcmp(data_date_periode,"Toute l'ann\u00e9e"))
         strcpy(data_date_periode,"Toute l\\'année");
 
-    strcpy(query,"INSERT INTO BAR (geo_point_2d, libelle_type, date_periode, lieu1) VALUES('");
-    strcat(query,data_geo_point_2d);
-    strcat(query,"','");
-    strcat(query,data_libelle_type);
-    strcat(query,"','");
-    strcat(query,data_date_periode);
-    strcat(query,"','");
-    strcat(query,data_lieu1);
-    strcat(query,"')");
+    strcpy(query, "SELECT * FROM BAR WHERE geo_point_2d='");
+    strcat(query, data_geo_point_2d);
+    strcat(query, "' AND date_periode='");
+    strcat(query, data_date_periode);
+    strcat(query, "' AND lieu1='");
+    strcat(query, data_lieu1);
+    strcat(query, "' AND libelle_type='");
+    strcat(query, data_libelle_type);
+    strcat(query, "'");
+
     mysql_query(&mysql,query);
-    printf("%s\n", query);
+    result = mysql_store_result(&mysql);
+    row = mysql_fetch_row(result);
+
+    if(!row){
+        strcpy(query,"INSERT INTO BAR (geo_point_2d, libelle_type, date_periode, lieu1) VALUES('");
+        strcat(query,data_geo_point_2d);
+        strcat(query,"','");
+        strcat(query,data_libelle_type);
+        strcat(query,"','");
+        strcat(query,data_date_periode);
+        strcat(query,"','");
+        strcat(query,data_lieu1);
+        strcat(query,"')");
+        mysql_query(&mysql,query);
+        //printf("%s\n", query);
+    }else{
+        //printf("already exist\n");
+    }
 }
 
 void readFile(FILE *fp){
@@ -163,24 +183,17 @@ void readFile(FILE *fp){
 
     char buffer;
 	char *key;
-	char *data;
 	int i;			// Permet de naviguer dans la variable key pour construire le mot clé
 	int iData;		// Stock un nombre qui correspond au nombre de champ récupérer
 
 	iData = 0;
 
 	key = malloc(sizeof(char) * 255);
-	data = malloc(sizeof(char) * 255);
 
 	data_geo_point_2d = malloc(sizeof(char) * 255);
     data_libelle_type = malloc(sizeof(char) * 255);
     data_date_periode = malloc(sizeof(char) * 255);
     data_lieu1 = malloc(sizeof(char) * 255);
-/*
-    data_geo_point_2d = NULL;
-    data_libelle_type = NULL;
-    data_date_periode = NULL;
-    data_lieu1 = NULL;*/
 
 	if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0)){
 
@@ -210,9 +223,9 @@ void readFile(FILE *fp){
                                         // Permet de faire un saut de
                     if(iData % 4 == 0){	// ligne tout les 4 champs lus
                         //printf("%s = %s\n", key, data);
-                        printf("\n");	// (juste pour la lisibilité dans la console)
+                        //printf("\n");	// (juste pour la lisibilité dans la console)
 
-                        sendBDD(mysql, data_geo_point_2d, data_date_periode, data_lieu1, data_libelle_type);
+                        sendBDD(mysql, data_geo_point_2d, data_date_periode, data_lieu1, data_libelle_type);    //call sendBDD
                     }
                 }
             }
@@ -230,7 +243,7 @@ void readFile(FILE *fp){
 */
 int main(int argc, char **argv){
 
-    FILE *fp;
+    FILE *fp = NULL;
 
     getApiViaCurl(fp);
 
