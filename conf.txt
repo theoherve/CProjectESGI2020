@@ -1,0 +1,5 @@
+app_mod:GUI
+font:poppins-Regular.ttf
+color:normal
+renderer:software
+
