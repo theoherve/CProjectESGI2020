@@ -1971,22 +1971,8 @@ void listCocktails(int id){
 
 }
 
-void game(){
 void listCocktails_SDL(int id){
 
-    int choice;
-    char **tab_id_game;
-    char query[255];
-    MYSQL_RES *result = NULL;
-    MYSQL_ROW row;
-    int count_row=0;
-    unsigned int i;
-    unsigned int y;
-    unsigned int number;
-    char txt_number[5];
-    char question[500];
-    int id_used[15];
-    int check=0;
     char query[255];
     MYSQL_RES *result = NULL;
     MYSQL_ROW row;
@@ -1997,123 +1983,6 @@ void listCocktails_SDL(int id){
     int choice2;
     int check=0;
     char id_cocktail[10];
-
-    MYSQL mysql;
-    mysql_init(&mysql);
-    mysql_options(&mysql,MYSQL_READ_DEFAULT_GROUP,"option");
-
-    srand(time(NULL));
-
-    if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0)){
-        printf("--GAME--\n");
-
-        do{
-            printf("1: Start a game\n2: Return to the menu\n");
-            scanf("%d",&choice);
-
-            if(choice==1){
-                        count_row=0;
-                        strcpy(query,"SELECT id FROM game");
-                        mysql_query(&mysql,query);
-
-                        result = mysql_use_result(&mysql);
-                        while((row = mysql_fetch_row(result))){
-                            count_row++;
-                        }
-
-                        printf("---check---\n");
-
-                        //printf("row: %d", count_row);
-
-                        tab_id_game=malloc(sizeof(char)*count_row);
-                        if(tab_id_game!=NULL){
-
-                            for(i=0;i<count_row;i++){
-                                tab_id_game[i]=malloc(sizeof(char*)*11);
-                            }
-                        }
-
-                        mysql_query(&mysql,query);
-
-                        i=0;
-                        result = mysql_use_result(&mysql);
-                        while((row = mysql_fetch_row(result))){
-                           strcpy(tab_id_game[i],row[0]);
-                           i++;
-
-                        }
-
-                        for(i=0;i<15;i++){
-
-
-                            do{
-                                check=1;
-                                number=rand()%16;
-                                //printf("#%d#\n",number);
-                                if(i!=0){
-                                    for(y=0;y<i;y++){
-                                        if(id_used[y]==number){
-                                            check=0;
-                                        }
-                                    }
-
-                                    if(check==1){
-                                        id_used[i]=number;
-                                    }
-
-                                }else{
-                                    id_used[i]=number;
-                                    check=1;
-                                }
-
-                            }while(check!=1);
-
-                            strcpy(txt_number,tab_id_game[number]);
-                            //printf("-%s-\n",txt_number);
-                            strcpy(query,"SELECT question FROM game WHERE id='");
-                            strcat(query,txt_number);
-                            strcat(query,"'");
-
-                            //printf("|%s|\n",query);
-
-                            mysql_query(&mysql,query);
-                            result = mysql_use_result(&mysql);
-                            while((row = mysql_fetch_row(result))){
-
-                                strcpy(question,row[0]);
-                            }
-                            //printf("Check");
-                            do{
-                                printf("%d: %s\n",i+1,question);
-                                printf("1: Next question\n");
-
-                                scanf("%d",&choice);
-                            }while(choice!=1);
-
-                            choice=0;
-                        }
-
-
-
-
-
-                        free(tab_id_game);
-
-
-            }
-        }while(choice!=2);
-
-        mysql_close(&mysql);
-
-    }else{ //////////
-
-        printf("ERROR: An error occurred while connecting to the DB!");
-
-    }
-
-}
-
-
 
     //SDL
     char txt_count_row[10];
@@ -2377,6 +2246,140 @@ void listCocktails_SDL(int id){
 
 }
 
+void game(){
+
+
+    int choice;
+    char **tab_id_game;
+    char query[255];
+    MYSQL_RES *result = NULL;
+    MYSQL_ROW row;
+    int count_row=0;
+    unsigned int i;
+    unsigned int y;
+    unsigned int number;
+    char txt_number[5];
+    char question[500];
+    int id_used[15];
+    int check=0;
+
+    MYSQL mysql;
+    mysql_init(&mysql);
+    mysql_options(&mysql,MYSQL_READ_DEFAULT_GROUP,"option");
+
+    srand(time(NULL));
+
+    if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0)){
+        printf("--GAME--\n");
+
+        do{
+            printf("1: Start a game\n2: Return to the menu\n");
+            scanf("%d",&choice);
+
+            if(choice==1){
+                        count_row=0;
+                        strcpy(query,"SELECT id FROM game");
+                        mysql_query(&mysql,query);
+
+                        result = mysql_use_result(&mysql);
+                        while((row = mysql_fetch_row(result))){
+                            count_row++;
+                        }
+
+                        printf("---check---\n");
+
+                        //printf("row: %d", count_row);
+
+                        tab_id_game=malloc(sizeof(char)*count_row);
+                        if(tab_id_game!=NULL){
+
+                            for(i=0;i<count_row;i++){
+                                tab_id_game[i]=malloc(sizeof(char*)*11);
+                            }
+                        }
+
+                        mysql_query(&mysql,query);
+
+                        i=0;
+                        result = mysql_use_result(&mysql);
+                        while((row = mysql_fetch_row(result))){
+                           strcpy(tab_id_game[i],row[0]);
+                           i++;
+
+                        }
+
+                        for(i=0;i<15;i++){
+
+
+                            do{
+                                check=1;
+                                number=rand()%16;
+                                //printf("#%d#\n",number);
+                                if(i!=0){
+                                    for(y=0;y<i;y++){
+                                        if(id_used[y]==number){
+                                            check=0;
+                                        }
+                                    }
+
+                                    if(check==1){
+                                        id_used[i]=number;
+                                    }
+
+                                }else{
+                                    id_used[i]=number;
+                                    check=1;
+                                }
+
+                            }while(check!=1);
+
+                            strcpy(txt_number,tab_id_game[number]);
+                            //printf("-%s-\n",txt_number);
+                            strcpy(query,"SELECT question FROM game WHERE id='");
+                            strcat(query,txt_number);
+                            strcat(query,"'");
+
+                            //printf("|%s|\n",query);
+
+                            mysql_query(&mysql,query);
+                            result = mysql_use_result(&mysql);
+                            while((row = mysql_fetch_row(result))){
+
+                                strcpy(question,row[0]);
+                            }
+                            //printf("Check");
+                            do{
+                                printf("%d: %s\n",i+1,question);
+                                printf("1: Next question\n");
+
+                                scanf("%d",&choice);
+                            }while(choice!=1);
+
+                            choice=0;
+                        }
+
+
+
+
+
+                        free(tab_id_game);
+
+
+            }
+        }while(choice!=2);
+
+        mysql_close(&mysql);
+
+    }else{ //////////
+
+        printf("ERROR: An error occurred while connecting to the DB!");
+
+    }
+
+}
+
+
+
 
 
 int main(int argc, char **argv){
@@ -2389,8 +2392,6 @@ int main(int argc, char **argv){
     int x_mouse;
     int y_mouse;
     int check=0;
-    char txt_test[255];
-    char txt_test_tmp[255];
 
     if (SDL_Init(SDL_INIT_VIDEO)!=0){
         fprintf(stderr, "SDL Error : Init failed\n");
@@ -2492,9 +2493,6 @@ int main(int argc, char **argv){
         id=SignUp_SDL();
     }
 
-    //printf("#%d\n#",id);
-
-
     /*do{
         printf("--MENU--\n1: Cocktails\n4:EXIT\n");
         scanf("%d",&choice);
@@ -2513,7 +2511,7 @@ int main(int argc, char **argv){
 
         x_mouse=0;
         y_mouse=0;
-        choice=0;
+        choice=-1;
 
         SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
         SDL_RenderClear(renderer);
@@ -2543,6 +2541,20 @@ int main(int argc, char **argv){
         position.y=170;
         SDL_RenderCopy(renderer, texture, NULL, &position);
 
+        font=TTF_OpenFont("poppins-Regular.ttf", 30);
+        text=TTF_RenderText_Blended(font,"Game",font_color);
+        surface=NULL;
+        surface = SDL_CreateRGBSurface(0, 170, 70, 32, 0, 0, 0, 0);
+        SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 129, 120, 115));
+        position.x=40;
+        position.y=15;
+        SDL_BlitSurface(text,NULL,surface,&position);
+        texture= SDL_CreateTextureFromSurface(renderer,surface);
+        SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+        position.x=110;
+        position.y=260;
+        SDL_RenderCopy(renderer, texture, NULL, &position);
+
         text=TTF_RenderText_Blended(font,"Exit",font_color);
         surface=NULL;
         surface = SDL_CreateRGBSurface(0, 90, 70, 32, 0, 0, 0, 0);
@@ -2560,9 +2572,6 @@ int main(int argc, char **argv){
         SDL_RenderPresent(renderer);
 
         do{
-            choice=0;
-            x_mouse=0;
-            y_mouse=0;
             SDL_WaitEvent(&event);
 
             if(event.type == SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT){
@@ -2575,6 +2584,12 @@ int main(int argc, char **argv){
                 y_mouse=0;
             }
 
+            if(x_mouse>=110 && x_mouse<=280 && y_mouse>=260 && y_mouse<=330){
+                choice=3;
+                x_mouse=0;
+                y_mouse=0;
+            }
+
             if(x_mouse>=20 && x_mouse<=90 && y_mouse>=610 && y_mouse<=680){
                 choice=4;
                 x_mouse=0;
@@ -2582,13 +2597,15 @@ int main(int argc, char **argv){
             }
 
 
-        }while(choice!=1 && choice!=4);
+        }while(choice==-1);
 
         if(choice==1){
             cocktails_SDL(id);
         }
 
-
+        if(choice==3){
+            game();
+        }
 
     }while(choice!=4);
 
