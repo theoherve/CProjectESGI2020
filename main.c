@@ -2286,15 +2286,11 @@ void game(){
                             count_row++;
                         }
 
-                        printf("---check---\n");
-
-                        //printf("row: %d", count_row);
-
-                        tab_id_game=malloc(sizeof(char)*count_row);
+                        tab_id_game=malloc(sizeof(char*)*count_row);
                         if(tab_id_game!=NULL){
 
                             for(i=0;i<count_row;i++){
-                                tab_id_game[i]=malloc(sizeof(char*)*11);
+                                tab_id_game[i]=malloc(sizeof(char)*11);
                             }
                         }
 
@@ -2314,7 +2310,7 @@ void game(){
                             do{
                                 check=1;
                                 number=rand()%16;
-                                //printf("#%d#\n",number);
+
                                 if(i!=0){
                                     for(y=0;y<i;y++){
                                         if(id_used[y]==number){
@@ -2334,12 +2330,9 @@ void game(){
                             }while(check!=1);
 
                             strcpy(txt_number,tab_id_game[number]);
-                            //printf("-%s-\n",txt_number);
                             strcpy(query,"SELECT question FROM game WHERE id='");
                             strcat(query,txt_number);
                             strcat(query,"'");
-
-                            //printf("|%s|\n",query);
 
                             mysql_query(&mysql,query);
                             result = mysql_use_result(&mysql);
@@ -2347,7 +2340,7 @@ void game(){
 
                                 strcpy(question,row[0]);
                             }
-                            //printf("Check");
+
                             do{
                                 printf("%d: %s\n",i+1,question);
                                 printf("1: Next question\n");
@@ -2370,7 +2363,7 @@ void game(){
 
         mysql_close(&mysql);
 
-    }else{ //////////
+    }else{
 
         printf("ERROR: An error occurred while connecting to the DB!");
 
@@ -2378,8 +2371,244 @@ void game(){
 
 }
 
+void game_SDL(){
 
 
+    int choice;
+    char **tab_id_game;
+    char query[255];
+    MYSQL_RES *result = NULL;
+    MYSQL_ROW row;
+    int count_row=0;
+    unsigned int i;
+    unsigned int y;
+    unsigned int number;
+    char txt_number[5];
+    char question[500];
+    int id_used[15];
+    int check=0;
+
+    //SDL
+    int x_mouse;
+    int y_mouse;
+    int count_space;
+
+    MYSQL mysql;
+    mysql_init(&mysql);
+    mysql_options(&mysql,MYSQL_READ_DEFAULT_GROUP,"option");
+
+    srand(time(NULL));
+
+    if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0)){
+
+        do{
+
+            choice=-1;
+            x_mouse=0;
+            y_mouse=0;
+
+            SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
+            SDL_RenderClear(renderer);
+            SDL_RenderPresent(renderer);
+
+            font=TTF_OpenFont("poppins-Regular.ttf", 45);
+            text=TTF_RenderText_Blended(font,"GAME",font_color);
+            position.x=0;
+            position.y=0;
+            texture= SDL_CreateTextureFromSurface(renderer,text);
+            SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+            position.x=130;
+            position.y=50;
+            SDL_RenderCopy(renderer, texture, NULL, &position);
+
+            font=TTF_OpenFont("poppins-Regular.ttf", 30);
+            text=TTF_RenderText_Blended(font,"Start the game",font_color);
+            surface=NULL;
+            surface = SDL_CreateRGBSurface(0, 280, 70, 32, 0, 0, 0, 0);
+            SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 129, 120, 115));
+            position.x=20;
+            position.y=15;
+            SDL_BlitSurface(text,NULL,surface,&position);
+            texture= SDL_CreateTextureFromSurface(renderer,surface);
+            SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+            position.x=60;
+            position.y=170;
+            SDL_RenderCopy(renderer, texture, NULL, &position);
+
+            text=TTF_RenderText_Blended(font,"Menu",font_color);
+            surface=NULL;
+            surface = SDL_CreateRGBSurface(0, 120, 70, 32, 0, 0, 0, 0);
+            SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 129, 120, 115));
+            position.x=20;
+            position.y=15;
+            SDL_BlitSurface(text,NULL,surface,&position);
+            texture= SDL_CreateTextureFromSurface(renderer,surface);
+            SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+            position.x=20;
+            position.y=610;
+            SDL_RenderCopy(renderer, texture, NULL, &position);
+
+            SDL_RenderPresent(renderer);
+
+            do{
+
+                SDL_WaitEvent(&event);
+
+                if(event.type == SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT){
+                    SDL_GetMouseState(&x_mouse,&y_mouse);
+                }
+
+                if(x_mouse>=60 && x_mouse<=340 && y_mouse>=170 && y_mouse<=240){
+                    choice=1;
+                }
+
+                if(x_mouse>=20 && x_mouse<=140 && y_mouse>=610 && y_mouse<=680){
+                    choice=2;
+                }
+
+            }while(choice==-1);
+
+            if(choice==1){
+                        count_row=0;
+                        strcpy(query,"SELECT id FROM game");
+                        mysql_query(&mysql,query);
+
+                        result = mysql_use_result(&mysql);
+                        while((row = mysql_fetch_row(result))){
+                            count_row++;
+                        }
+
+                        tab_id_game=malloc(sizeof(char*)*count_row);
+                        if(tab_id_game!=NULL){
+
+                            for(i=0;i<count_row;i++){
+                                tab_id_game[i]=malloc(sizeof(char)*11);
+                            }
+                        }
+
+                        mysql_query(&mysql,query);
+
+                        i=0;
+                        result = mysql_use_result(&mysql);
+                        while((row = mysql_fetch_row(result))){
+                           strcpy(tab_id_game[i],row[0]);
+                           i++;
+
+                        }
+
+                        for(i=0;i<15;i++){
+
+
+                            do{
+                                check=1;
+                                number=rand()%16;
+
+                                if(i!=0){
+                                    for(y=0;y<i;y++){
+                                        if(id_used[y]==number){
+                                            check=0;
+                                        }
+                                    }
+
+                                    if(check==1){
+                                        id_used[i]=number;
+                                    }
+
+                                }else{
+                                    id_used[i]=number;
+                                    check=1;
+                                }
+
+                            }while(check!=1);
+
+                            strcpy(txt_number,tab_id_game[number]);
+                            strcpy(query,"SELECT question FROM game WHERE id='");
+                            strcat(query,txt_number);
+                            strcat(query,"'");
+
+                            mysql_query(&mysql,query);
+                            result = mysql_use_result(&mysql);
+                            while((row = mysql_fetch_row(result))){
+
+                                strcpy(question,row[0]);
+                            }
+
+                            count_space=0;
+
+                            if(strlen(question)>35){
+                                for(y=0;y<strlen(question);y++){
+                                    if(question[y]==' '){
+                                        if(count_space==4){
+                                           question[y]='\n';
+                                           count_space=0;
+                                        }else{
+                                            count_space++;
+                                        }
+                                    }
+                                }
+                                //printf("%s\n\n",question);
+                            }
+
+                            do{
+
+                                choice=-1;
+                                x_mouse=0;
+                                y_mouse=0;
+
+                                SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
+                                SDL_RenderClear(renderer);
+                                SDL_RenderPresent(renderer);
+
+                                font=TTF_OpenFont("poppins-Regular.ttf", 45);
+                                text=TTF_RenderText_Blended(font,"GAME",font_color);
+                                position.x=0;
+                                position.y=0;
+                                texture= SDL_CreateTextureFromSurface(renderer,text);
+                                SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                                position.x=130;
+                                position.y=50;
+                                SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                                font=TTF_OpenFont("poppins-Regular.ttf", 14);
+                                text=TTF_RenderText_Blended(font,question,font_color);
+                                position.x=0;
+                                position.y=0;
+                                texture= SDL_CreateTextureFromSurface(renderer,text);
+                                SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                                position.x=60;
+                                position.y=170;
+                                SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                                SDL_RenderPresent(renderer);
+
+                                do{
+
+                                    SDL_WaitEvent(&event);
+
+                                    if(event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_RETURN){
+                                        choice=1;
+                                    }
+
+                                }while(choice==-1);
+                            }while(choice!=1);
+
+                            choice=0;
+                        }
+
+                        free(tab_id_game);
+
+            }
+        }while(choice!=2);
+
+        mysql_close(&mysql);
+
+    }else{
+
+        printf("ERROR: An error occurred while connecting to the DB!");
+
+    }
+
+}
 
 
 int main(int argc, char **argv){
@@ -2604,7 +2833,7 @@ int main(int argc, char **argv){
         }
 
         if(choice==3){
-            game();
+            game_SDL();
         }
 
     }while(choice!=4);
