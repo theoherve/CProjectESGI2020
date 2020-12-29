@@ -165,14 +165,11 @@ int main(int argc, char **argv)
 SDL_Window    *window=NULL;
 SDL_Renderer *renderer=NULL;
 TTF_Font *font = NULL;
-
 SDL_Surface *text=NULL;
 SDL_Surface *surface=NULL;
 SDL_Texture *texture;
-
 SDL_Color font_color = {0, 0, 0};
 SDL_Event event;
-
 SDL_Rect position;
 SDL_Color background={213,115,51,255};
 SDL_Color items={129,120,115,255};
@@ -267,20 +264,12 @@ int SignIn_SDL(){
 
     if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0)){
 
-        //printf("\nSign in:\n");
-
         do{
            check=1;
            check_input=0;
            strcpy(pseudo,"");
            strcpy(password,"");
            strcpy(hide_password,"");
-           /*printf("Enter your pseudo:\n\n");
-           fflush(stdin);
-           fgets(pseudo,50,stdin);
-           if(pseudo[strlen(pseudo)-1]=='\n'){
-               pseudo[strlen(pseudo)-1]='\0';
-           }*/
 
            do{
 
@@ -335,13 +324,6 @@ int SignIn_SDL(){
             }while(check_input!=1);
 
             check_input=0;
-
-            /*printf("Enter your password:\n\n");
-            fflush(stdin);
-            fgets(password,100,stdin);
-            if(password[strlen(password)-1]=='\n'){
-                password[strlen(password)-1]='\0';
-            }*/
 
             do{
 
@@ -406,7 +388,7 @@ int SignIn_SDL(){
             row = mysql_fetch_row(result);
 
             if(!row){
-                //printf("Incorrect pseudo");
+
                 SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
                 SDL_RenderClear(renderer);
                 SDL_RenderPresent(renderer);
@@ -439,7 +421,6 @@ int SignIn_SDL(){
 
             if(check!=0){
                 if(strstr(password,row[1])==NULL){
-                    //printf("Incorrect password");
 
                     SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
                     SDL_RenderClear(renderer);
@@ -628,8 +609,6 @@ int SignUp(){
         strcat(query,password);
         strcat(query,"')");
 
-        //sprintf(query,"INSERT INTO USER (pseudo,mail,city,password) VALUES('%s','%s','%s','%s');",pseudo,mail,city,password);
-
         mysql_query(&mysql,query);
 
         strcpy(query,"SELECT id FROM USER WHERE pseudo='");
@@ -647,12 +626,7 @@ int SignUp(){
             printf("\nERROR: Your account can't be create\n");
         }
 
-        //mysql_query(&mysql,"INSERT INTO USER (pseudo,mail,city,password) VALUES('Izonite','armanddfl@gmail.com','Chatou','Test1234')");
-
          mysql_close(&mysql);
-
-
-
 
     }else{
         printf("ERROR: An error occurred while connecting to the DB!");
@@ -690,12 +664,6 @@ int SignUp_SDL(){
             check=1;
             check_input=0;
             strcpy(pseudo,"");
-            /*printf("Enter your pseudo:\n\n");
-            fflush(stdin);
-            fgets(pseudo,50,stdin);
-            if(pseudo[strlen(pseudo)-1]=='\n'){
-                pseudo[strlen(pseudo)-1]='\0';
-            }*/
 
             do{
 
@@ -796,12 +764,6 @@ int SignUp_SDL(){
             check=1;
             check_input=0;
             strcpy(mail,"");
-            /*printf("Enter your mail:\n\n");
-            fflush(stdin);
-            fgets(mail,100,stdin);
-            if(mail[strlen(mail)-1]=='\n'){
-                mail[strlen(mail)-1]='\0';
-            }*/
 
             do{
 
@@ -958,13 +920,6 @@ int SignUp_SDL(){
 
         }while(check!=1);
 
-            /*printf("Enter your city:\n\n");
-            fflush(stdin);
-            fgets(city,100,stdin);
-            if(city[strlen(city)-1]=='\n'){
-                city[strlen(city)-1]='\0';
-            }*/
-
         check_input=0;
 
         do{
@@ -1023,12 +978,6 @@ int SignUp_SDL(){
         do{
             check=1;
             check_input=0;
-            /*printf("Enter your password:\n\n");
-            fflush(stdin);
-            fgets(password,100,stdin);
-            if(password[strlen(password)-1]=='\n'){
-                password[strlen(password)-1]='\0';
-            }*/
 
             do{
 
@@ -1085,7 +1034,7 @@ int SignUp_SDL(){
             }while(check_input!=1);
 
             if(strlen(password)<8){
-                //printf("Password to short\n");
+
                 SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
                 SDL_RenderClear(renderer);
                 SDL_RenderPresent(renderer);
@@ -1117,7 +1066,7 @@ int SignUp_SDL(){
             }
 
             if(password[0]<65 || password[0]>90 && check!=0 ){
-                //printf("The first letter must be a capital letter\n");
+
                 SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
                 SDL_RenderClear(renderer);
                 SDL_RenderPresent(renderer);
@@ -1149,7 +1098,7 @@ int SignUp_SDL(){
             }
 
             if(strpbrk(password,"0123456789")==NULL && check!=0){
-                //printf("Your password must contain a number\n");
+
                 SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
                 SDL_RenderClear(renderer);
                 SDL_RenderPresent(renderer);
@@ -1188,12 +1137,6 @@ int SignUp_SDL(){
             check_input=0;
             strcpy(confirm_password,"");
             strcpy(hide_password,"");
-           /*printf("Confirm your password:\n\n");
-           fflush(stdin);
-           fgets(confirm_password,100,stdin);
-           if(confirm_password[strlen(confirm_password)-1]=='\n'){
-              confirm_password[strlen(confirm_password)-1]='\0';
-           }*/
 
            do{
 
@@ -1250,7 +1193,7 @@ int SignUp_SDL(){
             }while(check_input!=1);
 
            if(strstr(password,confirm_password)==NULL){
-                //printf("Both passwords must match\n");
+
                 SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
                 SDL_RenderClear(renderer);
                 SDL_RenderPresent(renderer);
@@ -1295,8 +1238,6 @@ int SignUp_SDL(){
         strcat(query,password);
         strcat(query,"')");
 
-        //sprintf(query,"INSERT INTO USER (pseudo,mail,city,password) VALUES('%s','%s','%s','%s');",pseudo,mail,city,password);
-
         mysql_query(&mysql,query);
 
         strcpy(query,"SELECT id FROM USER WHERE pseudo='");
@@ -1314,12 +1255,7 @@ int SignUp_SDL(){
             printf("\nERROR: Your account can't be create\n");
         }
 
-        //mysql_query(&mysql,"INSERT INTO USER (pseudo,mail,city,password) VALUES('Izonite','armanddfl@gmail.com','Chatou','Test1234')");
-
          mysql_close(&mysql);
-
-
-
 
     }else{
         printf("ERROR: An error occurred while connecting to the DB!");
@@ -1331,10 +1267,8 @@ int SignUp_SDL(){
 
 void cocktails(int id){
     int choice;
-    int x_mouse;
-    int y_mouse;
 
-    /*printf("--COCKTAILS--\n");
+    printf("--COCKTAILS--\n");
 
     do{
         printf("\n1:Create a coktails\n2:List of users Cocktails\n3:Return to menu\n");
@@ -1346,9 +1280,13 @@ void cocktails(int id){
         if(choice==2){
             listCocktails(id);
         }
-    }while(choice!=3);*/
+    }while(choice!=3);
+}
 
-
+void cocktails_SDL(int id){
+    int choice;
+    int x_mouse;
+    int y_mouse;
 
     do{
         choice=0;
@@ -1515,7 +1453,7 @@ void createCocktails(int id){
                 printf("\n");
 
                 if(check_count_row==0){
-                    //count_row++;
+
                     strcpy(tab_choice_ingredient[count_row],row[0]);
 
                 }
@@ -1524,7 +1462,6 @@ void createCocktails(int id){
             }
 
             check_count_row=1;
-            //printf("%d",count_row);
 
             scanf("%d",&choice);
             if(choice<=count_row && choice>0){
@@ -1546,8 +1483,6 @@ void createCocktails(int id){
         strcat(query,txt_tmp);
         strcat(query,"')");
 
-        //printf("%s",query);
-
         mysql_query(&mysql,query);
 
         strcpy(query,"SELECT LAST_INSERT_ID() FROM COCKTAILS");
@@ -1558,7 +1493,6 @@ void createCocktails(int id){
 
         if(row){
             sscanf(row[0],"%d",&id_cocktails);
-            //printf("\n---%d---",id_cocktails);
         }
 
         for(i=0;i<max;i++){
@@ -1566,14 +1500,12 @@ void createCocktails(int id){
             itoa(id_cocktails,txt_tmp,10);
             strcat(query,txt_tmp);
             strcat(query,"','");
-            //itoa(tab_choice_ingredient[tab_ingredient[i]-1],txt_tmp,10);
             strcat(query,tab_choice_ingredient[tab_ingredient[i]-1]);
             strcat(query,"','");
             itoa(tab_quantity[i],txt_tmp,10);
             strcat(query,txt_tmp);
             strcat(query,"')");
 
-            //printf("\n%s",query);
             mysql_query(&mysql,query);
         }
 
@@ -1602,6 +1534,7 @@ void createCocktails_SDL(int id){
     unsigned int i = 0;
     int count_row=0;
     int check_count_row=0;
+
     //SDL
     int x_mouse;
     int y_mouse;
@@ -1618,13 +1551,6 @@ void createCocktails_SDL(int id){
     mysql_options(&mysql,MYSQL_READ_DEFAULT_GROUP,"option");
 
     if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0)){
-
-
-
-        //printf("| Creation of a cocktail |\n");
-        //printf("Choose the name of your cocktails\n");
-        //fflush(stdin);
-        //fgets(name_cocktail,100,stdin);
 
         do{
 
@@ -1682,8 +1608,6 @@ void createCocktails_SDL(int id){
             name_cocktail[strlen(name_cocktail)-1]='\0';
         }
 
-        printf("%s",name_cocktail);
-
         strcpy(query,"SELECT * FROM ingredient");
         mysql_query(&mysql,query);
 
@@ -1700,7 +1624,6 @@ void createCocktails_SDL(int id){
              }
         }
 
-        //printf("Choose an ingredient(max 10)\n");
         do{
             count_row=0;
             y_position_increment=170;
@@ -1735,19 +1658,15 @@ void createCocktails_SDL(int id){
             position.x=15;
             position.y=130;
             SDL_RenderCopy(renderer, texture, NULL, &position);
-            //printf("Choose a number (or 0 if the list is finish)\n");
-            //printf("(%d/10)\n)",max);
             strcpy(query,"SELECT * FROM ingredient");
             mysql_query(&mysql,query);
 
             result = mysql_use_result(&mysql);
             while((row = mysql_fetch_row(result))){
 
-                //printf("[%d] [%s]",count_row+1,row[1]);
-                //printf("\n");
                 if(count_row<loop && count_row>=loop-6){
                     strcpy(gui_txt,"[");
-                    itoa(count_row,txt_count_row,10);
+                    itoa(count_row+1,txt_count_row,10);
                     strcat(gui_txt,txt_count_row);
                     strcat(gui_txt,"] ");
                     strcat(gui_txt,row[1]);
@@ -1765,7 +1684,6 @@ void createCocktails_SDL(int id){
                 }
 
                 if(check_count_row==0){
-                    //count_row++;
                     strcpy(tab_choice_ingredient[count_row],row[0]);
 
                 }
@@ -1774,7 +1692,6 @@ void createCocktails_SDL(int id){
             }
 
             check_count_row=1;
-            //printf("%d",count_row);
 
             text=TTF_RenderText_Blended(font,"Finish",font_color);
             surface=NULL;
@@ -1837,13 +1754,10 @@ void createCocktails_SDL(int id){
 
             }while(choice==-1);
 
-            //scanf("%d",&choice);
             if(choice<=count_row && choice>0){
                 if(choice!=0){
                     tab_ingredient[max]=loop-choice+1;
                     check_input=0;
-                    //printf("Enter the quantity (in milliter)\n");
-                    //scanf("%d",&quantity);
                     do{
 
                         SDL_WaitEvent(&event);
@@ -1905,8 +1819,6 @@ void createCocktails_SDL(int id){
                 if(loop>6){
                     loop-=1;
                 }
-
-                //printf("%d\n",loop);
             }
 
             if(choice==-3){
@@ -1914,8 +1826,6 @@ void createCocktails_SDL(int id){
                 if(loop+1<=count_row){
                     loop+=1;
                 }
-
-                //printf("%d\n",loop);
             }
 
         }while(choice!=0 && max<10 || max==0);
@@ -1927,8 +1837,6 @@ void createCocktails_SDL(int id){
         strcat(query,txt_tmp);
         strcat(query,"')");
 
-        //printf("%s",query);
-
         mysql_query(&mysql,query);
 
         strcpy(query,"SELECT LAST_INSERT_ID() FROM COCKTAILS");
@@ -1939,7 +1847,6 @@ void createCocktails_SDL(int id){
 
         if(row){
             sscanf(row[0],"%d",&id_cocktails);
-            //printf("\n---%d---",id_cocktails);
         }
 
         for(i=0;i<max;i++){
@@ -1947,14 +1854,11 @@ void createCocktails_SDL(int id){
             itoa(id_cocktails,txt_tmp,10);
             strcat(query,txt_tmp);
             strcat(query,"','");
-            //itoa(tab_choice_ingredient[tab_ingredient[i]-1],txt_tmp,10);
             strcat(query,tab_choice_ingredient[tab_ingredient[i]-1]);
             strcat(query,"','");
             itoa(tab_quantity[i],txt_tmp,10);
             strcat(query,txt_tmp);
             strcat(query,"')");
-
-            //printf("\n%s",query);
             mysql_query(&mysql,query);
         }
 
@@ -2007,8 +1911,6 @@ void listCocktails(int id){
             }
        }
 
-       //printf("#%d#",count_row);
-
        do{
             count_row=0;
 
@@ -2029,17 +1931,12 @@ void listCocktails(int id){
 
             check=1;
 
-            /*for(i=0;i<count_row;i++){
-                printf("%s\n",tab_coktails[i]);
-            }*/
-
             printf("Choose a cocktails (enter 0 to return to the coktails menu)\n");
             scanf("%d",&choice);
 
             if(choice>0 && choice<=count_row){
                 strcpy(id_cocktail,tab_coktails[choice-1]);
                 printf("Recipe\n");
-                //printf("%s\n",id_cocktail);
                 strcpy(query,"SELECT ingredient.name,quantity FROM recipe INNER JOIN cocktails ON recipe.id_cocktail = '");
                 strcat(query,id_cocktail);
                 strcat(query,"' and cocktails.id='");
@@ -2085,6 +1982,7 @@ void listCocktails_SDL(int id){
     int choice2;
     int check=0;
     char id_cocktail[10];
+
     //SDL
     char txt_count_row[10];
     char gui_txt[255];
@@ -2098,8 +1996,6 @@ void listCocktails_SDL(int id){
     mysql_options(&mysql,MYSQL_READ_DEFAULT_GROUP,"option");
 
     if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0)){
-
-       //printf("| List of the cocktail |\n");
 
        strcpy(query,"SELECT * FROM cocktails");
        mysql_query(&mysql,query);
@@ -2117,7 +2013,6 @@ void listCocktails_SDL(int id){
             }
        }
 
-       //printf("#%d#",count_row);
        do{
             count_row=0;
             choice=-1;
@@ -2149,8 +2044,6 @@ void listCocktails_SDL(int id){
             result = mysql_use_result(&mysql);
             while((row = mysql_fetch_row(result))){
 
-                /*printf("[%d] |%s| created by %s",count_row+1,row[1],row[2]);
-                printf("\n");*/
                 if(count_row<loop && count_row>=loop-6){
                     itoa(count_row+1,txt_count_row,10);
                     strcpy(gui_txt,"[");
@@ -2197,13 +2090,6 @@ void listCocktails_SDL(int id){
             SDL_RenderCopy(renderer, texture, NULL, &position);
 
             SDL_RenderPresent(renderer);
-
-            /*for(i=0;i<count_row;i++){
-                printf("%s\n",tab_coktails[i]);
-            }*/
-
-            //printf("Choose a cocktails (enter 0 to return to the coktails menu)\n");
-            //scanf("%d",&choice);
 
             do{
 
@@ -2274,7 +2160,7 @@ void listCocktails_SDL(int id){
 
                 strcpy(id_cocktail,tab_coktails[loop-choice]);
                 printf("Recipe\n");
-                //printf("%s\n",id_cocktail);
+
                 strcpy(query,"SELECT ingredient.name,quantity FROM recipe INNER JOIN cocktails ON recipe.id_cocktail = '");
                 strcat(query,id_cocktail);
                 strcat(query,"' and cocktails.id='");
@@ -2285,8 +2171,6 @@ void listCocktails_SDL(int id){
                 result = mysql_use_result(&mysql);
                 while((row = mysql_fetch_row(result))){
 
-                    //printf("|%s| quantity: %s",row[0],row[1]);
-                    //printf("\n");
                     strcpy(gui_txt,"|");
                     strcat(gui_txt,row[0]);
                     strcat(gui_txt,"| quantity: ");
@@ -2331,8 +2215,7 @@ void listCocktails_SDL(int id){
                     if(x_mouse>=20 && x_mouse<=140 && y_mouse>=610 && y_mouse<=680){
                     choice2=0;
                     }
-                    //printf("Return to cocktails list ?(enter 0)");
-                    //scanf("%d",&choice2);
+
                 }while(choice2!=0);
             }
 
@@ -2340,8 +2223,6 @@ void listCocktails_SDL(int id){
                 if(loop>6){
                     loop-=1;
                 }
-
-                //printf("%d\n",loop);
             }
 
             if(choice==-3){
@@ -2349,8 +2230,6 @@ void listCocktails_SDL(int id){
                 if(loop+1<=count_row){
                     loop+=1;
                 }
-
-                //printf("%d\n",loop);
             }
 
         }while(choice!=0);
@@ -2399,85 +2278,10 @@ int main(int argc, char **argv){
 
     TTF_Init();
 
-    /*font=TTF_OpenFont("poppins-Regular.ttf", 20);
-
-
-
-    while(check!=1){
-
-        SDL_WaitEvent(&event);
-        if(event.type == SDL_TEXTINPUT){
-            strcat(txt_test,event.text.text);
-
-            /*SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
-            SDL_RenderClear(renderer);
-            SDL_RenderPresent(renderer);
-
-
-            text=TTF_RenderText_Blended(font,txt_test,font_color);
-            position.x=0;
-            position.y=0;
-            texture= SDL_CreateTextureFromSurface(renderer,text);
-            SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
-            position.x=20;
-            position.y=50;
-            SDL_RenderCopy(renderer, texture, NULL, &position);
-
-            SDL_RenderPresent(renderer);
-
-        }
-
-        if(event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_BACKSPACE){
-            txt_test[strlen(txt_test)-1]='\0';
-
-            /*SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
-            SDL_RenderClear(renderer);
-            SDL_RenderPresent(renderer);
-
-            strcat(txt_test,event.text.text);
-            text=TTF_RenderText_Blended(font,txt_test,font_color);
-            position.x=0;
-            position.y=0;
-            texture= SDL_CreateTextureFromSurface(renderer,text);
-            SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
-            position.x=20;
-            position.y=50;
-            SDL_RenderCopy(renderer, texture, NULL, &position);
-
-            SDL_RenderPresent(renderer);
-        }
-
-        if(event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_KP_ENTER){
-            check=1;
-        }
-
-            SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
-            SDL_RenderClear(renderer);
-            SDL_RenderPresent(renderer);
-
-
-            text=TTF_RenderText_Blended(font,txt_test,font_color);
-            position.x=0;
-            position.y=0;
-            texture= SDL_CreateTextureFromSurface(renderer,text);
-            SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
-            position.x=20;
-            position.y=50;
-            SDL_RenderCopy(renderer, texture, NULL, &position);
-
-            SDL_RenderPresent(renderer);
-    }
-
-    printf("%s",txt_test);*/
-
     SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
     SDL_RenderClear(renderer);
     SDL_RenderPresent(renderer);
-    /*SDL_SetRenderDrawColor(renderer,items.r,items.g,items.b,items.a);
-    SDL_RenderFillRect(renderer,&rect);
-    rect.y+=170;
-    SDL_RenderFillRect(renderer,&rect);
-    SDL_RenderPresent(renderer);*/
+
     font=TTF_OpenFont("poppins-Regular.ttf", 30);
     text=TTF_RenderText_Blended(font,"Sign In",font_color);
     surface = SDL_CreateRGBSurface(0, 170, 70, 32, 0, 0, 0, 0);
@@ -2571,7 +2375,6 @@ int main(int argc, char **argv){
 
     do{
 
-        //printf("GUI CHoice\n");
         x_mouse=0;
         y_mouse=0;
         choice=0;
@@ -2624,17 +2427,14 @@ int main(int argc, char **argv){
             choice=0;
             x_mouse=0;
             y_mouse=0;
-            //printf("choice: %d\n",choice);
             SDL_WaitEvent(&event);
 
             if(event.type == SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT){
                 SDL_GetMouseState(&x_mouse,&y_mouse);
-                //printf("coord: %d-%d \n",x_mouse,y_mouse);
             }
 
             if(x_mouse>=110 && x_mouse<=280 && y_mouse>=170 && y_mouse<=240){
                 choice=1;
-                printf("coord: %d-%d \n",x_mouse,y_mouse);
                 x_mouse=0;
                 y_mouse=0;
             }
@@ -2649,7 +2449,7 @@ int main(int argc, char **argv){
         }while(choice!=1 && choice!=4);
 
         if(choice==1){
-            cocktails(id);
+            cocktails_SDL(id);
         }
 
 
