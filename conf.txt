@@ -1,5 +1,4 @@
 app_mod:GUI
-font:poppins-Regular.ttf
+font:redressed-Regular.ttf
 color:normal
 renderer:software
-

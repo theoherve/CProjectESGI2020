@@ -2164,7 +2164,7 @@ void listCocktails_SDL(int id){
                 font=TTF_OpenFont(txt_font, 20);
 
                 strcpy(id_cocktail,tab_coktails[loop-choice]);
-                printf("Recipe\n");
+                //printf("Recipe\n");
 
                 strcpy(query,"SELECT ingredient.name,quantity FROM recipe INNER JOIN cocktails ON recipe.id_cocktail = '");
                 strcat(query,id_cocktail);
@@ -2694,25 +2694,30 @@ int verifConfTxt(){
         fgets(conf_txt,255,fp);
         if((strncmp(conf_txt,"renderer:",9))==0 && check_verif_conf!=0){
             if((strncmp(conf_txt+9,"software",8))==0){
+                fclose(fp);
                 return 1;
             }else if((strncmp(conf_txt+9,"accelerate",10))==0){
                 return 2;
             }else{
+                fclose(fp);
                 return 1;
             }
         }else{
             printf("#4#");
+            fclose(fp);
             check_verif_conf=0;
         }
 
         if(check_verif_conf==0){
             printf("ERROR: the conf file format is wrong");
+            fclose(fp);
             return 0;
         }
 
 
     }else{
         printf("ERROR: Conf file does not exist");
+        fclose(fp);
         return 0;
     }
 
@@ -2737,7 +2742,7 @@ void menu(){
     }
 
     do{
-        printf("--MENU--\n1: Cocktails\n4:EXIT\n");
+        printf("--MENU--\n1: Cocktails\n2: Bar\n3: Game\n4 Setting\n5:EXIT\n");
         scanf("%d",&choice);
 
         if(choice==1){
@@ -2748,7 +2753,11 @@ void menu(){
             game();
         }
 
-    }while(choice!=4);
+        if(choice==4){
+            setting();
+        }
+
+    }while(choice!=5);
 }
 
 void menu_SDL(){
@@ -2757,7 +2766,7 @@ void menu_SDL(){
     int x_mouse;
     int y_mouse;
 
-    SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
+        SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
         SDL_RenderClear(renderer);
         SDL_RenderPresent(renderer);
 
@@ -2859,6 +2868,19 @@ void menu_SDL(){
             position.y=260;
             SDL_RenderCopy(renderer, texture, NULL, &position);
 
+            text=TTF_RenderText_Blended(font,"SETTING",font_color);
+            surface=NULL;
+            surface = SDL_CreateRGBSurface(0, 140, 70, 32, 0, 0, 0, 0);
+            SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, r_color, g_color, b_color));
+            position.x=15;
+            position.y=15;
+            SDL_BlitSurface(text,NULL,surface,&position);
+            texture= SDL_CreateTextureFromSurface(renderer,surface);
+            SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+            position.x=240;
+            position.y=610;
+            SDL_RenderCopy(renderer, texture, NULL, &position);
+
             text=TTF_RenderText_Blended(font,"Exit",font_color);
             surface=NULL;
             surface = SDL_CreateRGBSurface(0, 90, 70, 32, 0, 0, 0, 0);
@@ -2894,8 +2916,14 @@ void menu_SDL(){
                     y_mouse=0;
                 }
 
-                if(x_mouse>=20 && x_mouse<=90 && y_mouse>=610 && y_mouse<=680){
+                if(x_mouse>=240 && x_mouse<=380 && y_mouse>=610 && y_mouse<=680){
                     choice=4;
+                    x_mouse=0;
+                    y_mouse=0;
+                }
+
+                if(x_mouse>=20 && x_mouse<=90 && y_mouse>=610 && y_mouse<=680){
+                    choice=5;
                     x_mouse=0;
                     y_mouse=0;
                 }
@@ -2911,7 +2939,351 @@ void menu_SDL(){
                 game_SDL();
             }
 
-        }while(choice!=4);
+            if(choice==4){
+                setting_SDL();
+            }
+
+        }while(choice!=5);
+
+}
+
+void setting(){
+
+    int choice;
+    FILE *fp;
+    char appMod[100];
+    char font_conf[100];
+    char color_conf[100];
+    char renderer_conf[100];
+    int change=0;
+    char final_conf[100];
+
+    printf("--SETTING--\n");
+
+    fp=fopen("conf.txt","rb");
+    if(fp!=NULL){
+        fgets(appMod,100,fp);
+        strcpy(appMod,appMod+8);
+        if(appMod[strlen(appMod)-1]=='\n'){
+               appMod[strlen(appMod)-1]='\0';
+           }
+
+        fgets(font_conf,100,fp);
+        strcpy(font_conf,font_conf+5);
+        if(font_conf[strlen(font_conf)-1]=='\n'){
+               font_conf[strlen(font_conf)-1]='\0';
+            }
+
+        fgets(color_conf,100,fp);
+        strcpy(color_conf,color_conf+6);
+        if(color_conf[strlen(color_conf)-1]=='\n'){
+               color_conf[strlen(color_conf)-1]='\0';
+           }
+
+        fgets(renderer_conf,100,fp);
+        strcpy(renderer_conf,renderer_conf+9);
+        if(renderer_conf[strlen(renderer_conf)-1]=='\n'){
+               renderer_conf[strlen(renderer_conf)-1]='\0';
+           }
+    }else{
+        printf("ERROR: The file can't be open");
+    }
+
+    fclose(fp);
+
+    do{
+        printf("Select a number to change the option\n1: %s\n2: %s\n3: %s\n4: %s\n5: Menu\n",appMod,font_conf,color_conf,renderer_conf);
+        scanf("%d",&choice);
+
+        if(choice==1){
+            change=1;
+            if((strcmp(appMod,"GUI"))==0){
+                strcpy(appMod,"command_line");
+            }else{
+                strcpy(appMod,"GUI");
+            }
+        }
+
+        if(choice==2){
+            change=1;
+            if((strcmp(font_conf,"poppins-Regular.ttf"))==0){
+                strcpy(font_conf,"redressed-Regular.ttf");
+            }else{
+                strcpy(font_conf,"poppins-Regular.ttf");
+            }
+        }
+
+        if(choice==3){
+            change=1;
+            if((strcmp(color_conf,"normal"))==0){
+                strcpy(color_conf,"inversed");
+            }else{
+                strcpy(color_conf,"normal");
+            }
+        }
+
+        if(choice==4){
+            change=1;
+            if((strcmp(renderer_conf,"software"))==0){
+                strcpy(renderer_conf,"accelerate");
+            }else{
+                strcpy(renderer_conf,"software");
+            }
+        }
+
+    }while(choice!=5);
+
+    if(change==1){
+        fp=fopen("conf.txt","wb");
+        if(fp!=NULL){
+            strcpy(final_conf,"app_mod:");
+            strcat(final_conf,appMod);
+            strcat(final_conf,"\nfont:");
+            strcat(final_conf,font_conf);
+            strcat(final_conf,"\ncolor:");
+            strcat(final_conf,color_conf);
+            strcat(final_conf,"\nrenderer:");
+            strcat(final_conf,renderer_conf);
+
+            fwrite(final_conf,strlen(final_conf),1,fp);
+        }
+
+        fclose(fp);
+
+    }else{
+        printf("ERROR: The file can't be open");
+    }
+
+
+
+}
+
+void setting_SDL(){
+
+    int choice;
+    FILE *fp;
+    char appMod[100];
+    char font_conf[100];
+    char color_conf[100];
+    char renderer_conf[100];
+    int change=0;
+    char final_conf[100];
+
+    //SDL
+    int x_mouse;
+    int y_mouse;
+
+    //printf("--SETTING--\n");
+
+    fp=fopen("conf.txt","rb");
+    if(fp!=NULL){
+        fgets(appMod,100,fp);
+        strcpy(appMod,appMod+8);
+        if(appMod[strlen(appMod)-1]=='\n'){
+               appMod[strlen(appMod)-1]='\0';
+           }
+
+        fgets(font_conf,100,fp);
+        strcpy(font_conf,font_conf+5);
+        if(font_conf[strlen(font_conf)-1]=='\n'){
+               font_conf[strlen(font_conf)-1]='\0';
+            }
+
+        fgets(color_conf,100,fp);
+        strcpy(color_conf,color_conf+6);
+        if(color_conf[strlen(color_conf)-1]=='\n'){
+               color_conf[strlen(color_conf)-1]='\0';
+           }
+
+        fgets(renderer_conf,100,fp);
+        strcpy(renderer_conf,renderer_conf+9);
+        if(renderer_conf[strlen(renderer_conf)-1]=='\n'){
+               renderer_conf[strlen(renderer_conf)-1]='\0';
+           }
+    }else{
+        printf("ERROR: The file can't be open");
+    }
+
+    fclose(fp);
+
+    do{
+        //printf("Select a number to change the option\n1: %s\n2: %s\n3: %s\n4: %s\n5: Menu\n",appMod,font_conf,color_conf,renderer_conf);
+        //scanf("%d",&choice);
+
+        x_mouse=0;
+        y_mouse=0;
+        choice=-1;
+
+        SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
+        SDL_RenderClear(renderer);
+        SDL_RenderPresent(renderer);
+
+        font=TTF_OpenFont(txt_font, 45);
+        text=TTF_RenderText_Blended(font,"SETTING",font_color);
+        position.x=0;
+        position.y=0;
+        texture= SDL_CreateTextureFromSurface(renderer,text);
+        SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+        position.x=75;
+        position.y=50;
+        SDL_RenderCopy(renderer, texture, NULL, &position);
+
+        font=TTF_OpenFont(txt_font, 20);
+        text=TTF_RenderText_Blended(font,"Select an option to change it:",font_color);
+        position.x=0;
+        position.y=0;
+        texture= SDL_CreateTextureFromSurface(renderer,text);
+        SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+        position.x=20;
+        position.y=170;
+        SDL_RenderCopy(renderer, texture, NULL, &position);
+
+        font=TTF_OpenFont(txt_font, 20);
+        text=TTF_RenderText_Blended(font,appMod,font_color);
+        position.x=0;
+        position.y=0;
+        texture= SDL_CreateTextureFromSurface(renderer,text);
+        SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+        position.x=20;
+        position.y=240;
+        SDL_RenderCopy(renderer, texture, NULL, &position);
+
+        font=TTF_OpenFont(txt_font, 20);
+        text=TTF_RenderText_Blended(font,font_conf,font_color);
+        position.x=0;
+        position.y=0;
+        texture= SDL_CreateTextureFromSurface(renderer,text);
+        SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+        position.x=20;
+        position.y=310;
+        SDL_RenderCopy(renderer, texture, NULL, &position);
+
+        font=TTF_OpenFont(txt_font, 20);
+        text=TTF_RenderText_Blended(font,color_conf,font_color);
+        position.x=0;
+        position.y=0;
+        texture= SDL_CreateTextureFromSurface(renderer,text);
+        SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+        position.x=20;
+        position.y=380;
+        SDL_RenderCopy(renderer, texture, NULL, &position);
+
+        font=TTF_OpenFont(txt_font, 20);
+        text=TTF_RenderText_Blended(font,renderer_conf,font_color);
+        position.x=0;
+        position.y=0;
+        texture= SDL_CreateTextureFromSurface(renderer,text);
+        SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+        position.x=20;
+        position.y=450;
+        SDL_RenderCopy(renderer, texture, NULL, &position);
+
+        text=TTF_RenderText_Blended(font,"Menu",font_color);
+        surface=NULL;
+        surface = SDL_CreateRGBSurface(0, 85, 70, 32, 0, 0, 0, 0);
+        SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, r_color, g_color, b_color));
+        position.x=20;
+        position.y=15;
+        SDL_BlitSurface(text,NULL,surface,&position);
+        texture= SDL_CreateTextureFromSurface(renderer,surface);
+        SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+        position.x=20;
+        position.y=610;
+        SDL_RenderCopy(renderer, texture, NULL, &position);
+
+        SDL_RenderPresent(renderer);
+
+        do{
+            SDL_WaitEvent(&event);
+
+            if(event.type == SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT){
+                SDL_GetMouseState(&x_mouse,&y_mouse);
+            }
+
+            if(x_mouse>=20 && x_mouse<=340 && y_mouse>=240 && y_mouse<=268){
+                choice=1;
+            }
+
+            if(x_mouse>=20 && x_mouse<=340 && y_mouse>=310 && y_mouse<=338){
+                printf("%d-%d\n",x_mouse,y_mouse);
+                choice=2;
+            }
+
+            if(x_mouse>=20 && x_mouse<=340 && y_mouse>=380 && y_mouse<=408){
+                choice=3;
+            }
+
+            if(x_mouse>=20 && x_mouse<=340 && y_mouse>=450 && y_mouse<=478){
+                choice=4;
+            }
+
+            if(x_mouse>=20 && x_mouse<=85 && y_mouse>=610 && y_mouse<=680){
+                choice=5;
+            }
+
+
+        }while(choice==-1);
+
+        if(choice==1){
+            change=1;
+            if((strcmp(appMod,"GUI"))==0){
+                strcpy(appMod,"command_line");
+            }else{
+                strcpy(appMod,"GUI");
+            }
+        }
+
+        if(choice==2){
+            change=1;
+            if((strcmp(font_conf,"poppins-Regular.ttf"))==0){
+                strcpy(font_conf,"redressed-Regular.ttf");
+            }else{
+                strcpy(font_conf,"poppins-Regular.ttf");
+            }
+        }
+
+        if(choice==3){
+            change=1;
+            if((strcmp(color_conf,"normal"))==0){
+                strcpy(color_conf,"inversed");
+            }else{
+                strcpy(color_conf,"normal");
+            }
+        }
+
+        if(choice==4){
+            change=1;
+            if((strcmp(renderer_conf,"software"))==0){
+                strcpy(renderer_conf,"accelerate");
+            }else{
+                strcpy(renderer_conf,"software");
+            }
+        }
+
+    }while(choice!=5);
+
+    if(change==1){
+        fp=fopen("conf.txt","wb");
+        if(fp!=NULL){
+            strcpy(final_conf,"app_mod:");
+            strcat(final_conf,appMod);
+            strcat(final_conf,"\nfont:");
+            strcat(final_conf,font_conf);
+            strcat(final_conf,"\ncolor:");
+            strcat(final_conf,color_conf);
+            strcat(final_conf,"\nrenderer:");
+            strcat(final_conf,renderer_conf);
+
+            fwrite(final_conf,strlen(final_conf),1,fp);
+        }
+
+        fclose(fp);
+
+    }else{
+        printf("ERROR: The file can't be open");
+    }
+
+
 
 }
 
