@@ -1271,12 +1271,14 @@ int SignUp_SDL(){
 }
 
 void cocktails(int id){
-    int choice;
+    int choice;//Cette variable va nous servir à pouvoir naviger dans les différents menu de l'application.
+
+    //Cette fonction est un sous menu qui nous permet de choisir entre deux autres fonctionnalité lié aux cocktail: créer un cocktail ou consulter la liste des cocktails existant
 
     printf("--COCKTAILS--\n");
 
     do{
-        printf("\n1:Create a coktails\n2:List of users Cocktails\n3:Return to menu\n");
+        printf("\n1:Create a coktails\n2:List of users Cocktails\n3:Return to menu\n");//On a donc ici une boucle pour choisir entre ces deux fonctionnalité et l'utilisateur rentre le numéro associer pour s'y rendre.
         scanf("%d",&choice);
         if(choice==1){
             createCocktails(id);
@@ -1285,7 +1287,7 @@ void cocktails(int id){
         if(choice==2){
             listCocktails(id);
         }
-    }while(choice!=3);
+    }while(choice!=3);//On reste dans la boucle tant que l'utilisateur n'a pas décidé de revenir au menu principal
 }
 
 void cocktails_SDL(int id){
@@ -1397,45 +1399,48 @@ void cocktails_SDL(int id){
 
 void createCocktails(int id){
 
-    char name_cocktail[100];
-    char txt_tmp[10];
-    int id_cocktails;
-    int tab_ingredient[10];
-    int tab_quantity[10];
-    char **tab_choice_ingredient;
-    int max=0;
-    int choice;
-    int quantity;
-    char query[255];
-    MYSQL_RES *result = NULL;
-    MYSQL_ROW row;
+    char name_cocktail[100];//Cette variable va stocker le nom du Cocktail à créer.
+    char txt_tmp[10];//Cette variable va nous servir à stocker les versions string de certaines valeur pour les mettre dans une requette sql.
+    int id_cocktails;//Cette variable va stocker l'id du cocktail créer.
+    int tab_ingredient[10];//Ce tableau va contenir les id des ingrédients à mettre dans notre cocktail.
+    int tab_quantity[10];//Ce tableau va contenir la quantité de chaque ingrédient à mettre dans le cocktail
+    char **tab_choice_ingredient;//Un double pointeur de char qui va devenir un tableau dynamique contenant l'id de chaque ingrédient
+    int max=0;//Une variable qui va nous servir à limiter à 10 le nombre d'ingredient que l'on peut mettre dans le cocktail mais aussi à savoir combien d'ingrédient on a choisi.
+    int choice;//C'est avec cette variable que l'utilisateur va séléctionner un ingrédient on décider de revenir au menu des cocktails.
+    int quantity;//Cette variable va contenir la quantité d'un ingrédiant pour le cocktail
+    char query[255];//Va contenir nos diiférente requête SQL
     unsigned int i = 0;
-    int count_row=0;
-    int check_count_row=0;
+    int count_row=0;//Une variable tempon qui nous sert à savoir combien de ligne on traitre
+    int check_count_row=0;//Variable tempon qui va nous servir à par la suite
 
-    MYSQL mysql;
-    mysql_init(&mysql);
-    mysql_options(&mysql,MYSQL_READ_DEFAULT_GROUP,"option");
+    //SQL
+    MYSQL mysql;//
+    MYSQL_RES *result = NULL;//Ce pointeur va contenir le jeu de résultat de notre requête
+    MYSQL_ROW row;//Cette variable va contenir les lignes de nos tables que l'on va traiter
+    mysql_init(&mysql);//On initialise notre bibliothèque de BDD
+    mysql_options(&mysql,MYSQL_READ_DEFAULT_GROUP,"option");//On choisie nos options
 
-    if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0)){
+    //Cette fonction va nous servir à créer un cocktail avec pour chaque cocktail différents ingrédient avec leur propre quantité.
+
+    if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0)){//On se connecte à la base de donné et si on réussi on continue le programme.
 
         printf("| Creation of a cocktail |\n");
         printf("Choose the name of your cocktails\n");
         fflush(stdin);
-        fgets(name_cocktail,100,stdin);
-        if(name_cocktail[strlen(name_cocktail)-1]=='\n'){
+        fgets(name_cocktail,100,stdin);//Ici l'utilisateur choisi le nom de son cocktail (on fait au préalable un "fflush" sur stdin).
+        if(name_cocktail[strlen(name_cocktail)-1]=='\n'){//On met bien le marqueur de fin de chaine à la fin de notre chaîne de charactère.
             name_cocktail[strlen(name_cocktail)-1]='\0';
         }
 
-        strcpy(query,"SELECT * FROM ingredient");
+        strcpy(query,"SELECT * FROM ingredient");//Ici on va envoyer une reqête afin de récupérer toute les lignes de notre table ingrédient.
         mysql_query(&mysql,query);
 
         result = mysql_use_result(&mysql);
-        while((row = mysql_fetch_row(result))){
+        while((row = mysql_fetch_row(result))){//Et on fait une boucle qui pour chaque ligne incrémente la variable "count_row"--> On obtient donc le nombre d'ingrédient dans notre table.
              count_row++;
         }
 
-        tab_choice_ingredient=malloc(sizeof(char*)*count_row);
+        tab_choice_ingredient=malloc(sizeof(char*)*count_row);//Avec "count_row" on construit le tableau dynamique de string qui va contenire l'id de tout nos ingrédient.
         if(tab_choice_ingredient!=NULL){
 
              for(i=0;i<count_row;i++){
@@ -1444,44 +1449,45 @@ void createCocktails(int id){
         }
 
         printf("Choose an ingredient(max 10)\n");
-        do{
+        do{//C'est dans cette boucle qu'on va afficher la liste des ingrédients et que l'utilisateur va pouvoir les choisir
             count_row=0;
             printf("Choose a number (or 0 if the list is finish)\n");
             printf("(%d/10)\n)",max);
-            strcpy(query,"SELECT * FROM ingredient");
+            strcpy(query,"SELECT * FROM ingredient");//On envoie une requête pour récuperer tous les ingrédients avec leur id et leur nom.
             mysql_query(&mysql,query);
 
             result = mysql_use_result(&mysql);
-            while((row = mysql_fetch_row(result))){
+            while((row = mysql_fetch_row(result))){//On boucle pour chaque ligne
 
-                printf("[%d] [%s]",count_row+1,row[1]);
+                printf("[%d] [%s]",count_row+1,row[1]);//Pour chaque ligne on affiche le nom de l'ingrédient et "count_row+1" qui correspondra au chiffre que l'utilisateur devra renter pour choisir cet ingrédient
                 printf("\n");
 
-                if(check_count_row==0){
+                if(check_count_row==0){//C'est ici que notre variable tempon va être utile: on affecte dans notre tableau dynamique les id de nos ingrédient à chaque tour de boucle et la variable "check_count_row" passe à 1 dès le premier tour de boucle ce qui permet de faire l'affectation qu'une seul fois.
 
                     strcpy(tab_choice_ingredient[count_row],row[0]);
 
                 }
 
-                count_row++;
+                count_row++;//On incrémente à chaque tour de boucle
             }
 
             check_count_row=1;
 
-            scanf("%d",&choice);
-            if(choice<=count_row && choice>0){
+            scanf("%d",&choice);//L'utilisateur séléctionne le numéro correspondant à l'ingrédient.
+            if(choice<=count_row && choice>0){//On vérifie que ce numéro est bien dans notre intervalle d'ingrédient dispo
                 if(choice!=0){
-                    tab_ingredient[max]=choice;
-                    printf("Enter the quantity (in milliter)\n");
+                    tab_ingredient[max]=choice;//On stock son choix dans un tableau
+                    printf("Enter the quantity (in cl)\n");//On lui propose de rentrer la quantité.
                     scanf("%d",&quantity);
-                    tab_quantity[max]=quantity;
-                    max++;
+                    tab_quantity[max]=quantity;//et on l'a met dans un tableau
+                    max++;//Ici on incrémente notre variable max, elle nous sert à savoir combien d'ingrédient on a choisie et à vérifier que l'on dépasse pas le nombre d'ingrédient.
                 }
             }
 
-        }while(choice!=0 && max<10 || max==0);
+        }while(choice!=0 && max<10 || max==0);//on boucle tant que l'utilisateur ne veut pas sortir, qu'il n'a pas tapé le nombre maximum d'ingrédient ou tant qu'il n'a pas rentré au moins un ingrédient.
 
-        itoa(id,txt_tmp,10);
+        //On va créer le cocktail dans la table "cocktail" en insérant son nom et l'id de l'utilisateur qui l'a créé.
+        itoa(id,txt_tmp,10);//Sur cette ligne on convertie l'id de l'utilisateur en string pour le metre dans la requête.
         strcpy(query,"INSERT INTO COCKTAILS (name,id_user) VALUES('");
         strcat(query,name_cocktail);
         strcat(query,"','");
@@ -1490,22 +1496,23 @@ void createCocktails(int id){
 
         mysql_query(&mysql,query);
 
-        strcpy(query,"SELECT LAST_INSERT_ID() FROM COCKTAILS");
+        strcpy(query,"SELECT LAST_INSERT_ID() FROM COCKTAILS");//Pour la suite on doit récuperer l'id du cocktail qui vient d'être créé: on le fait avec cette requête.
         mysql_query(&mysql,query);
 
         result = mysql_store_result(&mysql);
         row = mysql_fetch_row(result);
 
         if(row){
-            sscanf(row[0],"%d",&id_cocktails);
+            sscanf(row[0],"%d",&id_cocktails);//On place l'id récupéré dans "id_cocktail".
         }
 
-        for(i=0;i<max;i++){
-            strcpy(query,"INSERT INTO RECIPE (id_cocktail,id_ingredient,quantity) VALUES('");
+        //C'est ici qu'on va crée la recette de notre cocktail en fonction du nombre d'ingrédient que l'on a créé
+        for(i=0;i<max;i++){//On boucle en fonction du nombre d'ingrédient qu'on a rentré
+            strcpy(query,"INSERT INTO RECIPE (id_cocktail,id_ingredient,quantity) VALUES('");//Dans une ligne on met l'id du cocktail, l'id de l'ingrédient et la quantité
             itoa(id_cocktails,txt_tmp,10);
             strcat(query,txt_tmp);
             strcat(query,"','");
-            strcat(query,tab_choice_ingredient[tab_ingredient[i]-1]);
+            strcat(query,tab_choice_ingredient[tab_ingredient[i]-1]);//Pour récupérer l'id de l'ingrédient on le fait avec le tableau contenant nos choix remplie précédement.
             strcat(query,"','");
             itoa(tab_quantity[i],txt_tmp,10);
             strcat(query,txt_tmp);
@@ -1514,8 +1521,12 @@ void createCocktails(int id){
             mysql_query(&mysql,query);
         }
 
-        free(tab_choice_ingredient);
-        mysql_close(&mysql);
+        free(tab_choice_ingredient);//On libère la mémoire prise par notre tableau dynamique.
+        mysql_close(&mysql);//On ferme la connection avec notre BDD.
+
+    }else{
+
+        printf("ERROR: An error occurred while connecting to the DB!");
 
     }
 
@@ -1669,7 +1680,7 @@ void createCocktails_SDL(int id){
             result = mysql_use_result(&mysql);
             while((row = mysql_fetch_row(result))){
 
-                if(count_row<loop && count_row>=loop-6){
+                if(count_row<loop && count_row>=loop-6){//Ce qui va changer par rapport à l'affichage en ligne de commande c'est qu'on va afficher 6 par 6 et naviguer sur l'interface grâce à la variable loop
                     strcpy(gui_txt,"[");
                     itoa(count_row+1,txt_count_row,10);
                     strcat(gui_txt,txt_count_row);
@@ -1720,6 +1731,8 @@ void createCocktails_SDL(int id){
                 if(event.type == SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT){
                     SDL_GetMouseState(&x_mouse,&y_mouse);
                 }
+
+                //C'est avec les deux events suivants qu'on navigue dans la liste en pressant la touche "flêche du haut" ou "flêche du bas"
 
                 if(event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_UP){
                     choice=-2;
@@ -1793,7 +1806,7 @@ void createCocktails_SDL(int id){
                         SDL_RenderCopy(renderer, texture, NULL, &position);
 
                         font=TTF_OpenFont(txt_font, 20);
-                        text=TTF_RenderText_Blended(font,"Enter the quantity:",font_color);
+                        text=TTF_RenderText_Blended(font,"Enter the quantity (cl):",font_color);
                         position.x=0;
                         position.y=0;
                         texture= SDL_CreateTextureFromSurface(renderer,text);
@@ -1820,12 +1833,15 @@ void createCocktails_SDL(int id){
                 }
             }
 
+
+            //Lorsque l'on veut aller vers le haut au décrémente loop pour afficher les élèment plus haut
             if(choice==-2){
                 if(loop>6){
                     loop-=1;
                 }
             }
 
+            //Lorsque l'on veut aller vers le bas au incrémente loop pour afficher les élèment plus bas
             if(choice==-3){
 
                 if(loop+1<=count_row){
@@ -1877,38 +1893,36 @@ void createCocktails_SDL(int id){
 
 void listCocktails(int id){
 
-    char query[255];
-    MYSQL_RES *result = NULL;
-    MYSQL_ROW row;
-    char **tab_coktails;
-    int count_row=0;
+    char query[255];//Va contenir nos diiférente requête SQL
+    char **tab_coktails;//Un double pointeur de char qui va devenir un tableau dynamique contenant l'id de chaque cocktail
+    int count_row=0;//Une variable tempon qui nous sert à savoir combien de ligne on traitre
     unsigned int i = 0;
-    int choice;
-    int choice2;
-    int check=0;
-    char id_cocktail[10];
+    int choice;//C'est avec cette variable que l'utilisateur va séléctionner un cockatil on décider de revenir au menu des cocktails.
+    int choice2;//Avec cette variable l'utilisateur va pouvoir revenir à la liste des cocktails
+    int check=0;//Variable tempon
+    //char id_cocktail[10];
 
     MYSQL mysql;
+    MYSQL_RES *result = NULL;
+    MYSQL_ROW row;
     mysql_init(&mysql);
     mysql_options(&mysql,MYSQL_READ_DEFAULT_GROUP,"option");
 
-    if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0)){
+    //Dans cette fonction on va pouvoir afficher la liste des cocktails créé et les séléctionner pour savoir les ingrédients nécéssaire à leur conception + la quantité.
+
+    if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0)){//On se connecte à la BDD
 
        printf("| List of the cocktail |\n");
 
-       SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
-       SDL_RenderClear(renderer);
-       SDL_RenderPresent(renderer);
+       strcpy(query,"SELECT * FROM cocktails");//Ici on va envoyer une requète qui va séléctionner toute les lignes de notre table coktails.
+       mysql_query(&mysql,query);//On envoi la requête
 
-       strcpy(query,"SELECT * FROM cocktails");
-       mysql_query(&mysql,query);
-
-       result = mysql_use_result(&mysql);
-       while((row = mysql_fetch_row(result))){
+       result = mysql_use_result(&mysql);//On récupère le jeu de résultat
+       while((row = mysql_fetch_row(result))){//Avec cette requête on va boucler pour chaque ligne récupéré et on va incrémenté un couteur pour connaître le nombre de cocktail dans notre table.
             count_row++;
        }
 
-       tab_coktails=malloc(sizeof(char*)*count_row);
+       tab_coktails=malloc(sizeof(char*)*count_row);//Avec notre conteur on créer un tableau dynamique de string qui va contenir l'id de nos cocktail
        if(tab_coktails!=NULL){
 
             for(i=0;i<count_row;i++){
@@ -1916,18 +1930,18 @@ void listCocktails(int id){
             }
        }
 
-       do{
+       do{//Dans cette boucle on va afficher la liste des cocktail et les utilisateurs qui les ont créé
             count_row=0;
 
-            strcpy(query,"SELECT cocktails.id,name,user.pseudo FROM cocktails INNER JOIN user ON cocktails.id_user = user.id");
+            strcpy(query,"SELECT cocktails.id,name,user.pseudo FROM cocktails INNER JOIN user ON cocktails.id_user = user.id ORDER BY(name)");//Avec cette requête on récupère l'id du cocktail, son nom, et l'utilisateur qui l'a créé.
             mysql_query(&mysql,query);
 
             result = mysql_use_result(&mysql);
             while((row = mysql_fetch_row(result))){
 
-                printf("[%d] |%s| created by %s",count_row+1,row[1],row[2]);
+                printf("[%d] |%s| created by %s",count_row+1,row[1],row[2]);//Pour chaque ligne on affiche le nom du cocktail , l'utilisateur qui l' a créé et "count_row+1" qui correspondra au chiffre que l'utilisateur devra renter pour voir les détails
                 printf("\n");
-                if(check==0){
+                if(check==0){//C'est ici que notre variable tempon va être utile: on affecte dans notre tableau dynamique les id de nos cocktails à chaque tour de boucle et la variable "check" passe à 1 dès le premier tour de boucle ce qui permet de faire l'affectation qu'une seul fois.
                     strcpy(tab_coktails[count_row],row[0]);
 
                 }
@@ -1936,36 +1950,36 @@ void listCocktails(int id){
 
             check=1;
 
-            printf("Choose a cocktails (enter 0 to return to the coktails menu)\n");
+            printf("Choose a cocktails (enter 0 to return to the coktails menu)\n");//On propose à l'utilisateur de choisir un cocktail ou de sortir
             scanf("%d",&choice);
 
-            if(choice>0 && choice<=count_row){
-                strcpy(id_cocktail,tab_coktails[choice-1]);
+            if(choice>0 && choice<=count_row){//On vérifie que l'utilisateur à rentré un numéro valide
+                //strcpy(id_cocktail,tab_coktails[choice-1]);
                 printf("Recipe\n");
-                strcpy(query,"SELECT ingredient.name,quantity FROM recipe INNER JOIN cocktails ON recipe.id_cocktail = '");
-                strcat(query,id_cocktail);
+                strcpy(query,"SELECT ingredient.name,quantity FROM recipe INNER JOIN cocktails ON recipe.id_cocktail = '");//Avec cette requête on va séléctionner les ingrédient et la quantité correspondante du cocktail que l'on a séléctionné.
+                strcat(query,tab_coktails[choice-1]);//On fait cette requête en fonction du cockatil que l'on a séléctionner, on va donc chercher son id dans le tableau "tab_cocktail" avec comme indice notre choix-1.
                 strcat(query,"' and cocktails.id='");
-                strcat(query,id_cocktail);
+                strcat(query,tab_coktails[choice-1]);
                 strcat(query,"' INNER JOIN ingredient ON recipe.id_ingredient = ingredient.id");
                  mysql_query(&mysql,query);
 
                 result = mysql_use_result(&mysql);
-                while((row = mysql_fetch_row(result))){
+                while((row = mysql_fetch_row(result))){//On affiche par la suite le résultat
 
-                    printf("|%s| quantity: %s",row[0],row[1]);
+                    printf("|%s| quantity: %s cl",row[0],row[1]);
                     printf("\n");
                 }
 
-                do{
+                do{//Ici on propose à l'utilisateur de revenir à la liste des cocktails.
                     printf("Return to cocktails list ?(enter 0)");
                     scanf("%d",&choice2);
                 }while(choice2!=0);
             }
 
-        }while(choice!=0);
+        }while(choice!=0);//On boucle tant que l'utilisateur ne souhaite pas revenir à la liste des cocktails
 
-       free(tab_coktails);
-       mysql_close(&mysql);
+       free(tab_coktails);//On libère la mémoire prise par notre tableau dynamique
+       mysql_close(&mysql);//On met fin à la connection avec la BDD
 
     }else{
 
@@ -1986,7 +2000,7 @@ void listCocktails_SDL(int id){
     int choice;
     int choice2;
     int check=0;
-    char id_cocktail[10];
+    //char id_cocktail[10];
 
     //SDL
     char txt_count_row[10];
@@ -2043,7 +2057,7 @@ void listCocktails_SDL(int id){
 
             font=TTF_OpenFont(txt_font, 20);
 
-            strcpy(query,"SELECT cocktails.id,name,user.pseudo FROM cocktails INNER JOIN user ON cocktails.id_user = user.id");
+            strcpy(query,"SELECT cocktails.id,name,user.pseudo FROM cocktails INNER JOIN user ON cocktails.id_user = user.id ORDER BY(name)");
             mysql_query(&mysql,query);
 
             result = mysql_use_result(&mysql);
@@ -2163,13 +2177,13 @@ void listCocktails_SDL(int id){
 
                 font=TTF_OpenFont(txt_font, 20);
 
-                strcpy(id_cocktail,tab_coktails[loop-choice]);
+                //strcpy(id_cocktail,tab_coktails[loop-choice]);
                 //printf("Recipe\n");
 
                 strcpy(query,"SELECT ingredient.name,quantity FROM recipe INNER JOIN cocktails ON recipe.id_cocktail = '");
-                strcat(query,id_cocktail);
+                strcat(query,tab_coktails[loop-choice]);
                 strcat(query,"' and cocktails.id='");
-                strcat(query,id_cocktail);
+                strcat(query,tab_coktails[loop-choice]);
                 strcat(query,"' INNER JOIN ingredient ON recipe.id_ingredient = ingredient.id");
                  mysql_query(&mysql,query);
 
@@ -2180,6 +2194,7 @@ void listCocktails_SDL(int id){
                     strcat(gui_txt,row[0]);
                     strcat(gui_txt,"| quantity: ");
                     strcat(gui_txt,row[1]);
+                    strcat(gui_txt," cl");
 
                     text=TTF_RenderText_Blended(font,gui_txt,font_color);
                     position.x=0;
@@ -2256,8 +2271,6 @@ void game(){
     int choice;
     char **tab_id_game;
     char query[255];
-    MYSQL_RES *result = NULL;
-    MYSQL_ROW row;
     int count_row=0;
     unsigned int i;
     unsigned int y;
@@ -2267,22 +2280,27 @@ void game(){
     int id_used[15];
     int check=0;
 
+    //SQL
     MYSQL mysql;
+    MYSQL_RES *result = NULL;
+    MYSQL_ROW row;
     mysql_init(&mysql);
     mysql_options(&mysql,MYSQL_READ_DEFAULT_GROUP,"option");
 
     srand(time(NULL));
 
+    //Cette fonction va lancer un jeu: le "je n'ai jamais". Il permet de lancer 15 question aléatoire sue le thème du jeu.
+
     if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0)){
         printf("--GAME--\n");
 
-        do{
+        do{//Dans cette boucle on demande à l'utilisateur si il veut commencer le jeu ou si il veut revenir au menu
             printf("1: Start a game\n2: Return to the menu\n");
             scanf("%d",&choice);
 
             if(choice==1){
                         count_row=0;
-                        strcpy(query,"SELECT id FROM game");
+                        strcpy(query,"SELECT id FROM game");//On fait une requête pour récupérer le nombre de ligne dans la table game pour pouvoir initialiser un tableau dynamique de string.
                         mysql_query(&mysql,query);
 
                         result = mysql_use_result(&mysql);
@@ -2308,10 +2326,9 @@ void game(){
 
                         }
 
-                        for(i=0;i<15;i++){
+                        for(i=0;i<15;i++){//On boucle pour afficher 15 question
 
-
-                            do{
+                            do{//Avec cette boucle on s'assure que les questions sont posé de manière aléatoire et qu'on ne répète jamais deux fois la même question
                                 check=1;
                                 number=rand()%16;
 
@@ -2333,6 +2350,7 @@ void game(){
 
                             }while(check!=1);
 
+                            //On récupère la question
                             strcpy(txt_number,tab_id_game[number]);
                             strcpy(query,"SELECT question FROM game WHERE id='");
                             strcat(query,txt_number);
@@ -2345,7 +2363,7 @@ void game(){
                                 strcpy(question,row[0]);
                             }
 
-                            do{
+                            do{//et on l'affiche.
                                 printf("%d: %s\n",i+1,question);
                                 printf("1: Next question\n");
 
@@ -2623,6 +2641,8 @@ int verifConfTxt(){
     fp=fopen("conf.txt","rb");
     if(fp!=NULL){
 
+        //Dans la suite d'instruction suivante on va récupèrer les différentes lignes de notre fichier de configuration et faire des comparaisons de chaines pour à la fois vérifier le bon format du fichier mais aussi quelle paramètre on doit mettre pour le programme
+        //Option interface graphique/ligne de commande
         fgets(conf_txt,255,fp);
         if((strncmp(conf_txt,"app_mod:",8))==0){
             if((strncmp(conf_txt+8,"GUI",3))==0){
@@ -2637,6 +2657,7 @@ int verifConfTxt(){
             check_verif_conf=0;
         }
 
+        //Option police d'écriture
         fgets(conf_txt,255,fp);
         if((strncmp(conf_txt,"font:",5))==0 && check_verif_conf!=0){
             if((strncmp(conf_txt+5,"poppins-Regular.ttf",19))==0){
@@ -2651,6 +2672,7 @@ int verifConfTxt(){
             check_verif_conf=0;
         }
 
+        //Option couleur normal/inverser
         fgets(conf_txt,255,fp);
         if((strncmp(conf_txt,"color:",6))==0 && check_verif_conf!=0){
             if((strncmp(conf_txt+6,"normal",6))==0){
@@ -2690,7 +2712,7 @@ int verifConfTxt(){
             check_verif_conf=0;
         }
 
-
+        //Option renderer avec le CPU/GPU
         fgets(conf_txt,255,fp);
         if((strncmp(conf_txt,"renderer:",9))==0 && check_verif_conf!=0){
             if((strncmp(conf_txt+9,"software",8))==0){
@@ -2725,24 +2747,24 @@ int verifConfTxt(){
 
 void menu(){
 
-    int choice;
-    int id;
+    int choice;//Cette variable va nous servir à pouvoir naviger dans les différents menu de l'application.
+    int id;//Cette variable va contenir l'id de l'utilisateur une fois qu'il se sera connécté ou qu'il aura créé son compte.
 
-    SDL_DestroyWindow(window);
+    //Cette fonction nous sert de menu principal c'est ici qu'on va pouvoir accéder au différentes fonctionnalité de l'appli
 
     do{
-        printf("1: Sign in\n2: Sign up\n");
+        printf("1: Sign in\n2: Sign up\n");//On demande à l'utilisateur de choisir entre se connecter et s'inscrire.
         scanf("%d",&choice);
     }while(choice!=1 && choice!=2);
 
-    if(choice==1){
+    if(choice==1){//En fonction du choix on se dirige vers la fonction SignIn ou SignUp
         id=SignIn();
     }else if(choice==2){
         id=SignUp();
     }
 
     do{
-        printf("--MENU--\n1: Cocktails\n2: Bar\n3: Game\n4 Setting\n5:EXIT\n");
+        printf("--MENU--\n1: Cocktails\n2: Bar\n3: Game\n4 Setting\n5:EXIT\n");//On propose ici de choisr entre 5 choix: la fonctionalité "cocktail",la fonctionalité "game",la fonctionalité "bar",rentrer dans les paramètre ou sortir de l'appli.Il rentre au clavier le numéro indiqué pour chaque fonction
         scanf("%d",&choice);
 
         if(choice==1){
@@ -2757,7 +2779,7 @@ void menu(){
             setting();
         }
 
-    }while(choice!=5);
+    }while(choice!=5);//On répète cette boucle tant que le joueur n'a pas décidé de sortir de l'appli.
 }
 
 void menu_SDL(){
@@ -2951,35 +2973,43 @@ void setting(){
 
     int choice;
     FILE *fp;
-    char appMod[100];
+    char app_mod_conf[100];
     char font_conf[100];
     char color_conf[100];
     char renderer_conf[100];
     int change=0;
     char final_conf[100];
 
+    //Dans cette fonction on va pouvoir changer les paramètre dans notre fichier de configuration.
+
     printf("--SETTING--\n");
 
     fp=fopen("conf.txt","rb");
     if(fp!=NULL){
-        fgets(appMod,100,fp);
-        strcpy(appMod,appMod+8);
-        if(appMod[strlen(appMod)-1]=='\n'){
-               appMod[strlen(appMod)-1]='\0';
+        //Dans la suite d'instruction suivante on va récupérer le paramètre texte dans notre fichier pour chaque option et on les place dans des variables correspondante
+
+        //mode d'affichage
+        fgets(app_mod_conf,100,fp);
+        strcpy(app_mod_conf,app_mod_conf+8);
+        if(app_mod_conf[strlen(app_mod_conf)-1]=='\n'){
+               app_mod_conf[strlen(app_mod_conf)-1]='\0';
            }
 
+        //police d'écriture
         fgets(font_conf,100,fp);
         strcpy(font_conf,font_conf+5);
         if(font_conf[strlen(font_conf)-1]=='\n'){
                font_conf[strlen(font_conf)-1]='\0';
             }
 
+        //Couleur
         fgets(color_conf,100,fp);
         strcpy(color_conf,color_conf+6);
         if(color_conf[strlen(color_conf)-1]=='\n'){
                color_conf[strlen(color_conf)-1]='\0';
            }
 
+        //mode renderer
         fgets(renderer_conf,100,fp);
         strcpy(renderer_conf,renderer_conf+9);
         if(renderer_conf[strlen(renderer_conf)-1]=='\n'){
@@ -2992,15 +3022,18 @@ void setting(){
     fclose(fp);
 
     do{
-        printf("Select a number to change the option\n1: %s\n2: %s\n3: %s\n4: %s\n5: Menu\n",appMod,font_conf,color_conf,renderer_conf);
+        //On affiche les paramètre actuelle et si l'utilisateur veut changer un paramètre il entre le numéro correspondant.
+        printf("Select a number to change the option\n1: %s\n2: %s\n3: %s\n4: %s\n5: Menu\n",app_mod_conf,font_conf,color_conf,renderer_conf);
         scanf("%d",&choice);
 
         if(choice==1){
+            //Ici en fonction du numéro choisie on change le paramètre
+
             change=1;
-            if((strcmp(appMod,"GUI"))==0){
-                strcpy(appMod,"command_line");
+            if((strcmp(app_mod_conf,"GUI"))==0){
+                strcpy(app_mod_conf,"command_line");
             }else{
-                strcpy(appMod,"GUI");
+                strcpy(app_mod_conf,"GUI");
             }
         }
 
@@ -3033,11 +3066,12 @@ void setting(){
 
     }while(choice!=5);
 
+    //à la fin du programme si un changement à été effectuer on réécrie le fichier avec les changement
     if(change==1){
         fp=fopen("conf.txt","wb");
         if(fp!=NULL){
             strcpy(final_conf,"app_mod:");
-            strcat(final_conf,appMod);
+            strcat(final_conf,app_mod_conf);
             strcat(final_conf,"\nfont:");
             strcat(final_conf,font_conf);
             strcat(final_conf,"\ncolor:");
@@ -3062,7 +3096,7 @@ void setting_SDL(){
 
     int choice;
     FILE *fp;
-    char appMod[100];
+    char app_mod_conf[100];
     char font_conf[100];
     char color_conf[100];
     char renderer_conf[100];
@@ -3077,10 +3111,10 @@ void setting_SDL(){
 
     fp=fopen("conf.txt","rb");
     if(fp!=NULL){
-        fgets(appMod,100,fp);
-        strcpy(appMod,appMod+8);
-        if(appMod[strlen(appMod)-1]=='\n'){
-               appMod[strlen(appMod)-1]='\0';
+        fgets(app_mod_conf,100,fp);
+        strcpy(app_mod_conf,app_mod_conf+8);
+        if(app_mod_conf[strlen(app_mod_conf)-1]=='\n'){
+               app_mod_conf[strlen(app_mod_conf)-1]='\0';
            }
 
         fgets(font_conf,100,fp);
@@ -3107,7 +3141,7 @@ void setting_SDL(){
     fclose(fp);
 
     do{
-        //printf("Select a number to change the option\n1: %s\n2: %s\n3: %s\n4: %s\n5: Menu\n",appMod,font_conf,color_conf,renderer_conf);
+        //printf("Select a number to change the option\n1: %s\n2: %s\n3: %s\n4: %s\n5: Menu\n",app_mod_conf,font_conf,color_conf,renderer_conf);
         //scanf("%d",&choice);
 
         x_mouse=0;
@@ -3139,7 +3173,7 @@ void setting_SDL(){
         SDL_RenderCopy(renderer, texture, NULL, &position);
 
         font=TTF_OpenFont(txt_font, 20);
-        text=TTF_RenderText_Blended(font,appMod,font_color);
+        text=TTF_RenderText_Blended(font,app_mod_conf,font_color);
         position.x=0;
         position.y=0;
         texture= SDL_CreateTextureFromSurface(renderer,text);
@@ -3226,10 +3260,10 @@ void setting_SDL(){
 
         if(choice==1){
             change=1;
-            if((strcmp(appMod,"GUI"))==0){
-                strcpy(appMod,"command_line");
+            if((strcmp(app_mod_conf,"GUI"))==0){
+                strcpy(app_mod_conf,"command_line");
             }else{
-                strcpy(appMod,"GUI");
+                strcpy(app_mod_conf,"GUI");
             }
         }
 
@@ -3266,7 +3300,7 @@ void setting_SDL(){
         fp=fopen("conf.txt","wb");
         if(fp!=NULL){
             strcpy(final_conf,"app_mod:");
-            strcat(final_conf,appMod);
+            strcat(final_conf,app_mod_conf);
             strcat(final_conf,"\nfont:");
             strcat(final_conf,font_conf);
             strcat(final_conf,"\ncolor:");
@@ -3289,80 +3323,49 @@ void setting_SDL(){
 
 int main(int argc, char **argv){
 
-    int choice;
-    int id;
-
-    SDL_Rect rect={78,50,250,120};
+    /*int choice;//Cette variable va nous servir à pouvoir naviger dans les différents menu de l'application.
+    int id;//Cette variable va contenir l'id de l'utilisateur une fois qu'il s'est connécter ou qu'il a créer son compte.
     SDL_bool quit=SDL_FALSE;
-    int x_mouse;
-    int y_mouse;
-    int check=0;
-    int result;
+    int x_mouse;//Cette variable va contenir les coordonnées en X de la souris.
+    int y_mouse;//Cette variable va contenir les coordonnées en Y de la souris.
+    int check=0;*/
+    int result;//Cette variable contient la valeur de retour de la fonction verifConfTxt;
 
 
-    result=verifConfTxt();
+    result=verifConfTxt();// On appelle cette fonction pour connaître les infos du fichier de configuration
 
-    if(result!=0){
-
-        if (SDL_Init(SDL_INIT_VIDEO)!=0){
-            fprintf(stderr, "SDL Error : Init failed\n");
-            return 0;
-        }
-
-        window=SDL_CreateWindow("Picomencer",600,100,400,700,0);
-        if(window==NULL){
-            printf("SDL ERROR");
-        }
-
-        if(result==1){
-            renderer=SDL_CreateRenderer(window,-1,SDL_RENDERER_SOFTWARE);
-        }else if(result==2){
-            renderer=SDL_CreateRenderer(window,-1,SDL_RENDERER_ACCELERATED);
-        }
-
-        if(renderer==NULL){
-            printf("SDL renderer ERROR");
-        }
-
-        TTF_Init();
+    if(result!=0){//Si il n'y a pas de problème avec le fichier de configuration on rentre dans le programme.
 
         if(app_mod==1){
+            if (SDL_Init(SDL_INIT_VIDEO)!=0){// A partir d'ici on configure toute la partie SDL (seulement si on à choisie l'option interface graphique).
+                fprintf(stderr, "SDL Error : Init failed\n");
+                return 0;
+            }
+
+            window=SDL_CreateWindow("Picomencer",600,100,400,700,0);
+            if(window==NULL){
+                printf("SDL ERROR");
+            }
+
+            if(result==1){
+                renderer=SDL_CreateRenderer(window,-1,SDL_RENDERER_SOFTWARE);
+            }else if(result==2){
+                renderer=SDL_CreateRenderer(window,-1,SDL_RENDERER_ACCELERATED);
+            }
+
+            if(renderer==NULL){
+                printf("SDL renderer ERROR");
+            }
+
+            TTF_Init();
+        }
+
+        if(app_mod==1){//En fonction de si on a choisi d'avoir une interface graphique ou d'être en ligne de commande on va dans le menu correspondant.
             menu_SDL();
         }else if(app_mod==2){
             menu();
         }
 
-        /*SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
-        SDL_RenderClear(renderer);
-        SDL_RenderPresent(renderer);
-
-        font=TTF_OpenFont("poppins-Regular.ttf", 30);
-        text=TTF_RenderText_Blended(font,"Sign In",font_color);
-        surface = SDL_CreateRGBSurface(0, 170, 70, 32, 0, 0, 0, 0);
-        SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 129, 120, 115));
-        position.x=37;
-        position.y=15;
-        SDL_BlitSurface(text,NULL,surface,&position);
-        texture= SDL_CreateTextureFromSurface(renderer,surface);
-        SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
-        position.x=110;
-        position.y=150;
-        SDL_RenderCopy(renderer, texture, NULL, &position);
-
-        text=TTF_RenderText_Blended(font,"Sign Up",font_color);
-        surface=NULL;
-        surface = SDL_CreateRGBSurface(0, 170, 70, 32, 0, 0, 0, 0);
-        SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 129, 120, 115));
-        position.x=35;
-        position.y=15;
-        SDL_BlitSurface(text,NULL,surface,&position);
-        texture= SDL_CreateTextureFromSurface(renderer,surface);
-        SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
-        position.x=110;
-        position.y=230;
-        SDL_RenderCopy(renderer, texture, NULL, &position);
-
-        SDL_RenderPresent(renderer);*/
 
 
         /*while(!quit){
@@ -3379,163 +3382,18 @@ int main(int argc, char **argv){
             }
 
 
-        }
-
-
-
-
-        do{
-            printf("1: Sign in\n2: Sign up\n");
-            scanf("%d",&choice);
-        }while(choice!=1 && choice!=2);*/
-
-
-        /*do{
-
-            SDL_WaitEvent(&event);
-
-            if(event.type == SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT){
-                SDL_GetMouseState(&x_mouse,&y_mouse);
-            }
-
-            if(x_mouse>=110 && x_mouse<=280 && y_mouse>=150 && y_mouse<=220){
-                choice=1;
-            }
-
-            if(x_mouse>=110 && x_mouse<=280 && y_mouse>=230 && y_mouse<=300){
-                choice=2;
-            }
-        }while(choice!=1 && choice!=2);
-
-        if(choice==1){
-            id=SignIn_SDL();
-        }else if(choice==2){
-            id=SignUp_SDL();
         }*/
 
-        /*do{
-            printf("--MENU--\n1: Cocktails\n4:EXIT\n");
-            scanf("%d",&choice);
+        if(app_mod==1){
 
-            if(choice==1){
-                cocktails(id);
-            }
+            SDL_FreeSurface(surface);//A partir d'ici on va libérer tout nos objet proprement et fermé la librairie.
+            SDL_DestroyWindow(window);
+            SDL_DestroyRenderer(renderer);
+            TTF_CloseFont(font);
+            TTF_Quit();
+            SDL_Quit();
 
-            if(choice==3){
-                game();
-            }
-
-        }while(choice!=4);*/
-
-       /* do{
-
-            x_mouse=0;
-            y_mouse=0;
-            choice=-1;
-
-            SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
-            SDL_RenderClear(renderer);
-            SDL_RenderPresent(renderer);
-
-            font=TTF_OpenFont("poppins-Regular.ttf", 50);
-            text=TTF_RenderText_Blended(font,"MENU",font_color);
-            position.x=0;
-            position.y=0;
-            texture= SDL_CreateTextureFromSurface(renderer,text);
-            SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
-            position.x=125;
-            position.y=50;
-            SDL_RenderCopy(renderer, texture, NULL, &position);
-
-            font=TTF_OpenFont("poppins-Regular.ttf", 30);
-            text=TTF_RenderText_Blended(font,"Cocktails",font_color);
-            surface=NULL;
-            surface = SDL_CreateRGBSurface(0, 170, 70, 32, 0, 0, 0, 0);
-            SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 129, 120, 115));
-            position.x=20;
-            position.y=15;
-            SDL_BlitSurface(text,NULL,surface,&position);
-            texture= SDL_CreateTextureFromSurface(renderer,surface);
-            SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
-            position.x=110;
-            position.y=170;
-            SDL_RenderCopy(renderer, texture, NULL, &position);
-
-            font=TTF_OpenFont("poppins-Regular.ttf", 30);
-            text=TTF_RenderText_Blended(font,"Game",font_color);
-            surface=NULL;
-            surface = SDL_CreateRGBSurface(0, 170, 70, 32, 0, 0, 0, 0);
-            SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 129, 120, 115));
-            position.x=40;
-            position.y=15;
-            SDL_BlitSurface(text,NULL,surface,&position);
-            texture= SDL_CreateTextureFromSurface(renderer,surface);
-            SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
-            position.x=110;
-            position.y=260;
-            SDL_RenderCopy(renderer, texture, NULL, &position);
-
-            text=TTF_RenderText_Blended(font,"Exit",font_color);
-            surface=NULL;
-            surface = SDL_CreateRGBSurface(0, 90, 70, 32, 0, 0, 0, 0);
-            SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 129, 120, 115));
-            position.x=20;
-            position.y=15;
-            SDL_BlitSurface(text,NULL,surface,&position);
-            texture= SDL_CreateTextureFromSurface(renderer,surface);
-            SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
-            position.x=20;
-            position.y=610;
-            SDL_RenderCopy(renderer, texture, NULL, &position);
-
-
-            SDL_RenderPresent(renderer);
-
-            do{
-                SDL_WaitEvent(&event);
-
-                if(event.type == SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT){
-                    SDL_GetMouseState(&x_mouse,&y_mouse);
-                }
-
-                if(x_mouse>=110 && x_mouse<=280 && y_mouse>=170 && y_mouse<=240){
-                    choice=1;
-                    x_mouse=0;
-                    y_mouse=0;
-                }
-
-                if(x_mouse>=110 && x_mouse<=280 && y_mouse>=260 && y_mouse<=330){
-                    choice=3;
-                    x_mouse=0;
-                    y_mouse=0;
-                }
-
-                if(x_mouse>=20 && x_mouse<=90 && y_mouse>=610 && y_mouse<=680){
-                    choice=4;
-                    x_mouse=0;
-                    y_mouse=0;
-                }
-
-
-            }while(choice==-1);
-
-            if(choice==1){
-                cocktails_SDL(id);
-            }
-
-            if(choice==3){
-                game_SDL();
-            }
-
-        }while(choice!=4);*/
-
-
-        SDL_FreeSurface(surface);
-        SDL_DestroyWindow(window);
-        SDL_DestroyRenderer(renderer);
-        TTF_CloseFont(font);
-        TTF_Quit();
-        SDL_Quit();
+        }
 
     }
 
