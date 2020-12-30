@@ -39,8 +39,8 @@ void getApiViaCurl(FILE *fp){
                 fprintf(stderr, "%s%s", errbuf, ((errbuf[len - 1] != '\n') ? "\n" : ""));
             }
         }else{
-                fprintf(stderr, "%s\n", curl_easy_strerror(result));
-                printf("Download successful !\n");
+                fprintf(stderr, "\n%s\n", curl_easy_strerror(result));
+                printf("Download successful !\nLoading...\n");
             }
 
         fclose(fp);
@@ -64,6 +64,60 @@ char *getData(FILE *fp, char *data){
 		}
 	}
 	return NULL;
+}
+
+void delDuplicateBDD(MYSQL mysql){
+
+    char query[255];
+    char query2[255];
+    MYSQL_RES *result=NULL;
+    MYSQL_ROW row;
+
+    MYSQL_RES *result2=NULL;
+    MYSQL_ROW row2;
+
+    int row_counter = 0;
+    char ***tabI;
+    int isDuplicated;
+    int i2 = 0;
+    int j2;
+    int nbrRow = 0;
+
+    strcpy(query, "SELECT id, lieu1, geo_point_2d FROM BAR");
+    mysql_query(&mysql, query);
+    result = mysql_store_result(&mysql);
+    while((row = mysql_fetch_row(result))){
+        row_counter++;
+    }
+
+    tabI = malloc(sizeof(char**)*row_counter+1);
+    for(int i = 0; i < row_counter+1 ; i++){
+        tabI[i] = malloc(sizeof(char*)*2);
+        for(int j = 0; j < 2 ; j++){
+            tabI[i][j] = malloc(sizeof(char)*255);
+        }
+    }
+
+    mysql_query(&mysql, query);
+    result = mysql_store_result(&mysql);
+    while((row = mysql_fetch_row(result))){
+        isDuplicated = 0;
+        for(j2 = 0; j2 < i2; j2++){
+            if(!strcmp(tabI[j2][0], row[1]) && !strcmp(tabI[j2][1], row[2])){
+                isDuplicated = 1;
+                strcpy(query2, "DELETE FROM BAR WHERE id='");
+                strcat(query2, row[0]);
+                strcat(query2, "'");
+                mysql_query(&mysql, query2);
+            }
+        }if(!isDuplicated){
+            nbrRow++;
+            i2++;
+            tabI[i2][0] = row[1];
+            tabI[i2][1] = row[2];
+        }
+    }
+    return;
 }
 
 void sendBDD(MYSQL mysql, char *data_geo_point_2d, char *data_date_periode, char *data_lieu1, char *data_libelle_type){
@@ -171,13 +225,15 @@ void readFile(FILE *fp){
 
 }
 
-void loadBars(){
+void loadBars(MYSQL mysql){
 
     FILE *fp = NULL;
 
     getApiViaCurl(fp);
 
     readFile(fp);
+
+    delDuplicateBDD(mysql);
 
     return;
 }
@@ -230,6 +286,12 @@ void selectFromCategory(MYSQL mysql){
         printf("0 - Back\n\n");
         scanf("%d", &categorySelected);
 
+        while(categorySelected <0 || categorySelected > 7){
+            printf("\nYour choice does not correspond to the expectations !\n");
+            printf("Please retype your selection :\n");
+            scanf("%d", &categorySelected);
+        }
+
         switch(categorySelected){
             case 0:
                 return;
@@ -260,6 +322,56 @@ void selectFromCategory(MYSQL mysql){
 
 }
 
+void runNavigator(MYSQL mysql, char query[255]){
+    int choice;
+    int idChoice;
+    int count_row = 0;
+    char query2[255];
+    char httpRequest[255];
+    int i = 0;
+    int tmp;
+
+    MYSQL_RES *result = NULL;
+    MYSQL_ROW row;
+
+    printf("\n\nChoose the search you want to run.\n");
+    printf("Select the search by its number :\n");
+    scanf("%d", &choice);
+    mysql_query(&mysql,query);
+    result = mysql_store_result(&mysql);
+    while((row = mysql_fetch_row(result))){
+        printf("[%d] %s - %s - %s\n",count_row+1,row[1],row[2], row[3]);
+        if((count_row+1) == choice){
+            idChoice = row[0];
+        }
+
+        count_row++;
+    }
+
+    strcpy(query2, "SELECT id, lieu1, date_periode, libelle_type, geo_point_2d FROM BAR WHERE id= '");
+    strcat(query2, idChoice);
+    strcat(query2, "'");
+    mysql_query(&mysql,query2);
+    result = mysql_store_result(&mysql);
+    row = mysql_fetch_row(result);
+
+    strcpy(httpRequest, "start https://www.google.fr/maps/search/");
+    if(row){
+        printf("[%s] %s - %s - %s - %s\n",row[0], row[1], row[2], row[3], row[4]);
+        while(row[4][i++]){
+            if(row[4][i] == ' '){
+                strncat(httpRequest, row[4], i);
+                strcat(httpRequest, "+");
+                strcat(httpRequest, row[4]+(i+1));
+            }
+        }
+        printf("httpRequest : %s", httpRequest);
+        system(httpRequest);
+    }
+    selectMenu(mysql);
+}
+
+
 void researchFromAddress(MYSQL mysql){
     system("cls");
 
@@ -268,19 +380,19 @@ void researchFromAddress(MYSQL mysql){
 
     char request[255];
     char query[255];
-    int count_row = 0;
     int choice;
 
     printf("Here you can make a research from an entered address !\n\n");
 
     do{
+        int count_row = 0;
         printf("\n\nPlease enter the street where you want to look for a bar :\n");
         fflush(stdin);
         fgets(request,255,stdin);
         if(request[strlen(request)-1] == '\n'){
                request[strlen(request)-1]='\0';
            }
-        strcpy(query, "SELECT id, lieu1, date_periode, libelle_type FROM BAR WHERE (libelle_type = 'TERRASSE FERMEE' OR libelle_type = 'TERRASSE OUVERTE') AND lieu1 LIKE '%");
+        strcpy(query, "SELECT id, lieu1, date_periode, libelle_type, geo_point_2d FROM BAR WHERE (libelle_type = 'TERRASSE FERMEE' OR libelle_type = 'TERRASSE OUVERTE') AND lieu1 LIKE '%");
         strcat(query, request);
         strcat(query, "%'");
         printf("\n");
@@ -291,9 +403,16 @@ void researchFromAddress(MYSQL mysql){
             count_row++;
         }
         printf("\n\nDo you want to make another research or get back ?\n\n");
-        printf("1 - Another research\n");
+        printf("1 - Make another research\n");
+        printf("2 - Run the research on your navigator\n");
         printf("0 - Get back\n");
         scanf("%d", &choice);
+
+        while(choice <0 || choice > 2){
+            printf("\nYour choice does not correspond to the expectations !\n");
+            printf("Please retype your choice :\n");
+            scanf("%d", &choice);
+        }
 
         switch(choice){
             case 0:
@@ -301,6 +420,9 @@ void researchFromAddress(MYSQL mysql){
                 break;
             case 1:
                 researchFromAddress(mysql);
+                break;
+            case 2:
+                runNavigator(mysql, query);
                 break;
         }
 
@@ -322,13 +444,19 @@ void selectMenu(MYSQL mysql){
         printf("0 - Leave the program\n\n");
         scanf("%d", &menuSelection);
 
+        while(menuSelection <0 || menuSelection > 3){
+            printf("\nYour choice does not correspond to the expectations !\n");
+            printf("Please retype your selection :\n");
+            scanf("%d", &menuSelection);
+        }
+
         switch(menuSelection){
             case 0:
                 printf("\nEnjoy your drinks ;)\nSee you next time !\n");
                 return;
                 break;
             case 1:
-                loadBars();
+                loadBars(mysql);
                 break;
             case 2:
                 selectFromCategory(mysql);
@@ -356,6 +484,7 @@ int main(int argc, char **argv){
         selectMenu(mysql);
     else
         printf("ERROR: An error occurred while connecting to the DB!");
+
 
     return 0;
 
