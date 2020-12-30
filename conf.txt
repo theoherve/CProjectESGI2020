@@ -1,0 +1,4 @@
+app_mod:GUI
+font:redressed-Regular.ttf
+color:normal
+renderer:software

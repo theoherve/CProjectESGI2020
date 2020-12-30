@@ -174,6 +174,12 @@ SDL_Event event;
 SDL_Rect position;
 SDL_Color background={213,115,51,255};
 SDL_Color items={129,120,115,255};
+int r_color=129;
+int g_color=120;
+int b_color=115;
+
+int app_mod;
+char txt_font[255];
 
 int SignIn(){
 
@@ -291,7 +297,7 @@ int SignIn_SDL(){
                 SDL_RenderClear(renderer);
                 SDL_RenderPresent(renderer);
 
-                font=TTF_OpenFont("poppins-Regular.ttf", 35);
+                font=TTF_OpenFont(txt_font, 35);
                 text=TTF_RenderText_Blended(font,"Sign In",font_color);
                 position.x=0;
                 position.y=0;
@@ -301,7 +307,7 @@ int SignIn_SDL(){
                 position.y=50;
                 SDL_RenderCopy(renderer, texture, NULL, &position);
 
-                font=TTF_OpenFont("poppins-Regular.ttf", 20);
+                font=TTF_OpenFont(txt_font, 20);
                 text=TTF_RenderText_Blended(font,"Enter your pseudo:",font_color);
                 position.x=0;
                 position.y=0;
@@ -347,7 +353,7 @@ int SignIn_SDL(){
                 SDL_RenderClear(renderer);
                 SDL_RenderPresent(renderer);
 
-                font=TTF_OpenFont("poppins-Regular.ttf", 35);
+                font=TTF_OpenFont(txt_font, 35);
                 text=TTF_RenderText_Blended(font,"Sign In",font_color);
                 position.x=0;
                 position.y=0;
@@ -357,7 +363,7 @@ int SignIn_SDL(){
                 position.y=50;
                 SDL_RenderCopy(renderer, texture, NULL, &position);
 
-                font=TTF_OpenFont("poppins-Regular.ttf", 20);
+                font=TTF_OpenFont(txt_font, 20);
                 text=TTF_RenderText_Blended(font,"Enter your password:",font_color);
                 position.x=0;
                 position.y=0;
@@ -394,7 +400,7 @@ int SignIn_SDL(){
                 SDL_RenderClear(renderer);
                 SDL_RenderPresent(renderer);
 
-                font=TTF_OpenFont("poppins-Regular.ttf", 35);
+                font=TTF_OpenFont(txt_font, 35);
                 text=TTF_RenderText_Blended(font,"Sign In",font_color);
                 position.x=0;
                 position.y=0;
@@ -404,7 +410,7 @@ int SignIn_SDL(){
                 position.y=50;
                 SDL_RenderCopy(renderer, texture, NULL, &position);
 
-                font=TTF_OpenFont("poppins-Regular.ttf", 20);
+                font=TTF_OpenFont(txt_font, 20);
                 text=TTF_RenderText_Blended(font,"Incorect pseudo",font_color);
                 position.x=0;
                 position.y=0;
@@ -427,7 +433,7 @@ int SignIn_SDL(){
                     SDL_RenderClear(renderer);
                     SDL_RenderPresent(renderer);
 
-                    font=TTF_OpenFont("poppins-Regular.ttf", 35);
+                    font=TTF_OpenFont(txt_font, 35);
                     text=TTF_RenderText_Blended(font,"Sign In",font_color);
                     position.x=0;
                     position.y=0;
@@ -437,7 +443,7 @@ int SignIn_SDL(){
                     position.y=50;
                     SDL_RenderCopy(renderer, texture, NULL, &position);
 
-                    font=TTF_OpenFont("poppins-Regular.ttf", 20);
+                    font=TTF_OpenFont(txt_font, 20);
                     text=TTF_RenderText_Blended(font,"Incorect password",font_color);
                     position.x=0;
                     position.y=0;
@@ -659,8 +665,6 @@ int SignUp_SDL(){
 
     if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0)){
 
-        printf("\nSign up:\n");
-
         do{
             check=1;
             check_input=0;
@@ -685,7 +689,7 @@ int SignUp_SDL(){
                 SDL_RenderClear(renderer);
                 SDL_RenderPresent(renderer);
 
-                font=TTF_OpenFont("poppins-Regular.ttf", 35);
+                font=TTF_OpenFont(txt_font, 35);
                 text=TTF_RenderText_Blended(font,"Sign Up",font_color);
                 position.x=0;
                 position.y=0;
@@ -695,7 +699,7 @@ int SignUp_SDL(){
                 position.y=50;
                 SDL_RenderCopy(renderer, texture, NULL, &position);
 
-                font=TTF_OpenFont("poppins-Regular.ttf", 20);
+                font=TTF_OpenFont(txt_font, 20);
                 text=TTF_RenderText_Blended(font,"Enter your pseudo:",font_color);
                 position.x=0;
                 position.y=0;
@@ -731,7 +735,7 @@ int SignUp_SDL(){
                 SDL_RenderClear(renderer);
                 SDL_RenderPresent(renderer);
 
-                font=TTF_OpenFont("poppins-Regular.ttf", 35);
+                font=TTF_OpenFont(txt_font, 35);
                 text=TTF_RenderText_Blended(font,"Sign Up",font_color);
                 position.x=0;
                 position.y=0;
@@ -741,7 +745,7 @@ int SignUp_SDL(){
                 position.y=50;
                 SDL_RenderCopy(renderer, texture, NULL, &position);
 
-                font=TTF_OpenFont("poppins-Regular.ttf", 20);
+                font=TTF_OpenFont(txt_font, 20);
                 text=TTF_RenderText_Blended(font,"Pseudo already used",font_color);
                 position.x=0;
                 position.y=0;
@@ -785,7 +789,7 @@ int SignUp_SDL(){
                 SDL_RenderClear(renderer);
                 SDL_RenderPresent(renderer);
 
-                font=TTF_OpenFont("poppins-Regular.ttf", 35);
+                font=TTF_OpenFont(txt_font, 35);
                 text=TTF_RenderText_Blended(font,"Sign Up",font_color);
                 position.x=0;
                 position.y=0;
@@ -795,7 +799,7 @@ int SignUp_SDL(){
                 position.y=50;
                 SDL_RenderCopy(renderer, texture, NULL, &position);
 
-                font=TTF_OpenFont("poppins-Regular.ttf", 20);
+                font=TTF_OpenFont(txt_font, 20);
                 text=TTF_RenderText_Blended(font,"Enter your mail:",font_color);
                 position.x=0;
                 position.y=0;
@@ -823,7 +827,7 @@ int SignUp_SDL(){
                 SDL_RenderClear(renderer);
                 SDL_RenderPresent(renderer);
 
-                font=TTF_OpenFont("poppins-Regular.ttf", 35);
+                font=TTF_OpenFont(txt_font, 35);
                 text=TTF_RenderText_Blended(font,"Sign Up",font_color);
                 position.x=0;
                 position.y=0;
@@ -833,7 +837,7 @@ int SignUp_SDL(){
                 position.y=50;
                 SDL_RenderCopy(renderer, texture, NULL, &position);
 
-                font=TTF_OpenFont("poppins-Regular.ttf", 20);
+                font=TTF_OpenFont(txt_font, 20);
                 text=TTF_RenderText_Blended(font,"The mail forma is incorect",font_color);
                 position.x=0;
                 position.y=0;
@@ -853,7 +857,7 @@ int SignUp_SDL(){
                 SDL_RenderClear(renderer);
                 SDL_RenderPresent(renderer);
 
-                font=TTF_OpenFont("poppins-Regular.ttf", 35);
+                font=TTF_OpenFont(txt_font, 35);
                 text=TTF_RenderText_Blended(font,"Sign Up",font_color);
                 position.x=0;
                 position.y=0;
@@ -863,7 +867,7 @@ int SignUp_SDL(){
                 position.y=50;
                 SDL_RenderCopy(renderer, texture, NULL, &position);
 
-                font=TTF_OpenFont("poppins-Regular.ttf", 20);
+                font=TTF_OpenFont(txt_font, 20);
                 text=TTF_RenderText_Blended(font,"The mail forma is incorect",font_color);
                 position.x=0;
                 position.y=0;
@@ -891,7 +895,7 @@ int SignUp_SDL(){
                 SDL_RenderClear(renderer);
                 SDL_RenderPresent(renderer);
 
-                font=TTF_OpenFont("poppins-Regular.ttf", 35);
+                font=TTF_OpenFont(txt_font, 35);
                 text=TTF_RenderText_Blended(font,"Sign Up",font_color);
                 position.x=0;
                 position.y=0;
@@ -901,7 +905,7 @@ int SignUp_SDL(){
                 position.y=50;
                 SDL_RenderCopy(renderer, texture, NULL, &position);
 
-                font=TTF_OpenFont("poppins-Regular.ttf", 20);
+                font=TTF_OpenFont(txt_font, 20);
                 text=TTF_RenderText_Blended(font,"Mail already used",font_color);
                 position.x=0;
                 position.y=0;
@@ -942,7 +946,7 @@ int SignUp_SDL(){
             SDL_RenderClear(renderer);
             SDL_RenderPresent(renderer);
 
-            font=TTF_OpenFont("poppins-Regular.ttf", 35);
+            font=TTF_OpenFont(txt_font, 35);
             text=TTF_RenderText_Blended(font,"Sign Up",font_color);
             position.x=0;
             position.y=0;
@@ -952,7 +956,7 @@ int SignUp_SDL(){
             position.y=50;
             SDL_RenderCopy(renderer, texture, NULL, &position);
 
-            font=TTF_OpenFont("poppins-Regular.ttf", 20);
+            font=TTF_OpenFont(txt_font, 20);
             text=TTF_RenderText_Blended(font,"Enter your City:",font_color);
             position.x=0;
             position.y=0;
@@ -1001,7 +1005,7 @@ int SignUp_SDL(){
                 SDL_RenderClear(renderer);
                 SDL_RenderPresent(renderer);
 
-                font=TTF_OpenFont("poppins-Regular.ttf", 35);
+                font=TTF_OpenFont(txt_font, 35);
                 text=TTF_RenderText_Blended(font,"Sign Up",font_color);
                 position.x=0;
                 position.y=0;
@@ -1011,7 +1015,7 @@ int SignUp_SDL(){
                 position.y=50;
                 SDL_RenderCopy(renderer, texture, NULL, &position);
 
-                font=TTF_OpenFont("poppins-Regular.ttf", 20);
+                font=TTF_OpenFont(txt_font, 20);
                 text=TTF_RenderText_Blended(font,"Enter your password:",font_color);
                 position.x=0;
                 position.y=0;
@@ -1040,7 +1044,7 @@ int SignUp_SDL(){
                 SDL_RenderClear(renderer);
                 SDL_RenderPresent(renderer);
 
-                font=TTF_OpenFont("poppins-Regular.ttf", 35);
+                font=TTF_OpenFont(txt_font, 35);
                 text=TTF_RenderText_Blended(font,"Sign Up",font_color);
                 position.x=0;
                 position.y=0;
@@ -1050,7 +1054,7 @@ int SignUp_SDL(){
                 position.y=50;
                 SDL_RenderCopy(renderer, texture, NULL, &position);
 
-                font=TTF_OpenFont("poppins-Regular.ttf", 20);
+                font=TTF_OpenFont(txt_font, 20);
                 text=TTF_RenderText_Blended(font,"Password to short",font_color);
                 position.x=0;
                 position.y=0;
@@ -1072,7 +1076,7 @@ int SignUp_SDL(){
                 SDL_RenderClear(renderer);
                 SDL_RenderPresent(renderer);
 
-                font=TTF_OpenFont("poppins-Regular.ttf", 35);
+                font=TTF_OpenFont(txt_font, 35);
                 text=TTF_RenderText_Blended(font,"Sign Up",font_color);
                 position.x=0;
                 position.y=0;
@@ -1082,7 +1086,7 @@ int SignUp_SDL(){
                 position.y=50;
                 SDL_RenderCopy(renderer, texture, NULL, &position);
 
-                font=TTF_OpenFont("poppins-Regular.ttf", 20);
+                font=TTF_OpenFont(txt_font, 20);
                 text=TTF_RenderText_Blended(font,"The first letter must be a capital letter",font_color);
                 position.x=0;
                 position.y=0;
@@ -1104,7 +1108,7 @@ int SignUp_SDL(){
                 SDL_RenderClear(renderer);
                 SDL_RenderPresent(renderer);
 
-                font=TTF_OpenFont("poppins-Regular.ttf", 35);
+                font=TTF_OpenFont(txt_font, 35);
                 text=TTF_RenderText_Blended(font,"Sign Up",font_color);
                 position.x=0;
                 position.y=0;
@@ -1114,7 +1118,7 @@ int SignUp_SDL(){
                 position.y=50;
                 SDL_RenderCopy(renderer, texture, NULL, &position);
 
-                font=TTF_OpenFont("poppins-Regular.ttf", 20);
+                font=TTF_OpenFont(txt_font, 20);
                 text=TTF_RenderText_Blended(font,"Your password must contain a number",font_color);
                 position.x=0;
                 position.y=0;
@@ -1160,7 +1164,7 @@ int SignUp_SDL(){
                 SDL_RenderClear(renderer);
                 SDL_RenderPresent(renderer);
 
-                font=TTF_OpenFont("poppins-Regular.ttf", 35);
+                font=TTF_OpenFont(txt_font, 35);
                 text=TTF_RenderText_Blended(font,"Sign Up",font_color);
                 position.x=0;
                 position.y=0;
@@ -1170,7 +1174,7 @@ int SignUp_SDL(){
                 position.y=50;
                 SDL_RenderCopy(renderer, texture, NULL, &position);
 
-                font=TTF_OpenFont("poppins-Regular.ttf", 20);
+                font=TTF_OpenFont(txt_font, 20);
                 text=TTF_RenderText_Blended(font,"Confirm your password:",font_color);
                 position.x=0;
                 position.y=0;
@@ -1199,7 +1203,7 @@ int SignUp_SDL(){
                 SDL_RenderClear(renderer);
                 SDL_RenderPresent(renderer);
 
-                font=TTF_OpenFont("poppins-Regular.ttf", 35);
+                font=TTF_OpenFont(txt_font, 35);
                 text=TTF_RenderText_Blended(font,"Sign Up",font_color);
                 position.x=0;
                 position.y=0;
@@ -1209,7 +1213,7 @@ int SignUp_SDL(){
                 position.y=50;
                 SDL_RenderCopy(renderer, texture, NULL, &position);
 
-                font=TTF_OpenFont("poppins-Regular.ttf", 20);
+                font=TTF_OpenFont(txt_font, 20);
                 text=TTF_RenderText_Blended(font,"Both passwords must match",font_color);
                 position.x=0;
                 position.y=0;
@@ -1298,7 +1302,7 @@ void cocktails_SDL(int id){
         SDL_RenderClear(renderer);
         SDL_RenderPresent(renderer);
 
-        font=TTF_OpenFont("poppins-Regular.ttf", 45);
+        font=TTF_OpenFont(txt_font, 45);
         text=TTF_RenderText_Blended(font,"COCKTAILS",font_color);
         position.x=0;
         position.y=0;
@@ -1308,11 +1312,11 @@ void cocktails_SDL(int id){
         position.y=50;
         SDL_RenderCopy(renderer, texture, NULL, &position);
 
-        font=TTF_OpenFont("poppins-Regular.ttf", 30);
+        font=TTF_OpenFont(txt_font, 30);
         text=TTF_RenderText_Blended(font,"Create Cocktails",font_color);
         surface=NULL;
         surface = SDL_CreateRGBSurface(0, 280, 70, 32, 0, 0, 0, 0);
-        SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 129, 120, 115));
+        SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, r_color, g_color, b_color));
         position.x=20;
         position.y=15;
         SDL_BlitSurface(text,NULL,surface,&position);
@@ -1325,7 +1329,7 @@ void cocktails_SDL(int id){
         text=TTF_RenderText_Blended(font,"List of users",font_color);
         surface=NULL;
         surface = SDL_CreateRGBSurface(0, 280, 100, 32, 0, 0, 0, 0);
-        SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 129, 120, 115));
+        SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, r_color, g_color, b_color));
         position.x=50;
         position.y=15;
         SDL_BlitSurface(text,NULL,surface,&position);
@@ -1345,7 +1349,7 @@ void cocktails_SDL(int id){
         text=TTF_RenderText_Blended(font,"Menu",font_color);
         surface=NULL;
         surface = SDL_CreateRGBSurface(0, 120, 70, 32, 0, 0, 0, 0);
-        SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 129, 120, 115));
+        SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, r_color, g_color, b_color));
         position.x=20;
         position.y=15;
         SDL_BlitSurface(text,NULL,surface,&position);
@@ -1572,7 +1576,7 @@ void createCocktails_SDL(int id){
             SDL_RenderClear(renderer);
             SDL_RenderPresent(renderer);
 
-            font=TTF_OpenFont("poppins-Regular.ttf", 35);
+            font=TTF_OpenFont(txt_font, 35);
             text=TTF_RenderText_Blended(font,"Creation of a cocktail",font_color);
             position.x=0;
             position.y=0;
@@ -1582,7 +1586,7 @@ void createCocktails_SDL(int id){
             position.y=50;
             SDL_RenderCopy(renderer, texture, NULL, &position);
 
-            font=TTF_OpenFont("poppins-Regular.ttf", 20);
+            font=TTF_OpenFont(txt_font, 20);
             text=TTF_RenderText_Blended(font,"Choose the name of your cocktails:",font_color);
             position.x=0;
             position.y=0;
@@ -1636,7 +1640,7 @@ void createCocktails_SDL(int id){
             SDL_RenderClear(renderer);
             SDL_RenderPresent(renderer);
 
-            font=TTF_OpenFont("poppins-Regular.ttf", 35);
+            font=TTF_OpenFont(txt_font, 35);
             text=TTF_RenderText_Blended(font,"Creation of a cocktail",font_color);
             position.x=0;
             position.y=0;
@@ -1646,7 +1650,7 @@ void createCocktails_SDL(int id){
             position.y=50;
             SDL_RenderCopy(renderer, texture, NULL, &position);
 
-            font=TTF_OpenFont("poppins-Regular.ttf", 20);
+            font=TTF_OpenFont(txt_font, 20);
             strcpy(gui_txt,"Choose an ingredient (");
             itoa(max,txt_max,10);
             strcat(gui_txt,txt_max);
@@ -1697,7 +1701,7 @@ void createCocktails_SDL(int id){
             text=TTF_RenderText_Blended(font,"Finish",font_color);
             surface=NULL;
             surface = SDL_CreateRGBSurface(0, 120, 70, 32, 0, 0, 0, 0);
-            SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 129, 120, 115));
+            SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, r_color, g_color, b_color));
             position.x=20;
             position.y=15;
             SDL_BlitSurface(text,NULL,surface,&position);
@@ -1778,7 +1782,7 @@ void createCocktails_SDL(int id){
                         SDL_RenderClear(renderer);
                         SDL_RenderPresent(renderer);
 
-                        font=TTF_OpenFont("poppins-Regular.ttf", 35);
+                        font=TTF_OpenFont(txt_font, 35);
                         text=TTF_RenderText_Blended(font,"Creation of a cocktail",font_color);
                         position.x=0;
                         position.y=0;
@@ -1788,7 +1792,7 @@ void createCocktails_SDL(int id){
                         position.y=50;
                         SDL_RenderCopy(renderer, texture, NULL, &position);
 
-                        font=TTF_OpenFont("poppins-Regular.ttf", 20);
+                        font=TTF_OpenFont(txt_font, 20);
                         text=TTF_RenderText_Blended(font,"Enter the quantity:",font_color);
                         position.x=0;
                         position.y=0;
@@ -2025,7 +2029,7 @@ void listCocktails_SDL(int id){
             SDL_RenderClear(renderer);
             SDL_RenderPresent(renderer);
 
-            font=TTF_OpenFont("poppins-Regular.ttf", 45);
+            font=TTF_OpenFont(txt_font, 45);
             text=TTF_RenderText_Blended(font,"List Cocktail",font_color);
             position.x=0;
             position.y=0;
@@ -2037,7 +2041,7 @@ void listCocktails_SDL(int id){
 
             SDL_RenderPresent(renderer);
 
-            font=TTF_OpenFont("poppins-Regular.ttf", 20);
+            font=TTF_OpenFont(txt_font, 20);
 
             strcpy(query,"SELECT cocktails.id,name,user.pseudo FROM cocktails INNER JOIN user ON cocktails.id_user = user.id");
             mysql_query(&mysql,query);
@@ -2080,7 +2084,7 @@ void listCocktails_SDL(int id){
             text=TTF_RenderText_Blended(font,"Return",font_color);
             surface=NULL;
             surface = SDL_CreateRGBSurface(0, 120, 70, 32, 0, 0, 0, 0);
-            SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 129, 120, 115));
+            SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, r_color, g_color, b_color));
             position.x=20;
             position.y=15;
             SDL_BlitSurface(text,NULL,surface,&position);
@@ -2147,7 +2151,7 @@ void listCocktails_SDL(int id){
                 SDL_RenderClear(renderer);
                 SDL_RenderPresent(renderer);
 
-                font=TTF_OpenFont("poppins-Regular.ttf", 45);
+                font=TTF_OpenFont(txt_font, 45);
                 text=TTF_RenderText_Blended(font,"List Cocktail",font_color);
                 position.x=0;
                 position.y=0;
@@ -2157,10 +2161,10 @@ void listCocktails_SDL(int id){
                 position.y=50;
                 SDL_RenderCopy(renderer, texture, NULL, &position);
 
-                font=TTF_OpenFont("poppins-Regular.ttf", 20);
+                font=TTF_OpenFont(txt_font, 20);
 
                 strcpy(id_cocktail,tab_coktails[loop-choice]);
-                printf("Recipe\n");
+                //printf("Recipe\n");
 
                 strcpy(query,"SELECT ingredient.name,quantity FROM recipe INNER JOIN cocktails ON recipe.id_cocktail = '");
                 strcat(query,id_cocktail);
@@ -2194,7 +2198,7 @@ void listCocktails_SDL(int id){
                 text=TTF_RenderText_Blended(font,"Return",font_color);
                 surface=NULL;
                 surface = SDL_CreateRGBSurface(0, 120, 70, 32, 0, 0, 0, 0);
-                SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 129, 120, 115));
+                SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, r_color, g_color, b_color));
                 position.x=20;
                 position.y=15;
                 SDL_BlitSurface(text,NULL,surface,&position);
@@ -2411,7 +2415,7 @@ void game_SDL(){
             SDL_RenderClear(renderer);
             SDL_RenderPresent(renderer);
 
-            font=TTF_OpenFont("poppins-Regular.ttf", 45);
+            font=TTF_OpenFont(txt_font, 45);
             text=TTF_RenderText_Blended(font,"GAME",font_color);
             position.x=0;
             position.y=0;
@@ -2421,11 +2425,11 @@ void game_SDL(){
             position.y=50;
             SDL_RenderCopy(renderer, texture, NULL, &position);
 
-            font=TTF_OpenFont("poppins-Regular.ttf", 30);
+            font=TTF_OpenFont(txt_font, 30);
             text=TTF_RenderText_Blended(font,"Start the game",font_color);
             surface=NULL;
             surface = SDL_CreateRGBSurface(0, 280, 70, 32, 0, 0, 0, 0);
-            SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 129, 120, 115));
+            SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, r_color, g_color, b_color));
             position.x=20;
             position.y=15;
             SDL_BlitSurface(text,NULL,surface,&position);
@@ -2438,7 +2442,7 @@ void game_SDL(){
             text=TTF_RenderText_Blended(font,"Menu",font_color);
             surface=NULL;
             surface = SDL_CreateRGBSurface(0, 120, 70, 32, 0, 0, 0, 0);
-            SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 129, 120, 115));
+            SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, r_color, g_color, b_color));
             position.x=20;
             position.y=15;
             SDL_BlitSurface(text,NULL,surface,&position);
@@ -2559,7 +2563,7 @@ void game_SDL(){
                                 SDL_RenderClear(renderer);
                                 SDL_RenderPresent(renderer);
 
-                                font=TTF_OpenFont("poppins-Regular.ttf", 45);
+                                font=TTF_OpenFont(txt_font, 45);
                                 text=TTF_RenderText_Blended(font,"GAME",font_color);
                                 position.x=0;
                                 position.y=0;
@@ -2569,7 +2573,7 @@ void game_SDL(){
                                 position.y=50;
                                 SDL_RenderCopy(renderer, texture, NULL, &position);
 
-                                font=TTF_OpenFont("poppins-Regular.ttf", 14);
+                                font=TTF_OpenFont(txt_font, 14);
                                 text=TTF_RenderText_Blended(font,question,font_color);
                                 position.x=0;
                                 position.y=0;
@@ -2610,6 +2614,678 @@ void game_SDL(){
 
 }
 
+int verifConfTxt(){
+
+    FILE *fp;
+    char conf_txt[255];
+    int check_verif_conf=1;
+
+    fp=fopen("conf.txt","rb");
+    if(fp!=NULL){
+
+        fgets(conf_txt,255,fp);
+        if((strncmp(conf_txt,"app_mod:",8))==0){
+            if((strncmp(conf_txt+8,"GUI",3))==0){
+                app_mod=1;
+            }else if((strncmp(conf_txt+8,"command_line",12))==0){
+                app_mod=2;
+            }else{
+                app_mod=1;
+            }
+        }else{
+            printf("#1#");
+            check_verif_conf=0;
+        }
+
+        fgets(conf_txt,255,fp);
+        if((strncmp(conf_txt,"font:",5))==0 && check_verif_conf!=0){
+            if((strncmp(conf_txt+5,"poppins-Regular.ttf",19))==0){
+                strcpy(txt_font,"poppins-Regular.ttf");
+            }else if((strncmp(conf_txt+5,"redressed-Regular.ttf",21))==0){
+                strcpy(txt_font,"redressed-Regular.ttf");
+            }else{
+                strcpy(txt_font,"poppins-Regular.ttf");
+            }
+        }else{
+            printf("#2#");
+            check_verif_conf=0;
+        }
+
+        fgets(conf_txt,255,fp);
+        if((strncmp(conf_txt,"color:",6))==0 && check_verif_conf!=0){
+            if((strncmp(conf_txt+6,"normal",6))==0){
+
+                background.r=213;
+                background.g=115;
+                background.b=51;
+
+                r_color=129;
+                g_color=120;
+                b_color=115;
+
+            }else if((strncmp(conf_txt+6,"inversed",8))==0){
+
+                background.r=129;
+                background.g=120;
+                background.b=115;
+
+                r_color=213;
+                g_color=115;
+                b_color=51;
+
+            }else{
+
+               background.r=213;
+                background.g=115;
+                background.b=51;
+
+                r_color=129;
+                g_color=120;
+                b_color=115;
+
+            }
+
+        }else{
+            printf("#3#");
+            check_verif_conf=0;
+        }
+
+
+        fgets(conf_txt,255,fp);
+        if((strncmp(conf_txt,"renderer:",9))==0 && check_verif_conf!=0){
+            if((strncmp(conf_txt+9,"software",8))==0){
+                fclose(fp);
+                return 1;
+            }else if((strncmp(conf_txt+9,"accelerate",10))==0){
+                return 2;
+            }else{
+                fclose(fp);
+                return 1;
+            }
+        }else{
+            printf("#4#");
+            fclose(fp);
+            check_verif_conf=0;
+        }
+
+        if(check_verif_conf==0){
+            printf("ERROR: the conf file format is wrong");
+            fclose(fp);
+            return 0;
+        }
+
+
+    }else{
+        printf("ERROR: Conf file does not exist");
+        fclose(fp);
+        return 0;
+    }
+
+}
+
+void menu(){
+
+    int choice;
+    int id;
+
+    SDL_DestroyWindow(window);
+
+    do{
+        printf("1: Sign in\n2: Sign up\n");
+        scanf("%d",&choice);
+    }while(choice!=1 && choice!=2);
+
+    if(choice==1){
+        id=SignIn();
+    }else if(choice==2){
+        id=SignUp();
+    }
+
+    do{
+        printf("--MENU--\n1: Cocktails\n2: Bar\n3: Game\n4 Setting\n5:EXIT\n");
+        scanf("%d",&choice);
+
+        if(choice==1){
+            cocktails(id);
+        }
+
+        if(choice==3){
+            game();
+        }
+
+        if(choice==4){
+            setting();
+        }
+
+    }while(choice!=5);
+}
+
+void menu_SDL(){
+    int choice;
+    int id;
+    int x_mouse;
+    int y_mouse;
+
+        SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
+        SDL_RenderClear(renderer);
+        SDL_RenderPresent(renderer);
+
+        font=TTF_OpenFont(txt_font, 30);
+        text=TTF_RenderText_Blended(font,"Sign In",font_color);
+        surface = SDL_CreateRGBSurface(0, 170, 70, 32, 0, 0, 0, 0);
+        SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, r_color, g_color, b_color));
+        position.x=37;
+        position.y=15;
+        SDL_BlitSurface(text,NULL,surface,&position);
+        texture= SDL_CreateTextureFromSurface(renderer,surface);
+        SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+        position.x=110;
+        position.y=150;
+        SDL_RenderCopy(renderer, texture, NULL, &position);
+
+        text=TTF_RenderText_Blended(font,"Sign Up",font_color);
+        surface=NULL;
+        surface = SDL_CreateRGBSurface(0, 170, 70, 32, 0, 0, 0, 0);
+        SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, r_color, g_color, b_color));
+        position.x=35;
+        position.y=15;
+        SDL_BlitSurface(text,NULL,surface,&position);
+        texture= SDL_CreateTextureFromSurface(renderer,surface);
+        SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+        position.x=110;
+        position.y=230;
+        SDL_RenderCopy(renderer, texture, NULL, &position);
+
+        SDL_RenderPresent(renderer);
+
+        do{
+
+            SDL_WaitEvent(&event);
+
+            if(event.type == SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT){
+                SDL_GetMouseState(&x_mouse,&y_mouse);
+            }
+
+            if(x_mouse>=110 && x_mouse<=280 && y_mouse>=150 && y_mouse<=220){
+                choice=1;
+            }
+
+            if(x_mouse>=110 && x_mouse<=280 && y_mouse>=230 && y_mouse<=300){
+                choice=2;
+            }
+        }while(choice!=1 && choice!=2);
+
+        if(choice==1){
+            id=SignIn_SDL();
+        }else if(choice==2){
+            id=SignUp_SDL();
+        }
+
+        do{
+
+            x_mouse=0;
+            y_mouse=0;
+            choice=-1;
+
+            SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
+            SDL_RenderClear(renderer);
+            SDL_RenderPresent(renderer);
+
+            font=TTF_OpenFont(txt_font, 50);
+            text=TTF_RenderText_Blended(font,"MENU",font_color);
+            position.x=0;
+            position.y=0;
+            texture= SDL_CreateTextureFromSurface(renderer,text);
+            SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+            position.x=125;
+            position.y=50;
+            SDL_RenderCopy(renderer, texture, NULL, &position);
+
+            font=TTF_OpenFont(txt_font, 30);
+            text=TTF_RenderText_Blended(font,"Cocktails",font_color);
+            surface=NULL;
+            surface = SDL_CreateRGBSurface(0, 170, 70, 32, 0, 0, 0, 0);
+            SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, r_color, g_color, b_color));
+            position.x=20;
+            position.y=15;
+            SDL_BlitSurface(text,NULL,surface,&position);
+            texture= SDL_CreateTextureFromSurface(renderer,surface);
+            SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+            position.x=110;
+            position.y=170;
+            SDL_RenderCopy(renderer, texture, NULL, &position);
+
+            text=TTF_RenderText_Blended(font,"Game",font_color);
+            surface=NULL;
+            surface = SDL_CreateRGBSurface(0, 170, 70, 32, 0, 0, 0, 0);
+            SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, r_color, g_color, b_color));
+            position.x=40;
+            position.y=15;
+            SDL_BlitSurface(text,NULL,surface,&position);
+            texture= SDL_CreateTextureFromSurface(renderer,surface);
+            SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+            position.x=110;
+            position.y=260;
+            SDL_RenderCopy(renderer, texture, NULL, &position);
+
+            text=TTF_RenderText_Blended(font,"SETTING",font_color);
+            surface=NULL;
+            surface = SDL_CreateRGBSurface(0, 140, 70, 32, 0, 0, 0, 0);
+            SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, r_color, g_color, b_color));
+            position.x=15;
+            position.y=15;
+            SDL_BlitSurface(text,NULL,surface,&position);
+            texture= SDL_CreateTextureFromSurface(renderer,surface);
+            SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+            position.x=240;
+            position.y=610;
+            SDL_RenderCopy(renderer, texture, NULL, &position);
+
+            text=TTF_RenderText_Blended(font,"Exit",font_color);
+            surface=NULL;
+            surface = SDL_CreateRGBSurface(0, 90, 70, 32, 0, 0, 0, 0);
+            SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, r_color, g_color, b_color));
+            position.x=20;
+            position.y=15;
+            SDL_BlitSurface(text,NULL,surface,&position);
+            texture= SDL_CreateTextureFromSurface(renderer,surface);
+            SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+            position.x=20;
+            position.y=610;
+            SDL_RenderCopy(renderer, texture, NULL, &position);
+
+
+            SDL_RenderPresent(renderer);
+
+            do{
+                SDL_WaitEvent(&event);
+
+                if(event.type == SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT){
+                    SDL_GetMouseState(&x_mouse,&y_mouse);
+                }
+
+                if(x_mouse>=110 && x_mouse<=280 && y_mouse>=170 && y_mouse<=240){
+                    choice=1;
+                    x_mouse=0;
+                    y_mouse=0;
+                }
+
+                if(x_mouse>=110 && x_mouse<=280 && y_mouse>=260 && y_mouse<=330){
+                    choice=3;
+                    x_mouse=0;
+                    y_mouse=0;
+                }
+
+                if(x_mouse>=240 && x_mouse<=380 && y_mouse>=610 && y_mouse<=680){
+                    choice=4;
+                    x_mouse=0;
+                    y_mouse=0;
+                }
+
+                if(x_mouse>=20 && x_mouse<=90 && y_mouse>=610 && y_mouse<=680){
+                    choice=5;
+                    x_mouse=0;
+                    y_mouse=0;
+                }
+
+
+            }while(choice==-1);
+
+            if(choice==1){
+                cocktails_SDL(id);
+            }
+
+            if(choice==3){
+                game_SDL();
+            }
+
+            if(choice==4){
+                setting_SDL();
+            }
+
+        }while(choice!=5);
+
+}
+
+void setting(){
+
+    int choice;
+    FILE *fp;
+    char appMod[100];
+    char font_conf[100];
+    char color_conf[100];
+    char renderer_conf[100];
+    int change=0;
+    char final_conf[100];
+
+    printf("--SETTING--\n");
+
+    fp=fopen("conf.txt","rb");
+    if(fp!=NULL){
+        fgets(appMod,100,fp);
+        strcpy(appMod,appMod+8);
+        if(appMod[strlen(appMod)-1]=='\n'){
+               appMod[strlen(appMod)-1]='\0';
+           }
+
+        fgets(font_conf,100,fp);
+        strcpy(font_conf,font_conf+5);
+        if(font_conf[strlen(font_conf)-1]=='\n'){
+               font_conf[strlen(font_conf)-1]='\0';
+            }
+
+        fgets(color_conf,100,fp);
+        strcpy(color_conf,color_conf+6);
+        if(color_conf[strlen(color_conf)-1]=='\n'){
+               color_conf[strlen(color_conf)-1]='\0';
+           }
+
+        fgets(renderer_conf,100,fp);
+        strcpy(renderer_conf,renderer_conf+9);
+        if(renderer_conf[strlen(renderer_conf)-1]=='\n'){
+               renderer_conf[strlen(renderer_conf)-1]='\0';
+           }
+    }else{
+        printf("ERROR: The file can't be open");
+    }
+
+    fclose(fp);
+
+    do{
+        printf("Select a number to change the option\n1: %s\n2: %s\n3: %s\n4: %s\n5: Menu\n",appMod,font_conf,color_conf,renderer_conf);
+        scanf("%d",&choice);
+
+        if(choice==1){
+            change=1;
+            if((strcmp(appMod,"GUI"))==0){
+                strcpy(appMod,"command_line");
+            }else{
+                strcpy(appMod,"GUI");
+            }
+        }
+
+        if(choice==2){
+            change=1;
+            if((strcmp(font_conf,"poppins-Regular.ttf"))==0){
+                strcpy(font_conf,"redressed-Regular.ttf");
+            }else{
+                strcpy(font_conf,"poppins-Regular.ttf");
+            }
+        }
+
+        if(choice==3){
+            change=1;
+            if((strcmp(color_conf,"normal"))==0){
+                strcpy(color_conf,"inversed");
+            }else{
+                strcpy(color_conf,"normal");
+            }
+        }
+
+        if(choice==4){
+            change=1;
+            if((strcmp(renderer_conf,"software"))==0){
+                strcpy(renderer_conf,"accelerate");
+            }else{
+                strcpy(renderer_conf,"software");
+            }
+        }
+
+    }while(choice!=5);
+
+    if(change==1){
+        fp=fopen("conf.txt","wb");
+        if(fp!=NULL){
+            strcpy(final_conf,"app_mod:");
+            strcat(final_conf,appMod);
+            strcat(final_conf,"\nfont:");
+            strcat(final_conf,font_conf);
+            strcat(final_conf,"\ncolor:");
+            strcat(final_conf,color_conf);
+            strcat(final_conf,"\nrenderer:");
+            strcat(final_conf,renderer_conf);
+
+            fwrite(final_conf,strlen(final_conf),1,fp);
+        }
+
+        fclose(fp);
+
+    }else{
+        printf("ERROR: The file can't be open");
+    }
+
+
+
+}
+
+void setting_SDL(){
+
+    int choice;
+    FILE *fp;
+    char appMod[100];
+    char font_conf[100];
+    char color_conf[100];
+    char renderer_conf[100];
+    int change=0;
+    char final_conf[100];
+
+    //SDL
+    int x_mouse;
+    int y_mouse;
+
+    //printf("--SETTING--\n");
+
+    fp=fopen("conf.txt","rb");
+    if(fp!=NULL){
+        fgets(appMod,100,fp);
+        strcpy(appMod,appMod+8);
+        if(appMod[strlen(appMod)-1]=='\n'){
+               appMod[strlen(appMod)-1]='\0';
+           }
+
+        fgets(font_conf,100,fp);
+        strcpy(font_conf,font_conf+5);
+        if(font_conf[strlen(font_conf)-1]=='\n'){
+               font_conf[strlen(font_conf)-1]='\0';
+            }
+
+        fgets(color_conf,100,fp);
+        strcpy(color_conf,color_conf+6);
+        if(color_conf[strlen(color_conf)-1]=='\n'){
+               color_conf[strlen(color_conf)-1]='\0';
+           }
+
+        fgets(renderer_conf,100,fp);
+        strcpy(renderer_conf,renderer_conf+9);
+        if(renderer_conf[strlen(renderer_conf)-1]=='\n'){
+               renderer_conf[strlen(renderer_conf)-1]='\0';
+           }
+    }else{
+        printf("ERROR: The file can't be open");
+    }
+
+    fclose(fp);
+
+    do{
+        //printf("Select a number to change the option\n1: %s\n2: %s\n3: %s\n4: %s\n5: Menu\n",appMod,font_conf,color_conf,renderer_conf);
+        //scanf("%d",&choice);
+
+        x_mouse=0;
+        y_mouse=0;
+        choice=-1;
+
+        SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
+        SDL_RenderClear(renderer);
+        SDL_RenderPresent(renderer);
+
+        font=TTF_OpenFont(txt_font, 45);
+        text=TTF_RenderText_Blended(font,"SETTING",font_color);
+        position.x=0;
+        position.y=0;
+        texture= SDL_CreateTextureFromSurface(renderer,text);
+        SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+        position.x=75;
+        position.y=50;
+        SDL_RenderCopy(renderer, texture, NULL, &position);
+
+        font=TTF_OpenFont(txt_font, 20);
+        text=TTF_RenderText_Blended(font,"Select an option to change it:",font_color);
+        position.x=0;
+        position.y=0;
+        texture= SDL_CreateTextureFromSurface(renderer,text);
+        SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+        position.x=20;
+        position.y=170;
+        SDL_RenderCopy(renderer, texture, NULL, &position);
+
+        font=TTF_OpenFont(txt_font, 20);
+        text=TTF_RenderText_Blended(font,appMod,font_color);
+        position.x=0;
+        position.y=0;
+        texture= SDL_CreateTextureFromSurface(renderer,text);
+        SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+        position.x=20;
+        position.y=240;
+        SDL_RenderCopy(renderer, texture, NULL, &position);
+
+        font=TTF_OpenFont(txt_font, 20);
+        text=TTF_RenderText_Blended(font,font_conf,font_color);
+        position.x=0;
+        position.y=0;
+        texture= SDL_CreateTextureFromSurface(renderer,text);
+        SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+        position.x=20;
+        position.y=310;
+        SDL_RenderCopy(renderer, texture, NULL, &position);
+
+        font=TTF_OpenFont(txt_font, 20);
+        text=TTF_RenderText_Blended(font,color_conf,font_color);
+        position.x=0;
+        position.y=0;
+        texture= SDL_CreateTextureFromSurface(renderer,text);
+        SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+        position.x=20;
+        position.y=380;
+        SDL_RenderCopy(renderer, texture, NULL, &position);
+
+        font=TTF_OpenFont(txt_font, 20);
+        text=TTF_RenderText_Blended(font,renderer_conf,font_color);
+        position.x=0;
+        position.y=0;
+        texture= SDL_CreateTextureFromSurface(renderer,text);
+        SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+        position.x=20;
+        position.y=450;
+        SDL_RenderCopy(renderer, texture, NULL, &position);
+
+        text=TTF_RenderText_Blended(font,"Menu",font_color);
+        surface=NULL;
+        surface = SDL_CreateRGBSurface(0, 85, 70, 32, 0, 0, 0, 0);
+        SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, r_color, g_color, b_color));
+        position.x=20;
+        position.y=15;
+        SDL_BlitSurface(text,NULL,surface,&position);
+        texture= SDL_CreateTextureFromSurface(renderer,surface);
+        SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+        position.x=20;
+        position.y=610;
+        SDL_RenderCopy(renderer, texture, NULL, &position);
+
+        SDL_RenderPresent(renderer);
+
+        do{
+            SDL_WaitEvent(&event);
+
+            if(event.type == SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT){
+                SDL_GetMouseState(&x_mouse,&y_mouse);
+            }
+
+            if(x_mouse>=20 && x_mouse<=340 && y_mouse>=240 && y_mouse<=268){
+                choice=1;
+            }
+
+            if(x_mouse>=20 && x_mouse<=340 && y_mouse>=310 && y_mouse<=338){
+                printf("%d-%d\n",x_mouse,y_mouse);
+                choice=2;
+            }
+
+            if(x_mouse>=20 && x_mouse<=340 && y_mouse>=380 && y_mouse<=408){
+                choice=3;
+            }
+
+            if(x_mouse>=20 && x_mouse<=340 && y_mouse>=450 && y_mouse<=478){
+                choice=4;
+            }
+
+            if(x_mouse>=20 && x_mouse<=85 && y_mouse>=610 && y_mouse<=680){
+                choice=5;
+            }
+
+
+        }while(choice==-1);
+
+        if(choice==1){
+            change=1;
+            if((strcmp(appMod,"GUI"))==0){
+                strcpy(appMod,"command_line");
+            }else{
+                strcpy(appMod,"GUI");
+            }
+        }
+
+        if(choice==2){
+            change=1;
+            if((strcmp(font_conf,"poppins-Regular.ttf"))==0){
+                strcpy(font_conf,"redressed-Regular.ttf");
+            }else{
+                strcpy(font_conf,"poppins-Regular.ttf");
+            }
+        }
+
+        if(choice==3){
+            change=1;
+            if((strcmp(color_conf,"normal"))==0){
+                strcpy(color_conf,"inversed");
+            }else{
+                strcpy(color_conf,"normal");
+            }
+        }
+
+        if(choice==4){
+            change=1;
+            if((strcmp(renderer_conf,"software"))==0){
+                strcpy(renderer_conf,"accelerate");
+            }else{
+                strcpy(renderer_conf,"software");
+            }
+        }
+
+    }while(choice!=5);
+
+    if(change==1){
+        fp=fopen("conf.txt","wb");
+        if(fp!=NULL){
+            strcpy(final_conf,"app_mod:");
+            strcat(final_conf,appMod);
+            strcat(final_conf,"\nfont:");
+            strcat(final_conf,font_conf);
+            strcat(final_conf,"\ncolor:");
+            strcat(final_conf,color_conf);
+            strcat(final_conf,"\nrenderer:");
+            strcat(final_conf,renderer_conf);
+
+            fwrite(final_conf,strlen(final_conf),1,fp);
+        }
+
+        fclose(fp);
+
+    }else{
+        printf("ERROR: The file can't be open");
+    }
+
+
+
+}
 
 int main(int argc, char **argv){
 
@@ -2621,231 +3297,247 @@ int main(int argc, char **argv){
     int x_mouse;
     int y_mouse;
     int check=0;
-
-    if (SDL_Init(SDL_INIT_VIDEO)!=0){
-        fprintf(stderr, "SDL Error : Init failed\n");
-        return 0;
-    }
-
-    window=SDL_CreateWindow("Picomencer",600,100,400,700,0);
-    if(window==NULL){
-        printf("SDL ERROR");
-    }
-
-    renderer=SDL_CreateRenderer(window,-1,SDL_RENDERER_SOFTWARE);
-
-    if(renderer==NULL){
-        printf("SDL renderer ERROR");
-    }
-
-    TTF_Init();
-
-    SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
-    SDL_RenderClear(renderer);
-    SDL_RenderPresent(renderer);
-
-    font=TTF_OpenFont("poppins-Regular.ttf", 30);
-    text=TTF_RenderText_Blended(font,"Sign In",font_color);
-    surface = SDL_CreateRGBSurface(0, 170, 70, 32, 0, 0, 0, 0);
-    SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 129, 120, 115));
-    position.x=37;
-    position.y=15;
-    SDL_BlitSurface(text,NULL,surface,&position);
-    texture= SDL_CreateTextureFromSurface(renderer,surface);
-    SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
-    position.x=110;
-    position.y=150;
-    SDL_RenderCopy(renderer, texture, NULL, &position);
-
-    text=TTF_RenderText_Blended(font,"Sign Up",font_color);
-    surface=NULL;
-    surface = SDL_CreateRGBSurface(0, 170, 70, 32, 0, 0, 0, 0);
-    SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 129, 120, 115));
-    position.x=35;
-    position.y=15;
-    SDL_BlitSurface(text,NULL,surface,&position);
-    texture= SDL_CreateTextureFromSurface(renderer,surface);
-    SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
-    position.x=110;
-    position.y=230;
-    SDL_RenderCopy(renderer, texture, NULL, &position);
-
-    SDL_RenderPresent(renderer);
+    int result;
 
 
-    /*while(!quit){
+    result=verifConfTxt();
 
+    if(result!=0){
 
-        if(event.button.button==SDL_BUTTON_LEFT){
-            SDL_GetMouseState(&x_mouse,&y_mouse);
-
+        if (SDL_Init(SDL_INIT_VIDEO)!=0){
+            fprintf(stderr, "SDL Error : Init failed\n");
+            return 0;
         }
 
-        SDL_WaitEvent(&event);
-        if(event.type==SDL_QUIT){
-            quit=SDL_TRUE;
+        window=SDL_CreateWindow("Picomencer",600,100,400,700,0);
+        if(window==NULL){
+            printf("SDL ERROR");
         }
 
-
-    }
-
-
-
-
-    do{
-        printf("1: Sign in\n2: Sign up\n");
-        scanf("%d",&choice);
-    }while(choice!=1 && choice!=2);*/
-
-
-    do{
-
-        SDL_WaitEvent(&event);
-
-        if(event.type == SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT){
-            SDL_GetMouseState(&x_mouse,&y_mouse);
+        if(result==1){
+            renderer=SDL_CreateRenderer(window,-1,SDL_RENDERER_SOFTWARE);
+        }else if(result==2){
+            renderer=SDL_CreateRenderer(window,-1,SDL_RENDERER_ACCELERATED);
         }
 
-        if(x_mouse>=110 && x_mouse<=280 && y_mouse>=150 && y_mouse<=220){
-            choice=1;
+        if(renderer==NULL){
+            printf("SDL renderer ERROR");
         }
 
-        if(x_mouse>=110 && x_mouse<=280 && y_mouse>=230 && y_mouse<=300){
-            choice=2;
+        TTF_Init();
+
+        if(app_mod==1){
+            menu_SDL();
+        }else if(app_mod==2){
+            menu();
         }
 
-    }while(choice!=1 && choice!=2);
-
-    if(choice==1){
-        id=SignIn_SDL();
-    }else if(choice==2){
-        id=SignUp_SDL();
-    }
-
-    /*do{
-        printf("--MENU--\n1: Cocktails\n4:EXIT\n");
-        scanf("%d",&choice);
-
-        if(choice==1){
-            cocktails(id);
-        }
-
-        if(choice==3){
-            game();
-        }
-
-    }while(choice!=4);*/
-
-    do{
-
-        x_mouse=0;
-        y_mouse=0;
-        choice=-1;
-
-        SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
+        /*SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
         SDL_RenderClear(renderer);
         SDL_RenderPresent(renderer);
 
-        font=TTF_OpenFont("poppins-Regular.ttf", 50);
-        text=TTF_RenderText_Blended(font,"MENU",font_color);
-        position.x=0;
-        position.y=0;
-        texture= SDL_CreateTextureFromSurface(renderer,text);
-        SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
-        position.x=125;
-        position.y=50;
-        SDL_RenderCopy(renderer, texture, NULL, &position);
-
         font=TTF_OpenFont("poppins-Regular.ttf", 30);
-        text=TTF_RenderText_Blended(font,"Cocktails",font_color);
-        surface=NULL;
+        text=TTF_RenderText_Blended(font,"Sign In",font_color);
         surface = SDL_CreateRGBSurface(0, 170, 70, 32, 0, 0, 0, 0);
         SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 129, 120, 115));
-        position.x=20;
+        position.x=37;
         position.y=15;
         SDL_BlitSurface(text,NULL,surface,&position);
         texture= SDL_CreateTextureFromSurface(renderer,surface);
         SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
         position.x=110;
-        position.y=170;
+        position.y=150;
         SDL_RenderCopy(renderer, texture, NULL, &position);
 
-        font=TTF_OpenFont("poppins-Regular.ttf", 30);
-        text=TTF_RenderText_Blended(font,"Game",font_color);
+        text=TTF_RenderText_Blended(font,"Sign Up",font_color);
         surface=NULL;
         surface = SDL_CreateRGBSurface(0, 170, 70, 32, 0, 0, 0, 0);
         SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 129, 120, 115));
-        position.x=40;
+        position.x=35;
         position.y=15;
         SDL_BlitSurface(text,NULL,surface,&position);
         texture= SDL_CreateTextureFromSurface(renderer,surface);
         SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
         position.x=110;
-        position.y=260;
+        position.y=230;
         SDL_RenderCopy(renderer, texture, NULL, &position);
 
-        text=TTF_RenderText_Blended(font,"Exit",font_color);
-        surface=NULL;
-        surface = SDL_CreateRGBSurface(0, 90, 70, 32, 0, 0, 0, 0);
-        SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 129, 120, 115));
-        position.x=20;
-        position.y=15;
-        SDL_BlitSurface(text,NULL,surface,&position);
-        texture= SDL_CreateTextureFromSurface(renderer,surface);
-        SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
-        position.x=20;
-        position.y=610;
-        SDL_RenderCopy(renderer, texture, NULL, &position);
+        SDL_RenderPresent(renderer);*/
 
 
-        SDL_RenderPresent(renderer);
+        /*while(!quit){
+
+
+            if(event.button.button==SDL_BUTTON_LEFT){
+                SDL_GetMouseState(&x_mouse,&y_mouse);
+
+            }
+
+            SDL_WaitEvent(&event);
+            if(event.type==SDL_QUIT){
+                quit=SDL_TRUE;
+            }
+
+
+        }
+
+
+
 
         do{
+            printf("1: Sign in\n2: Sign up\n");
+            scanf("%d",&choice);
+        }while(choice!=1 && choice!=2);*/
+
+
+        /*do{
+
             SDL_WaitEvent(&event);
 
             if(event.type == SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT){
                 SDL_GetMouseState(&x_mouse,&y_mouse);
             }
 
-            if(x_mouse>=110 && x_mouse<=280 && y_mouse>=170 && y_mouse<=240){
+            if(x_mouse>=110 && x_mouse<=280 && y_mouse>=150 && y_mouse<=220){
                 choice=1;
-                x_mouse=0;
-                y_mouse=0;
             }
 
-            if(x_mouse>=110 && x_mouse<=280 && y_mouse>=260 && y_mouse<=330){
-                choice=3;
-                x_mouse=0;
-                y_mouse=0;
+            if(x_mouse>=110 && x_mouse<=280 && y_mouse>=230 && y_mouse<=300){
+                choice=2;
             }
-
-            if(x_mouse>=20 && x_mouse<=90 && y_mouse>=610 && y_mouse<=680){
-                choice=4;
-                x_mouse=0;
-                y_mouse=0;
-            }
-
-
-        }while(choice==-1);
+        }while(choice!=1 && choice!=2);
 
         if(choice==1){
-            cocktails_SDL(id);
-        }
+            id=SignIn_SDL();
+        }else if(choice==2){
+            id=SignUp_SDL();
+        }*/
 
-        if(choice==3){
-            game_SDL();
-        }
+        /*do{
+            printf("--MENU--\n1: Cocktails\n4:EXIT\n");
+            scanf("%d",&choice);
 
-    }while(choice!=4);
+            if(choice==1){
+                cocktails(id);
+            }
 
-    SDL_FreeSurface(surface);
-    SDL_DestroyWindow(window);
-    SDL_DestroyRenderer(renderer);
-    TTF_CloseFont(font);
-    TTF_Quit();
-    SDL_Quit();
+            if(choice==3){
+                game();
+            }
+
+        }while(choice!=4);*/
+
+       /* do{
+
+            x_mouse=0;
+            y_mouse=0;
+            choice=-1;
+
+            SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
+            SDL_RenderClear(renderer);
+            SDL_RenderPresent(renderer);
+
+            font=TTF_OpenFont("poppins-Regular.ttf", 50);
+            text=TTF_RenderText_Blended(font,"MENU",font_color);
+            position.x=0;
+            position.y=0;
+            texture= SDL_CreateTextureFromSurface(renderer,text);
+            SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+            position.x=125;
+            position.y=50;
+            SDL_RenderCopy(renderer, texture, NULL, &position);
+
+            font=TTF_OpenFont("poppins-Regular.ttf", 30);
+            text=TTF_RenderText_Blended(font,"Cocktails",font_color);
+            surface=NULL;
+            surface = SDL_CreateRGBSurface(0, 170, 70, 32, 0, 0, 0, 0);
+            SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 129, 120, 115));
+            position.x=20;
+            position.y=15;
+            SDL_BlitSurface(text,NULL,surface,&position);
+            texture= SDL_CreateTextureFromSurface(renderer,surface);
+            SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+            position.x=110;
+            position.y=170;
+            SDL_RenderCopy(renderer, texture, NULL, &position);
+
+            font=TTF_OpenFont("poppins-Regular.ttf", 30);
+            text=TTF_RenderText_Blended(font,"Game",font_color);
+            surface=NULL;
+            surface = SDL_CreateRGBSurface(0, 170, 70, 32, 0, 0, 0, 0);
+            SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 129, 120, 115));
+            position.x=40;
+            position.y=15;
+            SDL_BlitSurface(text,NULL,surface,&position);
+            texture= SDL_CreateTextureFromSurface(renderer,surface);
+            SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+            position.x=110;
+            position.y=260;
+            SDL_RenderCopy(renderer, texture, NULL, &position);
+
+            text=TTF_RenderText_Blended(font,"Exit",font_color);
+            surface=NULL;
+            surface = SDL_CreateRGBSurface(0, 90, 70, 32, 0, 0, 0, 0);
+            SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 129, 120, 115));
+            position.x=20;
+            position.y=15;
+            SDL_BlitSurface(text,NULL,surface,&position);
+            texture= SDL_CreateTextureFromSurface(renderer,surface);
+            SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+            position.x=20;
+            position.y=610;
+            SDL_RenderCopy(renderer, texture, NULL, &position);
 
 
+            SDL_RenderPresent(renderer);
+
+            do{
+                SDL_WaitEvent(&event);
+
+                if(event.type == SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT){
+                    SDL_GetMouseState(&x_mouse,&y_mouse);
+                }
+
+                if(x_mouse>=110 && x_mouse<=280 && y_mouse>=170 && y_mouse<=240){
+                    choice=1;
+                    x_mouse=0;
+                    y_mouse=0;
+                }
+
+                if(x_mouse>=110 && x_mouse<=280 && y_mouse>=260 && y_mouse<=330){
+                    choice=3;
+                    x_mouse=0;
+                    y_mouse=0;
+                }
+
+                if(x_mouse>=20 && x_mouse<=90 && y_mouse>=610 && y_mouse<=680){
+                    choice=4;
+                    x_mouse=0;
+                    y_mouse=0;
+                }
+
+
+            }while(choice==-1);
+
+            if(choice==1){
+                cocktails_SDL(id);
+            }
+
+            if(choice==3){
+                game_SDL();
+            }
+
+        }while(choice!=4);*/
+
+
+        SDL_FreeSurface(surface);
+        SDL_DestroyWindow(window);
+        SDL_DestroyRenderer(renderer);
+        TTF_CloseFont(font);
+        TTF_Quit();
+        SDL_Quit();
+
+    }
 
     return 0;
 
