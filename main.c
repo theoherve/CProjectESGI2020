@@ -3,11 +3,35 @@ Programmed by HERV� Th�o and DE FARIA LEITE Armand
 December 2020
 Display Paris's bars (retrieve Api information via Curl on a file, sort the information we need and put them in database)
 */
+
+//start real code
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <curl.h>
+//#include <winsock.h>
 #include <MYSQL/mysql.h>
+#include <time.h>
+#include <SDL.h>
+#include <SDL2/SDL_ttf.h>
+#include <curl.h>
+
+SDL_Window    *window=NULL;
+SDL_Renderer *renderer=NULL;
+TTF_Font *font = NULL;
+SDL_Surface *text=NULL;
+SDL_Surface *surface=NULL;
+SDL_Texture *texture;
+SDL_Color font_color = {0, 0, 0};
+SDL_Event event;
+SDL_Rect position;
+SDL_Color background={213,115,51,255};
+SDL_Color items={129,120,115,255};
+int r_color=129;
+int g_color=120;
+int b_color=115;
+
+int app_mod;
+char txt_font[255];
 
 void getApiViaCurl(FILE *fp){
 
@@ -414,33 +438,23 @@ void researchFromAddress(MYSQL mysql){
             scanf("%d", &choice);
         }
 
-//start real code
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <winsock.h>
-#include <MYSQL/mysql.h>
-#include <time.h>
-#include <SDL.h>
-#include <SDL2/SDL_ttf.h>
+         switch(choice){
+            case 0:
+                return;
+                break;
+            case 1:
+                researchFromAddress(mysql);
+                break;
+            case 2:
+                runNavigator(mysql, query);
+                break;
+        }
 
-SDL_Window    *window=NULL;
-SDL_Renderer *renderer=NULL;
-TTF_Font *font = NULL;
-SDL_Surface *text=NULL;
-SDL_Surface *surface=NULL;
-SDL_Texture *texture;
-SDL_Color font_color = {0, 0, 0};
-SDL_Event event;
-SDL_Rect position;
-SDL_Color background={213,115,51,255};
-SDL_Color items={129,120,115,255};
-int r_color=129;
-int g_color=120;
-int b_color=115;
+    }while(1);
 
-int app_mod;
-char txt_font[255];
+}
+
+
 
 int SignIn(){
 
@@ -3010,6 +3024,9 @@ void menu(){
 
     int choice;//Cette variable va nous servir à pouvoir naviger dans les différents menu de l'application.
     int id;//Cette variable va contenir l'id de l'utilisateur une fois qu'il se sera connécté ou qu'il aura créé son compte.
+    MYSQL mysql;
+    mysql_init(&mysql);
+    mysql_options(&mysql,MYSQL_READ_DEFAULT_GROUP,"option");
 
     //Cette fonction nous sert de menu principal c'est ici qu'on va pouvoir accéder au différentes fonctionnalité de l'appli
 
@@ -3032,6 +3049,13 @@ void menu(){
             cocktails(id);
         }
 
+        if(choice==2){
+            if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0))
+                selectMenu(mysql);
+            else
+                printf("ERROR: An error occurred while connecting to the DB!");
+        }
+
         if(choice==3){
             game();
         }
@@ -3041,6 +3065,9 @@ void menu(){
         }
 
     }while(choice!=5);//On répète cette boucle tant que le joueur n'a pas décidé de sortir de l'appli.
+
+
+
 }
 
 void menu_SDL(){
@@ -3582,21 +3609,6 @@ void setting_SDL(){
 
 }
 
-        switch(choice){
-            case 0:
-                return;
-                break;
-            case 1:
-                researchFromAddress(mysql);
-                break;
-            case 2:
-                runNavigator(mysql, query);
-                break;
-        }
-
-    }while(1);
-
-}
 
 void selectMenu(MYSQL mysql){
 
@@ -3638,10 +3650,6 @@ void selectMenu(MYSQL mysql){
 }
 
 
-/*
-	Le programme a pour but d'afficher les diff�rents champs d'informations de chaques restaurants
-	�crit dans un fichier.
-*/
 int main(int argc, char **argv){
 
     /*int choice;//Cette variable va nous servir à pouvoir naviger dans les différents menu de l'application.
@@ -3651,14 +3659,7 @@ int main(int argc, char **argv){
     int y_mouse;//Cette variable va contenir les coordonnées en Y de la souris.
     int check=0;*/
     int result;//Cette variable contient la valeur de retour de la fonction verifConfTxt;
-    MYSQL mysql;
-    mysql_init(&mysql);
-    mysql_options(&mysql,MYSQL_READ_DEFAULT_GROUP,"option");
 
-    if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0))
-        selectMenu(mysql);
-    else
-        printf("ERROR: An error occurred while connecting to the DB!");
 
     result=verifConfTxt();// On appelle cette fonction pour connaître les infos du fichier de configuration
 
