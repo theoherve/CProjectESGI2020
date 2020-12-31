@@ -456,7 +456,7 @@ void researchFromAddress(MYSQL mysql){
 
 
 
-int SignIn(){
+int SignIn(MYSQL mysql){
 
     char pseudo[50];
     char password[100];
@@ -467,17 +467,19 @@ int SignIn(){
     int id;
 
 
-    MYSQL mysql;
-    mysql_init(&mysql);
-    mysql_options(&mysql,MYSQL_READ_DEFAULT_GROUP,"option");
+    //MYSQL mysql;
+    //mysql_init(&mysql);
+   // mysql_options(&mysql,MYSQL_READ_DEFAULT_GROUP,"option");
 
 
-    if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0)){
+   // if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0)){
 
-        printf("\nSign in:\n");
+
 
         do{
            check=1;
+           system("cls");
+           printf("\nSign in:\n");
            printf("Enter your pseudo:\n\n");
            fflush(stdin);
            fgets(pseudo,50,stdin);
@@ -517,14 +519,14 @@ int SignIn(){
         printf("You are connected");
         sscanf(row[0],"%d",&id);
 
-    }else{
-        printf("ERROR: An error occurred while connecting to the DB!");
-    }
+    //}else{
+        //printf("ERROR: An error occurred while connecting to the DB!");
+    //}
     return id;
 
 }
 
-int SignIn_SDL(){
+int SignIn_SDL(MYSQL mysql){
 
     char pseudo[50];
     char password[100];
@@ -539,12 +541,12 @@ int SignIn_SDL(){
     char hide_password[100];
 
 
-    MYSQL mysql;
-    mysql_init(&mysql);
-    mysql_options(&mysql,MYSQL_READ_DEFAULT_GROUP,"option");
+    //MYSQL mysql;
+    //mysql_init(&mysql);
+    //mysql_options(&mysql,MYSQL_READ_DEFAULT_GROUP,"option");
 
 
-    if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0)){
+    //if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0)){
 
         do{
            check=1;
@@ -739,14 +741,14 @@ int SignIn_SDL(){
         printf("You are connected");
         sscanf(row[0],"%d",&id);
 
-    }else{
-        printf("ERROR: An error occurred while connecting to the DB!");
-    }
+    //}else{
+        //printf("ERROR: An error occurred while connecting to the DB!");
+    //}
     return id;
 
 }
 
-int SignUp(){
+int SignUp(MYSQL mysql){
 
     char pseudo[50];
     char mail[100];
@@ -758,12 +760,6 @@ int SignUp(){
     MYSQL_RES *result=NULL;
     MYSQL_ROW row;
     int id;
-
-    MYSQL mysql;
-    mysql_init(&mysql);
-    mysql_options(&mysql,MYSQL_READ_DEFAULT_GROUP,"option");
-
-    if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0)){
 
         printf("\nSign up:\n");
 
@@ -908,17 +904,12 @@ int SignUp(){
             printf("\nERROR: Your account can't be create\n");
         }
 
-         mysql_close(&mysql);
-
-    }else{
-        printf("ERROR: An error occurred while connecting to the DB!");
-    }
 
     return id;
 
 }
 
-int SignUp_SDL(){
+int SignUp_SDL(MYSQL mysql){
 
     char pseudo[50];
     char mail[100];
@@ -934,11 +925,6 @@ int SignUp_SDL(){
     int check_input=0;
     char hide_password[100];
 
-    MYSQL mysql;
-    mysql_init(&mysql);
-    mysql_options(&mysql,MYSQL_READ_DEFAULT_GROUP,"option");
-
-    if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0)){
 
         do{
             check=1;
@@ -1506,7 +1492,7 @@ int SignUp_SDL(){
 
         }while(check!=1);
 
-        printf("Pseudo: %s\nMail: %s\nCity: %s\nPassword %s\n",pseudo,mail,city,password);
+        //printf("Pseudo: %s\nMail: %s\nCity: %s\nPassword %s\n",pseudo,mail,city,password);
 
         strcpy(query,"INSERT INTO USER (pseudo,mail,city,password) VALUES('");
         strcat(query,pseudo);
@@ -1535,37 +1521,32 @@ int SignUp_SDL(){
             printf("\nERROR: Your account can't be create\n");
         }
 
-         mysql_close(&mysql);
-
-    }else{
-        printf("ERROR: An error occurred while connecting to the DB!");
-    }
 
     return id;
 
 }
 
-void cocktails(int id){
+void cocktails(int id,MYSQL mysql){
     int choice;//Cette variable va nous servir à pouvoir naviger dans les différents menu de l'application.
 
     //Cette fonction est un sous menu qui nous permet de choisir entre deux autres fonctionnalité lié aux cocktail: créer un cocktail ou consulter la liste des cocktails existant
 
-    printf("--COCKTAILS--\n");
-
     do{
+        system("cls");
+        printf("--COCKTAILS--\n");
         printf("\n1:Create a coktails\n2:List of users Cocktails\n3:Return to menu\n");//On a donc ici une boucle pour choisir entre ces deux fonctionnalité et l'utilisateur rentre le numéro associer pour s'y rendre.
         scanf("%d",&choice);
         if(choice==1){
-            createCocktails(id);
+            createCocktails(id,mysql);
         }
 
         if(choice==2){
-            listCocktails(id);
+            listCocktails(id,mysql);
         }
     }while(choice!=3);//On reste dans la boucle tant que l'utilisateur n'a pas décidé de revenir au menu principal
 }
 
-void cocktails_SDL(int id){
+void cocktails_SDL(int id,MYSQL mysql){
     int choice;
     int x_mouse;
     int y_mouse;
@@ -1661,18 +1642,18 @@ void cocktails_SDL(int id){
         }while(choice!=1 && choice!=2 && choice!=3);
 
         if(choice==1){
-            createCocktails_SDL(id);
+            createCocktails_SDL(id,mysql);
         }
 
         if(choice==2){
-            listCocktails_SDL(id);
+            listCocktails_SDL(id,mysql);
         }
 
     }while(choice!=3);
 
 }
 
-void createCocktails(int id){
+void createCocktails(int id,MYSQL mysql){
 
     char name_cocktail[100];//Cette variable va stocker le nom du Cocktail à créer.
     char txt_tmp[10];//Cette variable va nous servir à stocker les versions string de certaines valeur pour les mettre dans une requette sql.
@@ -1689,16 +1670,11 @@ void createCocktails(int id){
     int check_count_row=0;//Variable tempon qui va nous servir à par la suite
 
     //SQL
-    MYSQL mysql;//
     MYSQL_RES *result = NULL;//Ce pointeur va contenir le jeu de résultat de notre requête
     MYSQL_ROW row;//Cette variable va contenir les lignes de nos tables que l'on va traiter
-    mysql_init(&mysql);//On initialise notre bibliothèque de BDD
-    mysql_options(&mysql,MYSQL_READ_DEFAULT_GROUP,"option");//On choisie nos options
 
     //Cette fonction va nous servir à créer un cocktail avec pour chaque cocktail différents ingrédient avec leur propre quantité.
-
-    if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0)){//On se connecte à la base de donné et si on réussi on continue le programme.
-
+        system("cls");
         printf("| Creation of a cocktail |\n");
         printf("Choose the name of your cocktails\n");
         fflush(stdin);
@@ -1723,9 +1699,11 @@ void createCocktails(int id){
              }
         }
 
-        printf("Choose an ingredient(max 10)\n");
+
         do{//C'est dans cette boucle qu'on va afficher la liste des ingrédients et que l'utilisateur va pouvoir les choisir
             count_row=0;
+            system("cls");
+            printf("Choose an ingredient(max 10)\n");
             printf("Choose a number (or 0 if the list is finish)\n");
             printf("(%d/10)\n)",max);
             strcpy(query,"SELECT * FROM ingredient");//On envoie une requête pour récuperer tous les ingrédients avec leur id et leur nom.
@@ -1797,18 +1775,12 @@ void createCocktails(int id){
         }
 
         free(tab_choice_ingredient);//On libère la mémoire prise par notre tableau dynamique.
-        mysql_close(&mysql);//On ferme la connection avec notre BDD.
-
-    }else{
-
-        printf("ERROR: An error occurred while connecting to the DB!");
-
-    }
-
 
 }
 
-void createCocktails_SDL(int id){
+
+
+void createCocktails_SDL(int id,MYSQL mysql){
 
     char name_cocktail[100];
     char txt_tmp[10];
@@ -1820,8 +1792,6 @@ void createCocktails_SDL(int id){
     int choice;
     int quantity;
     char query[255];
-    MYSQL_RES *result = NULL;
-    MYSQL_ROW row;
     unsigned int i = 0;
     int count_row=0;
     int check_count_row=0;
@@ -1837,11 +1807,9 @@ void createCocktails_SDL(int id){
     int check_input=0;
     char txt_quantity[10];
 
-    MYSQL mysql;
-    mysql_init(&mysql);
-    mysql_options(&mysql,MYSQL_READ_DEFAULT_GROUP,"option");
-
-    if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0)){
+    //SQL
+    MYSQL_RES *result = NULL;
+    MYSQL_ROW row;
 
         do{
 
@@ -2051,6 +2019,7 @@ void createCocktails_SDL(int id){
                 if(choice!=0){
                     tab_ingredient[max]=loop-choice+1;
                     check_input=0;
+                    strcpy(txt_quantity,"");
                     do{
 
                         SDL_WaitEvent(&event);
@@ -2158,15 +2127,11 @@ void createCocktails_SDL(int id){
             mysql_query(&mysql,query);
         }
 
-        free(tab_choice_ingredient);
-        mysql_close(&mysql);
-
-    }
 
 
 }
 
-void listCocktails(int id){
+void listCocktails(int id,MYSQL mysql){
 
     char query[255];//Va contenir nos diiférente requête SQL
     char **tab_coktails;//Un double pointeur de char qui va devenir un tableau dynamique contenant l'id de chaque cocktail
@@ -2177,17 +2142,12 @@ void listCocktails(int id){
     int check=0;//Variable tempon
     //char id_cocktail[10];
 
-    MYSQL mysql;
+    //SQL
     MYSQL_RES *result = NULL;
     MYSQL_ROW row;
-    mysql_init(&mysql);
-    mysql_options(&mysql,MYSQL_READ_DEFAULT_GROUP,"option");
+
 
     //Dans cette fonction on va pouvoir afficher la liste des cocktails créé et les séléctionner pour savoir les ingrédients nécéssaire à leur conception + la quantité.
-
-    if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0)){//On se connecte à la BDD
-
-       printf("| List of the cocktail |\n");
 
        strcpy(query,"SELECT * FROM cocktails");//Ici on va envoyer une requète qui va séléctionner toute les lignes de notre table coktails.
        mysql_query(&mysql,query);//On envoi la requête
@@ -2210,8 +2170,10 @@ void listCocktails(int id){
 
             strcpy(query,"SELECT cocktails.id,name,user.pseudo FROM cocktails INNER JOIN user ON cocktails.id_user = user.id ORDER BY(name)");//Avec cette requête on récupère l'id du cocktail, son nom, et l'utilisateur qui l'a créé.
             mysql_query(&mysql,query);
-
             result = mysql_use_result(&mysql);
+
+            system("cls");
+            printf("| List of the cocktail |\n");
             while((row = mysql_fetch_row(result))){
 
                 printf("[%d] |%s| created by %s",count_row+1,row[1],row[2]);//Pour chaque ligne on affiche le nom du cocktail , l'utilisateur qui l' a créé et "count_row+1" qui correspondra au chiffre que l'utilisateur devra renter pour voir les détails
@@ -2240,7 +2202,7 @@ void listCocktails(int id){
 
                 result = mysql_use_result(&mysql);
                 while((row = mysql_fetch_row(result))){//On affiche par la suite le résultat
-
+                    system("cls");
                     printf("|%s| quantity: %s cl",row[0],row[1]);
                     printf("\n");
                 }
@@ -2254,21 +2216,14 @@ void listCocktails(int id){
         }while(choice!=0);//On boucle tant que l'utilisateur ne souhaite pas revenir à la liste des cocktails
 
        free(tab_coktails);//On libère la mémoire prise par notre tableau dynamique
-       mysql_close(&mysql);//On met fin à la connection avec la BDD
+       //mysql_close(&mysql);//On met fin à la connection avec la BDD
 
-    }else{
-
-        printf("ERROR: An error occurred while connecting to the DB!");
-
-    }
 
 }
 
-void listCocktails_SDL(int id){
+void listCocktails_SDL(int id,MYSQL mysql){
 
     char query[255];
-    MYSQL_RES *result = NULL;
-    MYSQL_ROW row;
     char **tab_coktails;
     int count_row=0;
     unsigned int i = 0;
@@ -2285,11 +2240,9 @@ void listCocktails_SDL(int id){
     int y_mouse;
     int loop=6;
 
-    MYSQL mysql;
-    mysql_init(&mysql);
-    mysql_options(&mysql,MYSQL_READ_DEFAULT_GROUP,"option");
-
-    if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0)){
+    //SQL
+    MYSQL_RES *result = NULL;
+    MYSQL_ROW row;
 
        strcpy(query,"SELECT * FROM cocktails");
        mysql_query(&mysql,query);
@@ -2530,17 +2483,10 @@ void listCocktails_SDL(int id){
         }while(choice!=0);
 
        free(tab_coktails);
-       mysql_close(&mysql);
-
-    }else{
-
-        printf("ERROR: An error occurred while connecting to the DB!");
-
-    }
 
 }
 
-void game(){
+void game(MYSQL mysql){
 
 
     int choice;
@@ -2556,20 +2502,18 @@ void game(){
     int check=0;
 
     //SQL
-    MYSQL mysql;
     MYSQL_RES *result = NULL;
     MYSQL_ROW row;
-    mysql_init(&mysql);
-    mysql_options(&mysql,MYSQL_READ_DEFAULT_GROUP,"option");
 
     srand(time(NULL));
 
     //Cette fonction va lancer un jeu: le "je n'ai jamais". Il permet de lancer 15 question aléatoire sue le thème du jeu.
 
-    if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0)){
-        printf("--GAME--\n");
+
 
         do{//Dans cette boucle on demande à l'utilisateur si il veut commencer le jeu ou si il veut revenir au menu
+            system("cls");
+            printf("--GAME--\n");
             printf("1: Start a game\n2: Return to the menu\n");
             scanf("%d",&choice);
 
@@ -2639,6 +2583,7 @@ void game(){
                             }
 
                             do{//et on l'affiche.
+                                system("cls");
                                 printf("%d: %s\n",i+1,question);
                                 printf("1: Next question\n");
 
@@ -2649,33 +2594,21 @@ void game(){
                         }
 
 
-
-
-
                         free(tab_id_game);
 
 
             }
         }while(choice!=2);
 
-        mysql_close(&mysql);
-
-    }else{
-
-        printf("ERROR: An error occurred while connecting to the DB!");
-
-    }
 
 }
 
-void game_SDL(){
+void game_SDL(MYSQL mysql){
 
 
     int choice;
     char **tab_id_game;
     char query[255];
-    MYSQL_RES *result = NULL;
-    MYSQL_ROW row;
     int count_row=0;
     unsigned int i;
     unsigned int y;
@@ -2690,13 +2623,11 @@ void game_SDL(){
     int y_mouse;
     int count_space;
 
-    MYSQL mysql;
-    mysql_init(&mysql);
-    mysql_options(&mysql,MYSQL_READ_DEFAULT_GROUP,"option");
+    //SQL
+    MYSQL_RES *result = NULL;
+    MYSQL_ROW row;
 
     srand(time(NULL));
-
-    if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0)){
 
         do{
 
@@ -2897,14 +2828,6 @@ void game_SDL(){
             }
         }while(choice!=2);
 
-        mysql_close(&mysql);
-
-    }else{
-
-        printf("ERROR: An error occurred while connecting to the DB!");
-
-    }
-
 }
 
 int verifConfTxt(){
@@ -3020,13 +2943,10 @@ int verifConfTxt(){
 
 }
 
-void menu(){
+void menu(MYSQL mysql){
 
     int choice;//Cette variable va nous servir à pouvoir naviger dans les différents menu de l'application.
     int id;//Cette variable va contenir l'id de l'utilisateur une fois qu'il se sera connécté ou qu'il aura créé son compte.
-    MYSQL mysql;
-    mysql_init(&mysql);
-    mysql_options(&mysql,MYSQL_READ_DEFAULT_GROUP,"option");
 
     //Cette fonction nous sert de menu principal c'est ici qu'on va pouvoir accéder au différentes fonctionnalité de l'appli
 
@@ -3036,28 +2956,26 @@ void menu(){
     }while(choice!=1 && choice!=2);
 
     if(choice==1){//En fonction du choix on se dirige vers la fonction SignIn ou SignUp
-        id=SignIn();
+        id=SignIn(mysql);
     }else if(choice==2){
-        id=SignUp();
+        id=SignUp(mysql);
     }
 
     do{
+        system("cls");
         printf("--MENU--\n1: Cocktails\n2: Bar\n3: Game\n4 Setting\n5:EXIT\n");//On propose ici de choisr entre 5 choix: la fonctionalité "cocktail",la fonctionalité "game",la fonctionalité "bar",rentrer dans les paramètre ou sortir de l'appli.Il rentre au clavier le numéro indiqué pour chaque fonction
         scanf("%d",&choice);
 
         if(choice==1){
-            cocktails(id);
+            cocktails(id,mysql);
         }
 
         if(choice==2){
-            if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0))
                 selectMenu(mysql);
-            else
-                printf("ERROR: An error occurred while connecting to the DB!");
         }
 
         if(choice==3){
-            game();
+            game(mysql);
         }
 
         if(choice==4){
@@ -3070,7 +2988,7 @@ void menu(){
 
 }
 
-void menu_SDL(){
+void menu_SDL(MYSQL mysql){
     int choice;
     int id;
     int x_mouse;
@@ -3126,9 +3044,9 @@ void menu_SDL(){
         }while(choice!=1 && choice!=2);
 
         if(choice==1){
-            id=SignIn_SDL();
+            id=SignIn_SDL(mysql);
         }else if(choice==2){
-            id=SignUp_SDL();
+            id=SignUp_SDL(mysql);
         }
 
         do{
@@ -3242,15 +3160,15 @@ void menu_SDL(){
             }while(choice==-1);
 
             if(choice==1){
-                cocktails_SDL(id);
+                cocktails_SDL(id,mysql);
             }
 
             if(choice==3){
-                game_SDL();
+                game_SDL(mysql);
             }
 
             if(choice==4){
-                setting_SDL();
+                setting_SDL(mysql);
             }
 
         }while(choice!=5);
@@ -3269,8 +3187,6 @@ void setting(){
     char final_conf[100];
 
     //Dans cette fonction on va pouvoir changer les paramètre dans notre fichier de configuration.
-
-    printf("--SETTING--\n");
 
     fp=fopen("conf.txt","rb");
     if(fp!=NULL){
@@ -3310,6 +3226,8 @@ void setting(){
     fclose(fp);
 
     do{
+        system("cls");
+        printf("--SETTING--\n");
         //On affiche les paramètre actuelle et si l'utilisateur veut changer un paramètre il entre le numéro correspondant.
         printf("Select a number to change the option\n1: %s\n2: %s\n3: %s\n4: %s\n5: Menu\n",app_mod_conf,font_conf,color_conf,renderer_conf);
         scanf("%d",&choice);
@@ -3652,6 +3570,10 @@ void selectMenu(MYSQL mysql){
 
 int main(int argc, char **argv){
 
+    MYSQL mysql;
+    mysql_init(&mysql);
+    mysql_options(&mysql,MYSQL_READ_DEFAULT_GROUP,"option");
+
     /*int choice;//Cette variable va nous servir à pouvoir naviger dans les différents menu de l'application.
     int id;//Cette variable va contenir l'id de l'utilisateur une fois qu'il s'est connécter ou qu'il a créer son compte.
     SDL_bool quit=SDL_FALSE;
@@ -3689,10 +3611,16 @@ int main(int argc, char **argv){
             TTF_Init();
         }
 
-        if(app_mod==1){//En fonction de si on a choisi d'avoir une interface graphique ou d'être en ligne de commande on va dans le menu correspondant.
-            menu_SDL();
-        }else if(app_mod==2){
-            menu();
+        if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0)){
+
+            if(app_mod==1){//En fonction de si on a choisi d'avoir une interface graphique ou d'être en ligne de commande on va dans le menu correspondant.
+                menu_SDL(mysql);
+            }else if(app_mod==2){
+                menu(mysql);
+            }
+
+            mysql_close(&mysql);
+
         }
 
 
@@ -3712,6 +3640,8 @@ int main(int argc, char **argv){
 
 
         }*/
+
+
 
         if(app_mod==1){
 
