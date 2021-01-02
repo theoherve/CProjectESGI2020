@@ -504,9 +504,6 @@ void researchFromAddress(MYSQL mysql){
 
 void researchFromAddress_SQL(MYSQL mysql){
 
-
-int SignIn(MYSQL mysql){
-
     MYSQL_RES *result = NULL;
     MYSQL_ROW row;
 
@@ -753,7 +750,7 @@ int SignIn(MYSQL mysql){
 }
 
 
-int SignIn(){
+int SignIn(MYSQL mysql){
 
     char pseudo[50];
     char password[100];
@@ -3891,8 +3888,6 @@ void selectMenu_SDL(MYSQL mysql){
     int x_mouse;
     int y_mouse;
 
-    if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0)){
-
     do{
         menuSelection = -1;
         x_mouse=0;
@@ -4009,12 +4004,6 @@ void selectMenu_SDL(MYSQL mysql){
         }
 
     }while(1);
-
-    mysql_close(&mysql);
-
-    }else
-        printf("ERROR: An error occurred while connecting to the DB!");
-
 
 }
 
