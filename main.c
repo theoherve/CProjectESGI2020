@@ -395,6 +395,54 @@ void runNavigator(MYSQL mysql, char query[255]){
     selectMenu(mysql);
 }
 
+void runNavigator_SDL(MYSQL mysql, char query[255], int choice){
+//    int choice;
+    int idChoice;
+    int count_row = 0;
+    char query2[255];
+    char httpRequest[255];
+    int i = 0;
+    int tmp;
+
+    MYSQL_RES *result = NULL;
+    MYSQL_ROW row;
+
+//    printf("\n\nChoose the search you want to run.\n");
+//    printf("Select the search by its number :\n");
+//    scanf("%d", &choice);
+    mysql_query(&mysql,query);
+    result = mysql_store_result(&mysql);
+    while((row = mysql_fetch_row(result))){
+//        printf("[%d] %s - %s - %s\n",count_row+1,row[1],row[2], row[3]);
+        if((count_row+1) == choice){
+            idChoice = row[0];
+        }
+
+        count_row++;
+    }
+
+    strcpy(query2, "SELECT id, lieu1, date_periode, libelle_type, geo_point_2d FROM BAR WHERE id= '");
+    strcat(query2, idChoice);
+    strcat(query2, "'");
+    mysql_query(&mysql,query2);
+    result = mysql_store_result(&mysql);
+    row = mysql_fetch_row(result);
+
+    strcpy(httpRequest, "start https://www.google.fr/maps/search/");
+    if(row){
+        printf("[%s] %s - %s - %s - %s\n",row[0], row[1], row[2], row[3], row[4]);
+        while(row[4][i++]){
+            if(row[4][i] == ' '){
+                strncat(httpRequest, row[4], i);
+                strcat(httpRequest, "+");
+                strcat(httpRequest, row[4]+(i+1));
+            }
+        }
+        printf("httpRequest : %s", httpRequest);
+        system(httpRequest);
+    }
+}
+
 
 void researchFromAddress(MYSQL mysql){
     system("cls");
@@ -454,9 +502,258 @@ void researchFromAddress(MYSQL mysql){
 
 }
 
+void researchFromAddress_SQL(MYSQL mysql){
 
 
 int SignIn(MYSQL mysql){
+
+    MYSQL_RES *result = NULL;
+    MYSQL_ROW row;
+
+    int x_mouse;
+    int y_mouse;
+
+    char request[255];
+    char query[255];
+    int choice = -1;
+    int check_input=0;
+    char txt_count_row[10];
+    char gui_txt[255];
+    int y_position_increment;
+    int loop = 6;
+
+    x_mouse=0;
+    y_mouse=0;
+    int count_row = 0;
+    strcpy(request,"");
+
+    do{
+        SDL_WaitEvent(&event);
+        if(event.type == SDL_TEXTINPUT){
+            strcat(request,event.text.text);
+        }
+
+        if(event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_BACKSPACE){
+            request[strlen(request)-1]='\0';
+        }
+
+        if(event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_RETURN){
+            check_input=1;
+        }
+
+        SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
+        SDL_RenderClear(renderer);
+        SDL_RenderPresent(renderer);
+
+        font=TTF_OpenFont(txt_font, 28);
+        text=TTF_RenderText_Blended(font,"Enter the street's name of your bar:",font_color);
+        position.x=0;
+        position.y=0;
+        texture= SDL_CreateTextureFromSurface(renderer,text);
+        SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+        position.x=20;
+        position.y=50;
+        SDL_RenderCopy(renderer, texture, NULL, &position);
+
+        text=TTF_RenderText_Blended(font,request,font_color);
+        position.x=0;
+        position.y=0;
+        texture= SDL_CreateTextureFromSurface(renderer,text);
+        SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+        position.x=15;
+        position.y=100;
+        SDL_RenderCopy(renderer, texture, NULL, &position);
+
+        SDL_RenderPresent(renderer);
+
+    }while(check_input!=1);
+
+    do{
+        count_row=0;
+        choice=-1;
+        x_mouse=0;
+        y_mouse=0;
+        y_position_increment=170;
+
+        SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
+        SDL_RenderClear(renderer);
+        SDL_RenderPresent(renderer);
+
+        font=TTF_OpenFont(txt_font, 45);
+        text=TTF_RenderText_Blended(font,"List Bars",font_color);
+        position.x=0;
+        position.y=0;
+        texture= SDL_CreateTextureFromSurface(renderer,text);
+        SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+        position.x=120;
+        position.y=50;
+        SDL_RenderCopy(renderer, texture, NULL, &position);
+
+        strcpy(query, "SELECT id, lieu1, date_periode, libelle_type, geo_point_2d FROM BAR WHERE (libelle_type = 'TERRASSE FERMEE' OR libelle_type = 'TERRASSE OUVERTE') AND lieu1 LIKE '%");
+        strcat(query, request);
+        strcat(query, "%'");
+        mysql_query(&mysql,query);
+        result = mysql_store_result(&mysql);
+        font=TTF_OpenFont(txt_font, 15);
+
+        while((row = mysql_fetch_row(result))){
+            if(count_row<loop && count_row>=loop-6){
+                itoa(count_row+1,txt_count_row,10);
+                strcpy(gui_txt,"[");
+                strcat(gui_txt,txt_count_row);
+                strcat(gui_txt,"] ");
+                strcat(gui_txt,row[1]);
+                strcat(gui_txt," - ");
+                strcat(gui_txt,row[2]);
+                strcat(gui_txt," - ");
+                strcat(gui_txt,row[3]);
+
+                font=TTF_OpenFont(txt_font, 12);
+                text=TTF_RenderText_Blended(font,gui_txt,font_color);
+                position.x=0;
+                position.y=0;
+                texture= SDL_CreateTextureFromSurface(renderer,text);
+                SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+                position.x=20;
+                position.y=y_position_increment;
+                SDL_RenderCopy(renderer, texture, NULL, &position);
+
+                SDL_RenderPresent(renderer);
+
+                y_position_increment+=70;
+            }
+            count_row++;
+        }
+
+        text=TTF_RenderText_Blended(font,"Return",font_color);
+        surface=NULL;
+        surface = SDL_CreateRGBSurface(0, 120, 70, 32, 0, 0, 0, 0);
+        SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, r_color, g_color, b_color));
+        position.x=20;
+        position.y=15;
+        SDL_BlitSurface(text,NULL,surface,&position);
+        texture= SDL_CreateTextureFromSurface(renderer,surface);
+        SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+        position.x=20;
+        position.y=610;
+        SDL_RenderCopy(renderer, texture, NULL, &position);
+
+        SDL_RenderPresent(renderer);
+
+        choice = -1;
+
+        do{
+            SDL_WaitEvent(&event);
+
+            if(event.type == SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT){
+                SDL_GetMouseState(&x_mouse,&y_mouse);
+            }
+
+            if(event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_UP){
+                choice=-2;
+            }
+
+            if(event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_DOWN){
+                choice=-3;
+            }
+
+            if(x_mouse>=20 && x_mouse<=390 && y_mouse>=170 && y_mouse<=198){
+                choice=6;
+            }
+
+            if(x_mouse>=60 && x_mouse<=340 && y_mouse>=240 && y_mouse<=268){
+                choice=5;
+            }
+
+            if(x_mouse>=20 && x_mouse<=340 && y_mouse>=310 && y_mouse<=338){
+                choice=4;
+            }
+
+            if(x_mouse>=20 && x_mouse<=340 && y_mouse>=380 && y_mouse<=408){
+                choice=3;
+            }
+
+            if(x_mouse>=20 && x_mouse<=340 && y_mouse>=450 && y_mouse<=478){
+                choice=2;
+            }
+
+            if(x_mouse>=20 && x_mouse<=340 && y_mouse>=520 && y_mouse<=548){
+                choice=1;
+            }
+
+            if(x_mouse>=20 && x_mouse<=140 && y_mouse>=610 && y_mouse<=680){
+                choice=0;
+            }
+
+        }while(choice == -1);
+
+        if(choice==-2){
+            if(loop>6){
+                loop-=1;
+            }
+        }
+
+        if(choice==-3){
+
+            if(loop+1<=count_row){
+                loop+=1;
+            }
+        }
+
+        if(choice>0 && choice<=6){
+        runNavigator_SDL(mysql, query, (loop-choice+1));
+    }
+
+//    if(choice == 0){
+//        //selectMenu_SDL(mysql);
+//        return;
+//    }
+
+    }while(choice != 0);
+
+
+
+//        printf("\n\nDo you want to make another research or get back ?\n\n");
+//        printf("1 - Make another research\n");
+//        printf("2 - Run the research on your navigator\n");
+//        printf("0 - Get back\n");
+//        scanf("%d", &choice);
+
+//        switch(choice){
+//            case 0:
+//                return;
+//                break;
+//            case 1:
+//                researchFromAddress_SQL(mysql);
+//                break;
+//            case 2:
+//                runNavigator(mysql, query);
+//                break;
+//        }
+
+
+//        while(choice <0 || choice > 2){
+//            printf("\nYour choice does not correspond to the expectations !\n");
+//            printf("Please retype your choice :\n");
+//            scanf("%d", &choice);
+//        }
+//
+//         switch(choice){
+//            case 0:
+//                return;
+//                break;
+//            case 1:
+//                researchFromAddress_SQL(mysql);
+//                break;
+//            case 2:
+//                runNavigator(mysql, query);
+//                break;
+//        }
+
+}
+
+
+int SignIn(){
 
     char pseudo[50];
     char password[100];
@@ -2279,7 +2576,7 @@ void listCocktails_SDL(int id,MYSQL mysql){
             position.y=50;
             SDL_RenderCopy(renderer, texture, NULL, &position);
 
-            SDL_RenderPresent(renderer);
+//            SDL_RenderPresent(renderer);
 
             font=TTF_OpenFont(txt_font, 20);
 
@@ -3081,7 +3378,7 @@ void menu_SDL(MYSQL mysql){
             position.y=170;
             SDL_RenderCopy(renderer, texture, NULL, &position);
 
-            text=TTF_RenderText_Blended(font,"Game",font_color);
+            text=TTF_RenderText_Blended(font,"Bars",font_color);
             surface=NULL;
             surface = SDL_CreateRGBSurface(0, 170, 70, 32, 0, 0, 0, 0);
             SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, r_color, g_color, b_color));
@@ -3092,6 +3389,19 @@ void menu_SDL(MYSQL mysql){
             SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
             position.x=110;
             position.y=260;
+            SDL_RenderCopy(renderer, texture, NULL, &position);
+
+            text=TTF_RenderText_Blended(font,"Game",font_color);
+            surface=NULL;
+            surface = SDL_CreateRGBSurface(0, 170, 70, 32, 0, 0, 0, 0);
+            SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, r_color, g_color, b_color));
+            position.x=40;
+            position.y=15;
+            SDL_BlitSurface(text,NULL,surface,&position);
+            texture= SDL_CreateTextureFromSurface(renderer,surface);
+            SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+            position.x=110;
+            position.y=350;
             SDL_RenderCopy(renderer, texture, NULL, &position);
 
             text=TTF_RenderText_Blended(font,"SETTING",font_color);
@@ -3137,6 +3447,12 @@ void menu_SDL(MYSQL mysql){
                 }
 
                 if(x_mouse>=110 && x_mouse<=280 && y_mouse>=260 && y_mouse<=330){
+                    choice=2;
+                    x_mouse=0;
+                    y_mouse=0;
+                }
+
+                if(x_mouse>=110 && x_mouse<=280 && y_mouse>=350 && y_mouse<=420){
                     choice=3;
                     x_mouse=0;
                     y_mouse=0;
@@ -3159,6 +3475,10 @@ void menu_SDL(MYSQL mysql){
 
             if(choice==1){
                 cocktails_SDL(id,mysql);
+            }
+
+            if(choice==2){
+                selectMenu_SDL(mysql);
             }
 
             if(choice==3){
@@ -3563,6 +3883,139 @@ void selectMenu(MYSQL mysql){
         }
 
     }while(1);
+}
+
+void selectMenu_SDL(MYSQL mysql){
+
+    int menuSelection;
+    int x_mouse;
+    int y_mouse;
+
+    if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0)){
+
+    do{
+        menuSelection = -1;
+        x_mouse=0;
+        y_mouse=0;
+
+        SDL_SetRenderDrawColor(renderer,background.r,background.g,background.b,background.a);
+        SDL_RenderClear(renderer);
+        SDL_RenderPresent(renderer);
+
+        font=TTF_OpenFont(txt_font, 45);
+        text=TTF_RenderText_Blended(font,"BARS",font_color);
+        position.x=0;
+        position.y=0;
+        texture= SDL_CreateTextureFromSurface(renderer,text);
+        SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+        position.x=135;
+        position.y=50;
+        SDL_RenderCopy(renderer, texture, NULL, &position);
+
+        font=TTF_OpenFont(txt_font, 25);
+        text=TTF_RenderText_Blended(font,"Load bar list",font_color);
+        surface=NULL;
+        surface = SDL_CreateRGBSurface(0, 280, 70, 32, 0, 0, 0, 0);
+        SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, r_color, g_color, b_color));
+        position.x=10;
+        position.y=15;
+        SDL_BlitSurface(text,NULL,surface,&position);
+        texture= SDL_CreateTextureFromSurface(renderer,surface);
+        SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+        position.x=60;
+        position.y=170;
+        SDL_RenderCopy(renderer, texture, NULL, &position);
+
+        text=TTF_RenderText_Blended(font,"Selection from a category",font_color);
+        surface=NULL;
+        surface = SDL_CreateRGBSurface(0, 280, 70, 32, 0, 0, 0, 0);
+        SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, r_color, g_color, b_color));
+        position.x=10;
+        position.y=15;
+        SDL_BlitSurface(text,NULL,surface,&position);
+        texture= SDL_CreateTextureFromSurface(renderer,surface);
+        SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+        position.x=60;
+        position.y=255;
+        SDL_RenderCopy(renderer, texture, NULL, &position);
+
+        text=TTF_RenderText_Blended(font,"Make a research from address",font_color);
+        surface=NULL;
+        surface = SDL_CreateRGBSurface(0, 280, 70, 32, 0, 0, 0, 0);
+        SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, r_color, g_color, b_color));
+        position.x=10;
+        position.y=15;
+        SDL_BlitSurface(text,NULL,surface,&position);
+        texture= SDL_CreateTextureFromSurface(renderer,surface);
+        SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+        position.x=60;
+        position.y=340;
+        SDL_RenderCopy(renderer, texture, NULL, &position);
+
+        text=TTF_RenderText_Blended(font,"Menu",font_color);
+        surface=NULL;
+        surface = SDL_CreateRGBSurface(0, 120, 70, 32, 0, 0, 0, 0);
+        SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, r_color, g_color, b_color));
+        position.x=15;
+        position.y=15;
+        SDL_BlitSurface(text,NULL,surface,&position);
+        texture= SDL_CreateTextureFromSurface(renderer,surface);
+        SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+        position.x=10;
+        position.y=610;
+        SDL_RenderCopy(renderer, texture, NULL, &position);
+
+        SDL_RenderPresent(renderer);
+
+        do{
+
+            SDL_WaitEvent(&event);
+
+            if(event.type == SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT){
+                SDL_GetMouseState(&x_mouse,&y_mouse);
+            }
+
+            if(x_mouse>=60 && x_mouse<=340 && y_mouse>=170 && y_mouse<=240){
+                menuSelection=1;
+            }
+
+            if(x_mouse>=60 && x_mouse<=340 && y_mouse>=255 && y_mouse<=355){
+                menuSelection=2;
+            }
+
+            if(x_mouse>=60 && x_mouse<=340 && y_mouse>=340 && y_mouse<=410){
+                menuSelection=3;
+            }
+
+            if(x_mouse>=20 && x_mouse<=140 && y_mouse>=610 && y_mouse<=680){
+                menuSelection=0;
+            }
+
+        }while(menuSelection == -1);
+
+        switch(menuSelection){
+            case 0:
+                return;
+                break;
+            case 1:
+                loadBars(mysql);
+                break;
+            case 2:
+                selectFromCategory(mysql);
+                break;
+            case 3:
+                researchFromAddress_SQL(mysql);
+                break;
+        }
+
+    }while(1);
+
+    mysql_close(&mysql);
+
+    }else
+        printf("ERROR: An error occurred while connecting to the DB!");
+
+
 }
 
 
