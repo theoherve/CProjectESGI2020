@@ -474,12 +474,10 @@ int SignIn(MYSQL mysql){
 
    // if(mysql_real_connect(&mysql,"localhost","root","root","picomancer",0,NULL,0)){
 
-
+    printf("\nSign in:\n");
 
         do{
            check=1;
-           system("cls");
-           printf("\nSign in:\n");
            printf("Enter your pseudo:\n\n");
            fflush(stdin);
            fgets(pseudo,50,stdin);
@@ -2384,7 +2382,7 @@ void listCocktails_SDL(int id,MYSQL mysql){
 
             }while(choice==-1);
 
-            if(choice>0 && choice<=count_row){
+            if(choice>0 && choice<=6){
 
                 y_position_increment=170;
                 choice2=1;
