@@ -2493,8 +2493,8 @@ void listCocktails(int id,MYSQL mysql){
                  mysql_query(&mysql,query);
 
                 result = mysql_use_result(&mysql);
+                system("cls");
                 while((row = mysql_fetch_row(result))){//On affiche par la suite le résultat
-                    system("cls");
                     printf("|%s| quantity: %s cl",row[0],row[1]);
                     printf("\n");
                 }

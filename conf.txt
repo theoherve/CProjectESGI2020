@@ -1,4 +1,4 @@
-app_mod:GUI
+app_mod:command_line
 font:redressed-Regular.ttf
 color:normal
 renderer:software
