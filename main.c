@@ -961,7 +961,6 @@ int SignIn_SDL(MYSQL mysql){
 
     }while(check!=1);
 
-    printf("You are connected");
     sscanf(row[0],"%d",&id);
 
     return id;
@@ -1723,7 +1722,6 @@ int SignUp_SDL(MYSQL mysql){
 
     if(row){
         sscanf(row[0],"%d",&id);
-        printf("\nWelcome %s, your account has been successfully created\n",pseudo);
     }else{
         printf("\nERROR: Your account can't be create\n");
     }
@@ -3625,7 +3623,6 @@ void setting_SDL(){
             }
 
             if(x_mouse>=20 && x_mouse<=340 && y_mouse>=310 && y_mouse<=338){
-                printf("%d-%d\n",x_mouse,y_mouse);
                 choice=2;
             }
 
@@ -3716,7 +3713,7 @@ void selectMenu(MYSQL mysql){
         printf("1 - Load bar list (no need to do it every time, your favorite bar will not disappear :D)\n\n");
         printf("2 - Selection from a category\n\n");
         printf("3 - Make a research from an entry\n\n");
-        printf("0 - Leave the program\n\n");
+        printf("0 - Back\n\n");
         scanf("%d", &menuSelection);
 
         while(menuSelection <0 || menuSelection > 3){
@@ -3875,14 +3872,7 @@ int main(int argc, char **argv){
     mysql_init(&mysql);
     mysql_options(&mysql,MYSQL_READ_DEFAULT_GROUP,"option");
 
-    /*int choice;//Cette variable va nous servir à pouvoir naviger dans les différents menu de l'application.
-    int id;//Cette variable va contenir l'id de l'utilisateur une fois qu'il s'est connécter ou qu'il a créer son compte.
-    SDL_bool quit=SDL_FALSE;
-    int x_mouse;//Cette variable va contenir les coordonnées en X de la souris.
-    int y_mouse;//Cette variable va contenir les coordonnées en Y de la souris.
-    int check=0;*/
     int result;//Cette variable contient la valeur de retour de la fonction verifConfTxt;
-
 
     result=verifConfTxt();// On appelle cette fonction pour connaître les infos du fichier de configuration
 
